@@ -1,0 +1,25 @@
+{
+  "name": "-mifuturo-",
+  "version": "1.0.0",
+  "description": "proyecto de desarrollo web para la ayuda de futuro estudiantes universitarios en su elección de carrera",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sub-dll/-miFuturo-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sub-dll/-miFuturo-/issues"
+  },
+  "homepage": "https://github.com/sub-dll/-miFuturo-#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mysql2": "^3.24.4"
+  }
+}

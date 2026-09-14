@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Comparador</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous">
+
+    <style>
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .selector_carreras {
+            background-color: #C2CFDC;
+            min-height: 50px;
+            width: 70%;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .comparador {
+            background-color: #C2CFDC;
+            min-height: 400px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .carrera {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .titulo_carrera {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .titulo_carrera img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .requisito {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .requisito:last-child {
+            border-bottom: none;
+        }
+
+        .columna_requisitos {
+            padding: 0 15px;
+        }
+
+        .descripcion_carrera {
+            background-color: #C2CFDC;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .estadistica {
+            background-color: #C2CFDC;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!--Navbar placeholer-->
+   <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link" href="#">Features</a>
+            <a class="nav-link" href="#">Pricing</a>
+            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </div>
+        </div>
+    </div>
+    </nav>
+
+    <div class="selector_carreras">
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <label for="carrera1" class="form-label">
+                    Carrera 1
+                </label>
+
+                <select id="carrera1" class="form-select">
+                    <option value="">Seleccionar carrera</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label for="carrera2" class="form-label">
+                    Carrera 2
+                </label>
+
+                <select id="carrera2" class="form-select">
+                    <option value="">Seleccionar carrera</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+
+    <main class="comparador">
+
+        <div class="row g-4">
+
+            <!-- CARRERA 1 -->
+
+            <div class="col-12 col-lg-6">
+                <div class="carrera shadow-sm">
+                    <h2 class="titulo_carrera">
+                        <img src="https://static.wikia.nocookie.net/wikiderechouct/images/b/b5/Logo_UCT.png/revision/latest?cb=20120622235022&path-prefix=es"
+                            alt="Icono Carrera">
+                        Carrera 1
+                    </h2>
+
+                    <h5 class="mb-3">
+                        Requisitos de la carrera:
+                    </h5>
+
+                    <div class="row">
+
+                        <!-- Requisitos Izquierda -->
+                        <div class="col-12 col-md-6 columna_requisitos">
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">NEM:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">M1:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">Historia o Ciencias:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">Punto de corte:</span>
+                                <span class="valor_requisito"># pts</span>
+                            </div>
+                        </div>
+
+
+                        <!-- Requisitos Derecha -->
+                        <div class="col-12 col-md-6 columna_requisitos">
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">Ranking:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">Lectora:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">M2:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descripción y estadisticas -->
+                    <div class="row mt-4 g-3">
+                        <div class="col-12 col-md-8">
+                            <div class="descripcion_carrera h-100">
+
+                                <p class="mb-2">
+                                    <strong>Descripción de la carrera:</strong>
+                                </p>
+
+                                <p class="mb-0">
+                                    <em>*Descripción de la carrera*</em>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+
+                            <!-- Ingresados -->
+                            <div class="estadistica mb-3">
+
+                                <p class="mb-1 fw-bold">
+                                    Cantidad de ingresados anual:
+                                </p>
+
+                                <p class="mb-0 text-center fs-4">
+                                    #
+                                </p>
+                            </div>
+
+                            <!-- Egresados -->
+                            <div class="estadistica">
+
+                                <p class="mb-1 fw-bold">
+                                    Cantidad de egresados anual:
+                                </p>
+
+                                <p class="mb-0 text-center fs-4">
+                                    #
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- CARRERA 2 -->
+
+            <div class="col-12 col-lg-6">
+
+                <div class="carrera shadow-sm">
+                    <h2 class="titulo_carrera">
+                        <img src="https://static.wikia.nocookie.net/wikiderechouct/images/b/b5/Logo_UCT.png/revision/latest?cb=20120622235022&path-prefix=es"
+                            alt="Icono Carrera">
+                        Carrera 2
+                    </h2>
+
+                    <h5 class="mb-3">
+                        Requisitos de la carrera:
+                    </h5>
+
+                    <div class="row">
+
+                        <!-- Requisitos Izquierda -->
+                        <div class="col-12 col-md-6 columna_requisitos">
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">NEM:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">M1:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">Historia o Ciencias:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">Punto de corte:</span>
+                                <span class="valor_requisito"># pts</span>
+                            </div>
+                        </div>
+
+
+                        <!-- Requisitos Derecha -->
+                        <div class="col-12 col-md-6 columna_requisitos">
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">Ranking:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">Lectora:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+
+                            <div class="requisito">
+                                <span class="nombre_requisito">M2:</span>
+                                <span class="valor_requisito">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Descripción y estadisticas -->
+                    <div class="row mt-4 g-3">
+                        <div class="col-12 col-md-8">
+                            <div class="descripcion_carrera h-100">
+
+                                <p class="mb-2">
+                                    <strong>Descripción de la carrera:</strong>
+                                </p>
+
+                                <p class="mb-0">
+                                    <em>*Descripción de la carrera*</em>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+
+                            <!-- Ingresados -->
+                            <div class="estadistica mb-3">
+
+                                <p class="mb-1 fw-bold">
+                                    Cantidad de ingresados anual:
+                                </p>
+
+                                <p class="mb-0 text-center fs-4">
+                                    #
+                                </p>
+                            </div>
+
+                            <!-- Egresados -->
+                            <div class="estadistica">
+
+                                <p class="mb-1 fw-bold">
+                                    Cantidad de egresados anual:
+                                </p>
+
+                                <p class="mb-0 text-center fs-4">
+                                    #
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"
+        defer>
+    </script>
+
+</body>
+
+</html>

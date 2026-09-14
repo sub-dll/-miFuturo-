@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login View</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Hoja de estilos externa -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container-fluid vh-100">
+        <div class="row h-100">
+            
+            <!-- Panel izquierdo -->
+            <div class="col-md-5 col-lg-6 bg-slate d-none d-md-block"></div>
+
+            <!-- Panel derecho (Formulario) -->
+            <div class="col-md-7 col-lg-6 d-flex align-items-center justify-content-center">
+                
+                <div class="w-100 px-3" style="max-width: 400px;">
+                    
+                    <!-- Encabezados -->
+                    <div class="text-center mb-5">
+                        <h4 class="fw-bold mb-1">Welcome back</h4>
+                        <p class="text-muted small mb-0">sign in to access your account</p>
+                    </div>
+
+                    <form>
+                        <!-- Campo de Email -->
+                        <div class="input-group mb-3 rounded-2 overflow-hidden">
+                            <input type="email" class="form-control border-0 py-2 ps-3 shadow-none text-muted small" placeholder="Enter your email" required>
+                            <span class="input-group-text border-0 text-muted pe-3"><i class="bi bi-envelope"></i></span>
+                        </div>
+
+                        <!-- Campo de Contraseña -->
+                        <div class="input-group mb-3 rounded-2 overflow-hidden">
+                            <input type="password" class="form-control border-0 py-2 ps-3 shadow-none text-muted small" placeholder="Password" required>
+                            <span class="input-group-text border-0 text-muted pe-3"><i class="bi bi-unlock"></i></span>
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check mb-0">
+                                <input type="checkbox" class="form-check-input shadow-none" id="rememberMe">
+                                <label class="form-check-label text-muted text-xs" for="rememberMe">Remember me</label>
+                            </div>
+                            <a href="#" class="text-primary text-decoration-none text-xs">Forgot password?</a>
+                        </div>
+
+                        <!-- Botón "Next" -->
+                        <button type="submit" class="btn btn-slate w-100 py-2 mb-3 rounded-2 d-flex justify-content-center align-items-center gap-2">
+                            Next <i class="bi bi-chevron-right text-xs"></i>
+                        </button>
+
+                        <!-- Enlace de registro -->
+                        <div class="text-center text-xs">
+                            <span class="text-muted">New Member?</span> 
+                            <a href="#" class="text-primary text-decoration-none">Register now</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

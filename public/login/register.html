@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Hoja de estilos externa -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container-fluid vh-100 p-0">
+        <div class="row h-100 m-0">
+            
+            <!-- Panel izquierdo (Parte azul) -->
+            <div class="col-md-5 col-lg-6 bg-slate d-none d-md-block"></div>
+
+            <!-- Formulario de registro -->
+            <div class="col-12 col-md-7 col-lg-6 d-flex align-items-center justify-content-center">
+                
+                <div class="w-100 px-3" style="max-width: 400px;">
+                    
+                    <div class="text-center mb-4">
+                        <h4 class="fw-bold mb-1">Comenzar</h4>
+                        <p class="text-muted small mb-0">creando una cuenta gratuita.</p>
+                    </div>
+
+                    <form>
+                        <div class="input-group mb-3 rounded-2 overflow-hidden">
+                            <input type="text" class="form-control border-0 py-2 ps-3 shadow-none text-muted small" placeholder="Nombre completo" required>
+                            <span class="input-group-text border-0 text-muted pe-3"><i class="bi bi-person"></i></span>
+                        </div>
+
+                        <div class="input-group mb-3 rounded-2 overflow-hidden">
+                            <input type="email" class="form-control border-0 py-2 ps-3 shadow-none text-muted small" placeholder="Correo electrónico válido" required>
+                            <span class="input-group-text border-0 text-muted pe-3"><i class="bi bi-envelope"></i></span>
+                        </div>
+
+                        <div class="input-group mb-3 rounded-2 overflow-hidden">
+                            <input type="tel" class="form-control border-0 py-2 ps-3 shadow-none text-muted small" placeholder="Número de teléfono" required>
+                            <span class="input-group-text border-0 text-muted pe-3"><i class="bi bi-phone"></i></span>
+                        </div>
+
+                        <div class="input-group mb-3 rounded-2 overflow-hidden">
+                            <input type="password" class="form-control border-0 py-2 ps-3 shadow-none text-muted small" placeholder="Contraseña segura" required>
+                            <span class="input-group-text border-0 text-muted pe-3"><i class="bi bi-unlock"></i></span>
+                        </div>
+
+                        <div class="text-center mb-4">
+                            <div class="form-check d-inline-block text-start mb-0">
+                                <input type="checkbox" class="form-check-input shadow-none mt-1" id="termsCheck" required>
+                                <label class="form-check-label text-muted" style="font-size: 0.65rem;" for="termsCheck">
+                                    Al marcar la casilla aceptas nuestros <a href="#" class="text-primary text-decoration-none">Términos y Condiciones</a>.
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-slate w-100 py-2 mb-3 rounded-2 d-flex justify-content-center align-items-center gap-2">
+                            Siguiente <i class="bi bi-chevron-right text-xs"></i>
+                        </button>
+
+                        <div class="text-center text-xs">
+                            <span class="text-muted">¿Ya eres miembro?</span> 
+                            <a href="#" class="text-primary text-decoration-none">Iniciar sesión</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

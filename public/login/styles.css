@@ -1,0 +1,32 @@
+/* Color del panel lateral */
+.bg-slate { 
+    background-color: #87a2ba !important; 
+}
+
+/* Estilos del botón */
+.btn-slate { 
+    background-color: #87a2ba; 
+    color: white; 
+    border: none; 
+}
+
+.btn-slate:hover { 
+    background-color: #7691a9; 
+    color: white; 
+}
+
+/* Estilos de los inputs */
+.form-control, .input-group-text { 
+    background-color: #f4f5f7; 
+}
+
+.form-control:focus { 
+    background-color: #f4f5f7;
+    box-shadow: none; 
+    border-color: #ced4da; 
+}
+
+/* Tamaños de texto */
+.text-xs { 
+    font-size: 0.75rem; 
+}

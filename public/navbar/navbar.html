@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navbar - miFuturo</title>
+
+<!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Port+Lligat+Slab&display=swap" rel="stylesheet">
+<!-- Estilos propios del navbar -->
+<link href="navbar.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar-custom">
+  <div class="container-fluid d-flex align-items-center justify-content-between h-100">
+
+    <!-- Izquierda: icono de mensajes + buscador -->
+    <div class="nb-left">
+      <button class="nb-icon-btn nb-msg-icon" type="button" aria-label="Mensajes">
+        <i class="fa-regular fa-comment-dots"></i>
+      </button>
+      <div class="nb-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" class="form-control" placeholder="Buscar...">
+      </div>
+    </div>
+
+    <!-- Centro: logo -->
+    <a href="#" class="nb-logo">[miFuturo]</a>
+
+    <!-- Derecha: botones + iconos + avatar -->
+    <div class="nb-right">
+      <button class="btn btn-register" type="button">Registrarse</button>
+      <button class="btn btn-signin" type="button">Ingresar</button>
+
+      <button class="nb-icon-btn" type="button" aria-label="Notificaciones">
+        <i class="fa-regular fa-bell"></i>
+      </button>
+
+      <div class="nb-avatar-wrap">
+        <img src="https://api.dicebear.com/7.x/initials/svg?seed=U&backgroundColor=c9ccd1" alt="Perfil de usuario">
+        <span class="nb-online-dot"></span>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Resto del contenido de tu página va aquí, debajo del navbar -->
+
+</body>
+</html>

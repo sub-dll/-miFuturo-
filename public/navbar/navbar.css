@@ -1,0 +1,213 @@
+:root{
+  --nb-height: 82px;
+  --nb-bg: #ffffff;
+  --nb-border: #e9ecef;
+  --nb-text: #1a1a1a;
+  --nb-register-bg: #859fb8;
+  --nb-register-bg-hover: #6f8ca8;
+  --nb-online: #22c55e;
+}
+
+html, body{
+  background:#f5f6f8;
+}
+
+body{
+  padding-top: var(--nb-height);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ===== Barra ===== */
+.navbar-custom{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nb-height);
+  background: var(--nb-bg);
+  border-bottom: 1px solid var(--nb-border);
+  z-index: 1030;
+}
+
+.navbar-custom .container-fluid{
+  position: relative; /* necesario para posicionar el icono de mensajes con top/left absolutos */
+  height: 100%;
+  max-width: 1733px;
+  margin: 0 auto;
+  padding-left: 40px;
+  padding-right: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===== Izquierda: icono + buscador ===== */
+.nb-left{
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;
+  /* deja espacio para el icono, que va posicionado en absoluto (top:19px / left:24px / 50x50) */
+  padding-left: 93px;
+}
+
+.nb-icon-btn{
+  background: none;
+  border: none;
+  color: var(--nb-text);
+  font-size: 1.65rem;
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s ease;
+}
+.nb-icon-btn:hover{
+  background: #f1f2f4;
+  color: var(--nb-text);
+}
+
+/* Icono de mensajes: pegado al inicio del navbar */
+.nb-msg-icon{
+  position: absolute;
+  top: 19px;
+  left: 24px;
+  width: 50px;
+  height: 50px;
+  font-size: 1.7rem;
+  transform: rotate(0deg);
+  opacity: 1;
+}
+
+.nb-search{
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+}
+.nb-search input{
+  border-radius: 999px;
+  padding: 0.5rem 1rem 0.5rem 2.5rem;
+  border: 1px solid var(--nb-border);
+  background: #f8f9fa;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.9rem;
+}
+.nb-search input:focus{
+  box-shadow: none;
+  border-color: #adb5bd;
+  background: #fff;
+}
+.nb-search i{
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9aa0a6;
+  font-size: 0.9rem;
+}
+
+/* ===== Centro: logo ===== */
+.nb-logo{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Port Lligat Slab", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 48px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: var(--nb-text);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.nb-logo:hover{ color: var(--nb-text); }
+
+/* ===== Derecha ===== */
+.nb-right{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1 1 0;
+  gap: 24px;
+}
+
+/* Label 1 - Semibold: tipografía de los botones Registrarse / Ingresar */
+.btn-register,
+.btn-signin{
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0%;
+}
+
+.btn-register{
+  background: var(--nb-register-bg);
+  border: none;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+.btn-register:hover{
+  background: var(--nb-register-bg-hover);
+  color: #fff;
+}
+
+.btn-signin{
+  background: #fff;
+  border: 1.5px solid var(--nb-text);
+  color: var(--nb-text);
+  padding: 12px 24px;
+  border-radius: 6px;
+  margin-left: -8px; /* compensa el gap general: en la imagen el hueco Registro-Ingreso es más chico */
+  margin-right: 46px; /* separación mayor hasta la campana, igual que en la imagen */
+  transition: background 0.15s ease;
+}
+.btn-signin:hover{
+  background: #f8f9fa;
+  color: var(--nb-text);
+}
+
+.nb-icon-btn[aria-label="Notificaciones"]{
+  font-size: 1.4rem;
+  border: 1px solid var(--nb-border);
+}
+
+.nb-avatar-wrap{
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--nb-border);
+}
+.nb-avatar-wrap img{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.nb-online-dot{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 13px;
+  height: 13px;
+  background: var(--nb-online);
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+@media (max-width: 991.98px){
+  .nb-search{ display: none; }
+}
+
+@media (max-width: 767.98px){
+  .nb-logo{ font-size: 28px; }
+  .btn-signin{ display: none; }
+  .nb-right{ gap: 16px; }
+  .nb-left{ padding-left: 85px; }
+}

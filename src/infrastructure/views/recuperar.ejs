@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar Sesión - miFuturo</title>
+  <title>Recuperar Contraseña - miFuturo</title>
   <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body>
@@ -11,34 +11,32 @@
     <div class="auth-banner"></div>
     <div class="auth-form-container">
       <div class="auth-card">
-        <h1 class="auth-title">Bienvenido de nuevo</h1>
-        <p class="auth-subtitle">Inicia sesión para acceder a tu cuenta</p>
+        <h1 class="auth-title">Cambiar contraseña</h1>
+        <p class="auth-subtitle">Ingresa tu correo y nueva contraseña</p>
 
         <form onsubmit="event.preventDefault();">
           <div class="input-group">
-            <input type="email" class="input-control" placeholder="Ingresa tu correo" required>
+            <input type="email" class="input-control" placeholder="Correo electrónico válido" required>
             <span class="input-icon">✉</span>
           </div>
 
           <div class="input-group">
-            <input type="password" class="input-control" placeholder="Contraseña" required>
+            <input type="password" class="input-control" placeholder="Nueva contraseña" required>
             <span class="input-icon">🔒</span>
           </div>
 
-          <div class="auth-options">
-            <label>
-              <input type="checkbox"> Recordarme
-            </label>
-            <a href="/recuperar" class="auth-link">¿Olvidaste tu contraseña?</a>
+          <div class="input-group">
+            <input type="password" class="input-control" placeholder="Repetir contraseña" required>
+            <span class="input-icon">🔒</span>
           </div>
 
-          <button type="submit" class="btn-submit">
+          <button type="submit" class="btn-submit" style="margin-top: 15px;">
             Siguiente <span>&gt;</span>
           </button>
         </form>
 
         <div class="auth-footer">
-          ¿Eres nuevo? <a href="/registro" class="auth-link">Regístrate ahora</a>
+          ¿Recordaste tu contraseña? <a href="/login" class="auth-link">Iniciar sesión</a>
         </div>
       </div>
     </div>

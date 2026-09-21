@@ -3,10 +3,8 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 1. Decirle a Express que use EJS como motor de plantillas 
+// Configuración del motor de plantillas EJS
 app.set('view engine', 'ejs');
-
-// 2. Decirle a Express dónde están guardadas físicamente las vistas ahora 
 app.set('views', path.join(__dirname, 'infrastructure/views'));
 
 // Importar el enrutador de vistas

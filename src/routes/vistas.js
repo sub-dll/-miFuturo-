@@ -1,24 +1,35 @@
 const express = require('express');
-const router = express.Router(); // ¡Ya no necesitamos requerir 'path'!
+const path = require('path');
+const router = express.Router();
 
-// Ruta para el Home (busca index.ejs)
-router.get('/', (req, res) => {
-    res.render('index');
-});
-
-// Ruta para el Login (busca login.ejs)
+// ==========================================
+// 1. RUTAS DE AUTENTICACIÓN (Usan EJS)
+// ==========================================
 router.get('/login', (req, res) => {
-    res.render('login');
+  res.render('login');
 });
 
-// Ruta para el Comparador (busca comparador.ejs)
+router.get('/registro', (req, res) => {
+  res.render('registro');
+});
+
+router.get('/recuperar', (req, res) => {
+  res.render('recuperar');
+});
+
+// ==========================================
+// 2. OTRAS VISTAS DEL PROYECTO (Mantienen sus HTML)
+// ==========================================
+router.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public/index.html'));
+});
+
 router.get('/comparador', (req, res) => {
-    res.render('comparador');
+  res.sendFile(path.join(__dirname, '../../public/comparador.html'));
 });
 
-// Ruta para el Foro (busca foro.ejs)
 router.get('/foros', (req, res) => {
-    res.render('foro');
+  res.sendFile(path.join(__dirname, '../../public/foro.html'));
 });
 
 module.exports = router;

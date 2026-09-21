@@ -1,0 +1,168 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f8f9fa;
+}
+
+/* Contenedor principal dividido 50/50 */
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Columna Izquierda (Banner Azul Grisáceo) */
+.auth-banner {
+  flex: 1;
+  background-color: #88a2b9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Columna Derecha (Formulario) */
+.auth-form-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #ffffff;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.auth-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  color: #777777;
+  margin-bottom: 30px;
+}
+
+/* Inputs con icono y animación */
+.input-group {
+  margin-bottom: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-control {
+  width: 100%;
+  padding: 12px 42px 12px 16px;
+  background-color: #f3f3f3;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-control::placeholder {
+  color: #a0a0a0;
+}
+
+/* Animación al hacer clic/escribir en el input */
+.input-control:focus {
+  border-color: #88a2b9;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(136, 162, 185, 0.2);
+}
+
+.input-icon {
+  position: absolute;
+  right: 14px;
+  color: #666;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Fila de Checkbox u Opciones extras */
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.auth-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.auth-link {
+  color: #4a6da7;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+  color: #2b4c80;
+}
+
+/* Botón con animación Hover y Active */
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #88a2b9;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, transform 0.15s ease, box-shadow 0.3s ease;
+}
+
+.btn-submit:hover {
+  background-color: #738ea5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(136, 162, 185, 0.4);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.auth-footer {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #666;
+}
+
+/* Adaptación Responsive para celulares */
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+  .auth-banner {
+    display: none;
+  }
+}

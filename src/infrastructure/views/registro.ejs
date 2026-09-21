@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro - miFuturo</title>
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-banner"></div>
+    <div class="auth-form-container">
+      <div class="auth-card">
+        <h1 class="auth-title">Crear Cuenta</h1>
+        <p class="auth-subtitle">Regístrate para comenzar gratis</p>
+
+        <form onsubmit="event.preventDefault();">
+          <div class="input-group">
+            <input type="text" class="input-control" placeholder="Nombre completo" required>
+            <span class="input-icon">👤</span>
+          </div>
+
+          <div class="input-group">
+            <input type="email" class="input-control" placeholder="Correo electrónico válido" required>
+            <span class="input-icon">✉</span>
+          </div>
+
+          <div class="input-group">
+            <input type="tel" class="input-control" placeholder="Número de teléfono">
+            <span class="input-icon">📱</span>
+          </div>
+
+          <div class="input-group">
+            <input type="password" class="input-control" placeholder="Contraseña segura" required>
+            <span class="input-icon">🔒</span>
+          </div>
+
+          <div class="auth-options">
+            <label style="font-size: 11px;">
+              <input type="checkbox" required> Al marcar la casilla aceptas nuestros Términos y Condiciones.
+            </label>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            Siguiente <span>&gt;</span>
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          ¿Ya tienes cuenta? <a href="/login" class="auth-link">Iniciar sesión</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

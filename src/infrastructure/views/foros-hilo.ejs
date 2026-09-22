@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title><%= hilo.titulo %></title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container mt-5 mb-5">
+
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h1>
+                    <%= hilo.titulo %>
+                </h1>
+
+                <p class="text-muted mb-0">
+                    Debate del foro de la carrera
+                </p>
+            </div>
+
+            <a href="/foros" class="btn btn-outline-secondary">
+                Volver al foro
+            </a>
+
+        </div>
+
+
+        <!-- Hilo principal -->
+        <div class="card mb-4">
+
+            <div class="card-body">
+
+                <div class="d-flex">
+
+                    <!-- Avatar del autor -->
+                    <div class="me-3">
+
+                        <img
+                            src="<%= hilo.avatar_url || '/img/avatar-default.png' %>"
+                            alt="Avatar"
+                            width="60"
+                            height="60"
+                            class="rounded-circle"
+                        >
+
+                    </div>
+
+
+                    <!-- Contenido -->
+                    <div class="flex-grow-1">
+
+                        <div class="d-flex justify-content-between">
+
+                            <div>
+                                <h5 class="mb-0">
+                                    <%= hilo.usuario %>
+                                </h5>
+
+                                <small class="text-muted">
+                                    <%= hilo.fecha %>
+                                </small>
+                            </div>
+
+                        </div>
+
+
+                        <!-- Contenido del hilo -->
+                        <div class="mt-3">
+
+                            <p>
+                                <%= hilo.contenido %>
+                            </p>
+
+                        </div>
+
+
+                        <!-- Acciones -->
+                        <div class="mt-3">
+
+                            <button class="btn btn-sm btn-outline-primary">
+                                👍 <%= hilo.likes || 0 %> Likes
+                            </button>
+
+                            <button class="btn btn-sm btn-outline-secondary">
+                                💬 Comentar
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Respuestas -->
+        <h3 class="mb-3">
+            Respuestas
+        </h3>
+
+
+        <div class="ms-4">
+
+            <% respuestas.forEach(respuesta => { %>
+
+                <!-- Respuesta -->
+                <div class="card mb-3">
+
+                    <div class="card-body">
+
+                        <div class="d-flex">
+
+                            <!-- Avatar -->
+                            <div class="me-3">
+
+                                <img
+                                    src="<%= respuesta.avatar_url || '/img/avatar-default.png' %>"
+                                    alt="Avatar"
+                                    width="50"
+                                    height="50"
+                                    class="rounded-circle"
+                                >
+
+                            </div>
+
+
+                            <!-- Contenido de la respuesta -->
+                            <div class="flex-grow-1">
+
+                                <div>
+                                    <strong>
+                                        <%= respuesta.usuario %>
+                                    </strong>
+
+                                    <small class="text-muted ms-2">
+                                        <%= respuesta.fecha %>
+                                    </small>
+                                </div>
+
+
+                                <p class="mt-2 mb-2">
+                                    <%= respuesta.contenido %>
+                                </p>
+
+
+                                <!-- Acciones -->
+                                <div>
+
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        👍 <%= respuesta.likes || 0 %> Likes
+                                    </button>
+
+                                    <button class="btn btn-sm btn-outline-secondary">
+                                        💬 Responder
+                                    </button>
+
+                                </div>
+
+
+                                <!-- Respuestas anidadas -->
+                                <% if (respuesta.respuestas && respuesta.respuestas.length > 0) { %>
+
+                                    <div class="ms-4 mt-3">
+
+                                        <% respuesta.respuestas.forEach(subrespuesta => { %>
+
+                                            <div class="card mb-2">
+
+                                                <div class="card-body">
+
+                                                    <div class="d-flex">
+
+                                                        <!-- Avatar -->
+                                                        <div class="me-3">
+
+                                                            <img
+                                                                src="<%= subrespuesta.avatar_url || '/img/avatar-default.png' %>"
+                                                                alt="Avatar"
+                                                                width="40"
+                                                                height="40"
+                                                                class="rounded-circle"
+                                                            >
+
+                                                        </div>
+
+
+                                                        <!-- Contenido -->
+                                                        <div class="flex-grow-1">
+
+                                                            <div>
+                                                                <strong>
+                                                                    <%= subrespuesta.usuario %>
+                                                                </strong>
+
+                                                                <small class="text-muted ms-2">
+                                                                    <%= subrespuesta.fecha %>
+                                                                </small>
+                                                            </div>
+
+
+                                                            <p class="mt-2 mb-2">
+                                                                <%= subrespuesta.contenido %>
+                                                            </p>
+
+
+                                                            <button class="btn btn-sm btn-outline-primary">
+                                                                👍 <%= subrespuesta.likes || 0 %> Likes
+                                                            </button>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+
+        <!-- Escribir respuesta -->
+        <div class="card mt-4">
+
+            <div class="card-body">
+
+                <h5 class="card-title">
+                    Responder al hilo
+                </h5>
+
+                <form action="/foros/hilo/<%= hilo.id_hilo %>/responder" method="POST">
+
+                    <div class="mb-3">
+
+                        <textarea
+                            name="contenido"
+                            class="form-control"
+                            rows="4"
+                            placeholder="Escribe tu respuesta..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Publicar respuesta
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

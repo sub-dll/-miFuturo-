@@ -21,4 +21,9 @@ router.get('/foros', (req, res) => {
     res.render('foro');
 });
 
+// NUEVA RUTA: Para el Perfil de cuenta (busca perfil-cuenta.ejs)
+router.get('/perfil', (req, res) => {
+    res.render('perfil-cuenta');
+});
+
 module.exports = router;

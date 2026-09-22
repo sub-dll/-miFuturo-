@@ -8,43 +8,50 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts: Port Lligat Slab -->
     <link href="https://fonts.googleapis.com/css2?family=Port+Lligat+Slab&display=swap" rel="stylesheet">
-    <!-- Tu archivo CSS separado -->
-    <link rel="stylesheet" href="/css/perfil.css">
+    
+    <style>
+        /* Únicamente la fuente general y el color de fondo exacto solicitado */
+        body {
+            font-family: 'Port Lligat Slab', serif;
+            background-color: #8E98A2;
+        }
+    </style>
 </head>
-<body>
+<body class="vh-100 overflow-hidden m-0 text-white">
 
-    <!-- Contenedor para mensajes de éxito -->
-    <div id="alert-container"></div>
+    <!-- Contenedor para mensajes de éxito flotantes -->
+    <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
 
-    <div class="container-fluid p-0">
-        <div class="row g-0">
+    <div class="container-fluid p-0 h-100">
+        <div class="row g-0 h-100">
             
-            <!-- Sidebar / Barra Lateral -->
-            <div class="col-md-3 col-lg-2 sidebar px-3">
-                <div class="text-muted small mb-3 px-3">Cuenta</div>
-                <div class="d-flex align-items-center px-3 mb-4">
+            <!-- Sidebar / Barra Lateral con clases de Bootstrap (#C2CFDC) -->
+            <div class="col-md-3 col-lg-2 p-3 border-end border-white border-opacity-25" style="background-color: #C2CFDC;">
+                <div class="text-muted small mb-3 px-2">Cuenta</div>
+                <div class="d-flex align-items-center px-2 mb-4">
+                    <!-- Icono de usuario de Bootstrap Icons -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle text-secondary me-2" viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                         <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                     </svg>
-                    <span class="fw-bold" style="color: #2d3748;">Don quijote</span>
+                    <span class="fw-bold text-dark">Don quijote</span>
                 </div>
                 <nav class="nav flex-column">
-                    <a class="nav-link active" href="#">Cuenta</a>
-                    <a class="nav-link" href="#">Preferencias</a>
-                    <a class="nav-link" href="#">Notificaciones</a>
-                    <a class="nav-link" href="#">General</a>
+                    <a class="nav-link active fw-bold rounded px-3 py-2 mb-1 bg-black bg-opacity-10 text-dark" href="#">Cuenta</a>
+                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">Preferencias</a>
+                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">Notificaciones</a>
+                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">General</a>
                 </nav>
             </div>
 
-            <!-- Área Principal -->
-            <div class="col-md-9 col-lg-10 main-content">
-                <div class="container-fluid max-width-container">
-                    <h1 class="section-title">Cuenta</h1>
-                    <p class="section-sub">Cambia configuracion de la cuenta de usuario</p>
+            <!-- Área Principal con scroll y el fondo #8E98A2 -->
+            <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100" style="background-color: #8E98A2;">
+                <div class="container-fluid">
+                    <h1 class="fs-3 fw-bold mb-0">Cuenta</h1>
+                    <p class="fs-6 text-light opacity-75 mb-4">Cambia configuracion de la cuenta de usuario</p>
 
                     <h5 class="fw-bold fs-6 mt-4">Datos de contacto</h5>
-                    <hr class="custom-divider">
+                    <hr class="border-white border-opacity-50 my-3">
 
                     <!-- Correo Electrónico -->
                     <div class="row align-items-center mb-3">
@@ -53,7 +60,7 @@
                             <small class="text-light opacity-75">En este correo llegaran notificaciones de mensajes</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <button class="modify-btn" onclick="abrirModalModificacion('Correo Electrónico')">[ Modificar ]</button>
+                            <button class="btn btn-link text-white text-decoration-none p-0 fw-normal" onclick="abrirModalModificacion('Correo Electrónico')">[ Modificar ]</button>
                         </div>
                     </div>
 
@@ -64,12 +71,12 @@
                             <small class="text-light opacity-75">Necesario para verificar la cuenta</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <button class="modify-btn" onclick="abrirModalModificacion('Número de Teléfono')">[ Modificar ]</button>
+                            <button class="btn btn-link text-white text-decoration-none p-0 fw-normal" onclick="abrirModalModificacion('Número de Teléfono')">[ Modificar ]</button>
                         </div>
                     </div>
 
                     <h5 class="fw-bold fs-6 mt-4">Cambiar nombre de usuario / contraseña</h5>
-                    <hr class="custom-divider">
+                    <hr class="border-white border-opacity-50 my-3">
 
                     <!-- Nombre de usuario -->
                     <div class="row align-items-center mb-3">
@@ -78,7 +85,7 @@
                             <small class="text-light opacity-75">Este es el nombre que se visualizara en los foros</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <button class="modify-btn" onclick="abrirModalModificacion('Nombre de Usuario')">[ Modificar ]</button>
+                            <button class="btn btn-link text-white text-decoration-none p-0 fw-normal" onclick="abrirModalModificacion('Nombre de Usuario')">[ Modificar ]</button>
                         </div>
                     </div>
 
@@ -89,7 +96,7 @@
                             <small class="text-light opacity-75">Restablece la contraseña si no te acuerdas de ella</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <button class="modify-btn" onclick="abrirModalModificacion('Contraseña')">[ Modificar ]</button>
+                            <button class="btn btn-link text-white text-decoration-none p-0 fw-normal" onclick="abrirModalModificacion('Contraseña')">[ Modificar ]</button>
                         </div>
                     </div>
 
@@ -99,7 +106,7 @@
         </div>
     </div>
 
-    <!-- Modal genérico de Bootstrap para la modificación -->
+    <!-- Modal de Bootstrap para la modificación -->
     <div class="modal fade" id="modalModificar" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content text-dark" style="font-family: 'Port Lligat Slab', serif;">
@@ -125,7 +132,52 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Tu archivo JS separado -->
-    <script src="/js/perfil.js"></script>
+    
+    <!-- Lógica JavaScript integrada -->
+    <script>
+        let campoActual = '';
+        const modalModificarElement = document.getElementById('modalModificar');
+        const modalModificar = new bootstrap.Modal(modalModificarElement);
+
+        function abrirModalModificacion(campo) {
+            campoActual = campo;
+            document.getElementById('modalTitulo').innerText = `Modificar ${campo}`;
+            document.getElementById('labelInput').innerText = `Nuevo/a ${campo}:`;
+            document.getElementById('inputValue').value = '';
+            
+            if(campo === 'Contraseña') {
+                document.getElementById('inputValue').type = 'password';
+            } else {
+                document.getElementById('inputValue').type = 'text';
+            }
+            modalModificar.show();
+        }
+
+        function guardarCambios() {
+            modalModificar.hide();
+
+            // Mensaje de éxito flotante utilizando clases de Bootstrap
+            const alertContainer = document.getElementById('alert-container');
+            const alertId = 'alert-' + Date.now();
+            
+            const alertaHTML = `
+                <div id="${alertId}" class="alert alert-success alert-dismissible fade show shadow" role="alert">
+                    <strong>¡Éxito!</strong> Se ha modificado tu ${campoActual} correctamente.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            alertContainer.innerHTML = alertaHTML;
+
+            // Ocultar automáticamente después de 4 segundos
+            setTimeout(() => {
+                const alertaEl = document.getElementById(alertId);
+                if (alertaEl) {
+                    const alertaBs = bootstrap.Alert.getOrCreateInstance(alertaEl);
+                    alertaBs.close();
+                }
+            }, 4000);
+        }
+    </script>
 </body>
 </html>

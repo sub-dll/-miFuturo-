@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Preferencias</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Port Lligat Slab -->
+    <link href="https://fonts.googleapis.com/css2?family=Port+Lligat+Slab&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Únicamente la fuente tipográfica requerida */
+        body {
+            font-family: 'Port Lligat Slab', serif;
+        }
+    </style>
+</head>
+<body class="vh-100 overflow-hidden m-0 text-white" style="background-color: #8E98A2;">
+
+    <!-- Contenedor para mensajes de éxito flotantes -->
+    <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+
+    <div class="container-fluid p-0 h-100">
+        <div class="row g-0 h-100">
+            
+            <!-- Sidebar / Barra Lateral utilizando colores y bordes de Bootstrap -->
+            <div class="col-md-3 col-lg-2 p-3 border-end border-white border-opacity-25" style="background-color: #C2CFDC;">
+                <div class="text-muted small mb-3 px-2">Cuenta</div>
+                <div class="d-flex align-items-center px-2 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle text-secondary me-2" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                    </svg>
+                    <span class="fw-bold text-dark">Don quijote</span>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="/perfil">Cuenta</a>
+                    <a class="nav-link active fw-bold rounded px-3 py-2 mb-1 bg-black bg-opacity-10 text-dark" href="/perfil/preferencias">Preferencias</a>
+                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">Notificaciones</a>
+                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">General</a>
+                </nav>
+            </div>
+
+            <!-- Área Principal utilizando utilidades de Bootstrap -->
+            <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100">
+                <div class="container-fluid">
+                    <h1 class="fs-3 fw-bold mb-0">Preferencias</h1>
+                    <p class="fs-6 text-light opacity-75 mb-4">Elige como quieres ver [miFuturo] y establece sus preferencias</p>
+
+                    <h5 class="fw-bold fs-6 mt-4">Apariencia</h5>
+                    <hr class="border-white border-opacity-50 my-3">
+
+                    <!-- Temas -->
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-8">
+                            <div class="fw-bold">Temas</div>
+                            <small class="text-light opacity-75">Elige un tema para [miFuturo] en este dispositivo</small>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <select class="form-select bg-dark bg-opacity-25 text-white border-white border-opacity-50 d-inline-block w-auto" onchange="notificarCambio('Temas')">
+                                <option class="bg-secondary text-white" value="oscuro" selected>[ Oscuro ]</option>
+                                <option class="bg-secondary text-white" value="claro">[ Claro ]</option>
+                                <option class="bg-secondary text-white" value="sistema">[ Predeterminado del sistema ]</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Contraste alto -->
+                    <div class="row align-items-center mb-5">
+                        <div class="col-md-8">
+                            <div class="fw-bold">Contraste alto</div>
+                            <small class="text-light opacity-75">Aumenta el contraste para mejorar la visibilidad</small>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <select class="form-select bg-dark bg-opacity-25 text-white border-white border-opacity-50 d-inline-block w-auto" onchange="notificarCambio('Contraste alto')">
+                                <option class="bg-secondary text-white" value="activado" selected>[ Activado ]</option>
+                                <option class="bg-secondary text-white" value="desactivado">[ Desactivado ]</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold fs-6 mt-4">Idioma y hora</h5>
+                    <hr class="border-white border-opacity-50 my-3">
+
+                    <!-- Idioma -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-8">
+                            <div class="fw-bold">Idioma</div>
+                            <small class="text-light opacity-75">Elige el idioma en el que quieres usar [miFuturo]</small>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <select class="form-select bg-dark bg-opacity-25 text-white border-white border-opacity-50 d-inline-block w-auto" onchange="notificarCambio('Idioma')">
+                                <option class="bg-secondary text-white" value="es" selected>[ Español ]</option>
+                                <option class="bg-secondary text-white" value="en">[ English ]</option>
+                                <option class="bg-secondary text-white" value="pt">[ Português ]</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Lógica JavaScript integrada para mostrar las alertas de éxito -->
+    <script>
+        function notificarCambio(opcionNombre) {
+            const alertContainer = document.getElementById('alert-container');
+            const alertId = 'alert-' + Date.now();
+            
+            const alertaHTML = `
+                <div id="${alertId}" class="alert alert-success alert-dismissible fade show shadow" role="alert">
+                    <strong>¡Éxito!</strong> Has actualizado tu preferencia de <strong>${opcionNombre}</strong> correctamente.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            alertContainer.innerHTML = alertaHTML;
+
+            // Ocultar la alerta automáticamente después de 4 segundos
+            setTimeout(() => {
+                const alertaEl = document.getElementById(alertId);
+                if (alertaEl) {
+                    const alertaBs = bootstrap.Alert.getOrCreateInstance(alertaEl);
+                    alertaBs.close();
+                }
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

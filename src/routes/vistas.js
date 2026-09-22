@@ -25,5 +25,9 @@ router.get('/foros', (req, res) => {
 router.get('/perfil', (req, res) => {
     res.render('perfil-cuenta');
 });
+// NUEVA RUTA: Para el Perfil de preferencias (busca perfil-preferencias.ejs)
+router.get('/perfil/preferencias', (req, res) => {
+    res.render('perfil-preferencias');
+});
 
 module.exports = router;

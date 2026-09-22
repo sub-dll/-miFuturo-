@@ -18,10 +18,12 @@ router.get('/recuperar', (req, res) => {
 });
 
 // ==========================================
-// 2. OTRAS VISTAS DEL PROYECTO (Mantienen sus HTML)
+// 2. OTRAS VISTAS DEL PROYECTO
 // ==========================================
+
+// Redirige la raíz '/' automáticamente al Login
 router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public/index.html'));
+  res.redirect('/login');
 });
 
 router.get('/comparador', (req, res) => {

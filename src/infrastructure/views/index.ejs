@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>miFuturo - Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Link a tu archivo CSS personalizado -->
+    <link rel="stylesheet" href="/css/global.css">
+    
     <style>
         /* Asegura que el footer quede siempre abajo si hay poco contenido */
         body { min-height: 100vh; display: flex; flex-direction: column; background-color: #F8F9FA; }
@@ -18,8 +22,8 @@
    <!-- 2. Contenido principal del Home -->
     <main class="container d-flex flex-column mt-5 flex-grow-1 px-4" style="max-width: 1200px;">
         
-        <!-- Contenedor principal gris/celeste -->
-        <div class="p-4 p-md-5 flex-grow-1 w-100" style="background-color: #dbe2eb; border-radius: 2rem 2rem 0 0;">
+        <!-- Contenedor principal gris/celeste (Añadí min-height: 80vh para empujar el footer) -->
+        <div class="p-4 p-md-5 flex-grow-1 w-100" style="background-color: #dbe2eb; border-radius: 2rem 2rem 0 0; min-height: 80vh;">
             
             <!-- Sección de Filtros -->
             <div class="card border-0 shadow-sm mb-4" style="max-width: 600px; border-radius: 1.5rem;">
@@ -47,21 +51,21 @@
             <!-- Lista de Universidades -->
             
             <!-- Tarjeta 1: UCT -->
-            <div class="card border-0 shadow-sm rounded-4 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 mb-3 hover-card">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-3 gap-md-4">
-                        <!-- Logo Placeholder -->
                         <div class="rounded-circle bg-light d-flex justify-content-center align-items-center border" style="width: 65px; height: 65px;">
                             <span class="fs-4">🏛️</span>
                         </div>
                         <h5 class="mb-0 fw-normal">Universidad Católica de Temuco</h5>
                     </div>
-                    <button class="btn text-white rounded-pill px-4" style="background-color: #8C9FBA;">Ver mas</button>
+                    <!-- Cambiado a <a> y con stretched-link para hacer clickeable toda la tarjeta -->
+                    <a href="#" class="btn btn-ver-mas rounded-pill px-4 stretched-link">Ver mas</a>
                 </div>
             </div>
 
             <!-- Tarjeta 2: UFRO -->
-            <div class="card border-0 shadow-sm rounded-4 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 mb-3 hover-card">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-3 gap-md-4">
                         <div class="rounded-circle bg-light d-flex justify-content-center align-items-center border" style="width: 65px; height: 65px;">
@@ -69,12 +73,12 @@
                         </div>
                         <h5 class="mb-0 fw-normal">Universidad de la Frontera</h5>
                     </div>
-                    <button class="btn text-white rounded-pill px-4" style="background-color: #8C9FBA;">Ver mas</button>
+                    <a href="#" class="btn btn-ver-mas rounded-pill px-4 stretched-link">Ver mas</a>
                 </div>
             </div>
 
             <!-- Tarjeta 3: Santo Tomás -->
-            <div class="card border-0 shadow-sm rounded-4 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 mb-3 hover-card">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-3 gap-md-4">
                         <div class="rounded-circle bg-light d-flex justify-content-center align-items-center border" style="width: 65px; height: 65px;">
@@ -82,12 +86,12 @@
                         </div>
                         <h5 class="mb-0 fw-normal">Universidad / instituto Santo Tomas</h5>
                     </div>
-                    <button class="btn text-white rounded-pill px-4" style="background-color: #8C9FBA;">Ver mas</button>
+                    <a href="#" class="btn btn-ver-mas rounded-pill px-4 stretched-link">Ver mas</a>
                 </div>
             </div>
 
             <!-- Tarjeta 4: Mayor -->
-            <div class="card border-0 shadow-sm rounded-4 mb-2">
+            <div class="card border-0 shadow-sm rounded-4 mb-2 hover-card">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-3 gap-md-4">
                         <div class="rounded-circle bg-light d-flex justify-content-center align-items-center border" style="width: 65px; height: 65px;">
@@ -95,31 +99,30 @@
                         </div>
                         <h5 class="mb-0 fw-normal">Universidad Mayor</h5>
                     </div>
-                    <button class="btn text-white rounded-pill px-4" style="background-color: #8C9FBA;">Ver mas</button>
+                    <a href="#" class="btn btn-ver-mas rounded-pill px-4 stretched-link">Ver mas</a>
                 </div>
             </div>
 
-            <!--forzar el scroll para evitar que la pagina se vea corta o chica --> 
-
+            <!-- Tarjetas Dinámicas (Bucle) --> 
             <% for(let i=0; i < 6; i++) { %>
-            <div class="card border-0 shadow-sm rounded-4 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 mb-3 hover-card">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-3 gap-md-4">
                         <div class="rounded-circle bg-light d-flex justify-content-center align-items-center border" style="width: 65px; height: 65px;">
                             <span class="fs-4">🏛️</span>
                         </div>
-                        <!-- En el futuro aquí irán datos reales, por ahora texto de prueba -->
                         <h5 class="mb-0 fw-normal">Universidad de Prueba <%= i + 1 %></h5>
                     </div>
-                    <button class="btn text-white rounded-pill px-4" style="background-color: #8C9FBA;">Ver mas</button>
+                    <a href="#" class="btn btn-ver-mas rounded-pill px-4 stretched-link">Ver mas</a>
                 </div>
             </div>
-        <% } %>
+            <% } %>
+
         </div>
     </main>
 
     <!-- 3. Inyectar Footer -->
     <%- include('partials/footer') %>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

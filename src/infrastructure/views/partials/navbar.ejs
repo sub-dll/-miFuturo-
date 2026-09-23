@@ -22,11 +22,57 @@
         <a href="/login" class="btn btn-outline-dark btn-sm">Sign in</a>
         
         <!-- Campana -->
-        <button class="btn btn-light rounded-circle p-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
-            </svg>
-        </button>
+        <!-- Contenedor Dropdown de Notificaciones -->
+        <div class="dropdown">
+            <!-- Botón de la campana (modificado para ser el gatillo del menú) -->
+            <button class="btn btn-light rounded-circle p-2 position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                </svg>
+                <!-- Puntito rojo indicador de notificación nueva (opcional, le da un buen toque) -->
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span class="visually-hidden">Nuevas notificaciones</span>
+                </span>
+            </button>
+
+            <!-- El Menú Desplegable (Rectángulo que cae) -->
+            <!-- dropdown-menu-end asegura que se alinee a la derecha y no se salga de la pantalla -->
+            <ul class="dropdown-menu dropdown-menu-end shadow rounded-3 border-0 mt-2" style="width: 320px; max-height: 400px; overflow-y: auto;">
+                <li><h6 class="dropdown-header fw-bold text-dark fs-6">Notificaciones</h6></li>
+                
+                <!-- Notificación 1: Respuesta en foro -->
+                <li>
+                    <a class="dropdown-item py-3 text-wrap" href="#">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="bg-light rounded-circle p-2 fs-5">💬</div>
+                            <div>
+                                <p class="mb-1" style="font-size: 0.9rem;"><strong>@ramocito123</strong> respondió a tu pregunta sobre la carga académica en la UFRO.</p>
+                                <small class="text-muted">Hace 10 minutos</small>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                
+                <li><hr class="dropdown-divider"></li>
+
+                <!-- Notificación 2: Likes -->
+                <li>
+                    <a class="dropdown-item py-3 text-wrap" href="#">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="bg-light rounded-circle p-2 fs-5 text-danger">❤️</div>
+                            <div>
+                                <p class="mb-1" style="font-size: 0.9rem;">A <strong>12 personas</strong> les gustó tu recomendación de pensionados en Temuco.</p>
+                                <small class="text-muted">Hace 2 horas</small>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                
+                <li><hr class="dropdown-divider"></li>
+                
+                <li><a class="dropdown-item text-center text-primary fw-semibold py-2" href="#">Ver todas las notificaciones</a></li>
+            </ul>
+        </div>
         <!-- Avatar -->
         <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">

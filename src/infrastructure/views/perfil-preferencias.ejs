@@ -10,13 +10,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Port+Lligat+Slab&display=swap" rel="stylesheet">
     
     <style>
-        /* Únicamente la fuente tipográfica requerida */
         body {
+            background-color: #94a3b8;
+            min-height: 100vh;
             font-family: 'Port Lligat Slab', serif;
+        }
+        .sidebar {
+            background-color: #cbd5e1;
+            min-height: 100vh;
+            border-right: 1px solid #94a3b8;
+        }
+        .nav-link {
+            color: #334155;
+            font-weight: 500;
+        }
+        .nav-link.active {
+            background-color: #94a3b8;
+            color: #0f172a;
+            border-radius: 0.375rem;
+        }
+        .content-area {
+            color: #f8fafc;
+        }
+        @media (max-width: 767.98px) {
+            body.vh-100 {
+                height: auto !important;
+            }
+            body.overflow-hidden {
+                overflow: auto !important;
+            }
+            .container-fluid.h-100,
+            .row.h-100,
+            .content-area.h-100 {
+                height: auto !important;
+            }
+            .sidebar {
+                min-height: auto;
+            }
+            .content-area {
+                overflow: visible !important;
+                padding: 1rem !important;
+            }
         }
     </style>
 </head>
-<body class="vh-100 overflow-hidden m-0 text-white" style="background-color: #8E98A2;">
+<body class="vh-100 overflow-hidden m-0 text-white">
 
     <!-- Contenedor para mensajes de éxito flotantes -->
     <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
@@ -25,7 +63,7 @@
         <div class="row g-0 h-100">
             
             <!-- Sidebar / Barra Lateral utilizando colores y bordes de Bootstrap -->
-            <div class="col-md-3 col-lg-2 p-3 border-end border-white border-opacity-25" style="background-color: #C2CFDC;">
+            <div class="col-md-3 col-lg-2 sidebar p-3">
                 <div class="text-muted small mb-3 px-2">Cuenta</div>
                 <div class="d-flex align-items-center px-2 mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle text-secondary me-2" viewBox="0 0 16 16">
@@ -35,15 +73,15 @@
                     <span class="fw-bold text-dark">Don quijote</span>
                 </div>
                 <nav class="nav flex-column">
-                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="/perfil">Cuenta</a>
-                    <a class="nav-link active fw-bold rounded px-3 py-2 mb-1 bg-black bg-opacity-10 text-dark" href="/perfil/preferencias">Preferencias</a>
-                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">Notificaciones</a>
+                    <a class="nav-link rounded px-3 py-2 mb-1" href="/perfil">Cuenta</a>
+                    <a class="nav-link active rounded px-3 py-2 mb-1" href="/perfil/preferencias">Preferencias</a>
+                    <a class="nav-link rounded px-3 py-2 mb-1" href="/perfil/notificaciones">Notificaciones</a>
                     <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">General</a>
                 </nav>
             </div>
 
             <!-- Área Principal utilizando utilidades de Bootstrap -->
-            <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100">
+            <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
                 <div class="container-fluid">
                     <h1 class="fs-3 fw-bold mb-0">Preferencias</h1>
                     <p class="fs-6 text-light opacity-75 mb-4">Elige como quieres ver [miFuturo] y establece sus preferencias</p>
@@ -58,10 +96,10 @@
                             <small class="text-light opacity-75">Elige un tema para [miFuturo] en este dispositivo</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <select class="form-select bg-dark bg-opacity-25 text-white border-white border-opacity-50 d-inline-block w-auto" onchange="notificarCambio('Temas')">
-                                <option class="bg-secondary text-white" value="oscuro" selected>[ Oscuro ]</option>
-                                <option class="bg-secondary text-white" value="claro">[ Claro ]</option>
-                                <option class="bg-secondary text-white" value="sistema">[ Predeterminado del sistema ]</option>
+                            <select class="btn btn-outline-light btn-sm d-inline-block w-auto" onchange="notificarCambio('Temas')">
+                                <option value="oscuro" selected>Oscuro</option>
+                                <option value="claro">Claro</option>
+                                <option value="sistema">Predeterminado del sistema</option>
                             </select>
                         </div>
                     </div>
@@ -73,27 +111,26 @@
                             <small class="text-light opacity-75">Aumenta el contraste para mejorar la visibilidad</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <select class="form-select bg-dark bg-opacity-25 text-white border-white border-opacity-50 d-inline-block w-auto" onchange="notificarCambio('Contraste alto')">
-                                <option class="bg-secondary text-white" value="activado" selected>[ Activado ]</option>
-                                <option class="bg-secondary text-white" value="desactivado">[ Desactivado ]</option>
+                            <select class="btn btn-outline-light btn-sm d-inline-block w-auto" onchange="notificarCambio('Contraste alto')">
+                                <option value="activado" selected>Activado</option>
+                                <option value="desactivado">Desactivado</option>
                             </select>
                         </div>
                     </div>
 
-                    <h5 class="fw-bold fs-6 mt-4">Idioma y hora</h5>
+                    <h5 class="fw-bold fs-6 mt-4">Idioma </h5>
                     <hr class="border-white border-opacity-50 my-3">
 
                     <!-- Idioma -->
                     <div class="row align-items-center mb-3">
                         <div class="col-md-8">
                             <div class="fw-bold">Idioma</div>
-                            <small class="text-light opacity-75">Elige el idioma en el que quieres usar [miFuturo]</small>
+                            <small class="text-light opacity-75">Elige el idioma en el que quieres usar </small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <select class="form-select bg-dark bg-opacity-25 text-white border-white border-opacity-50 d-inline-block w-auto" onchange="notificarCambio('Idioma')">
-                                <option class="bg-secondary text-white" value="es" selected>[ Español ]</option>
-                                <option class="bg-secondary text-white" value="en">[ English ]</option>
-                                <option class="bg-secondary text-white" value="pt">[ Português ]</option>
+                            <select class="btn btn-outline-light btn-sm d-inline-block w-auto" onchange="notificarCambio('Idioma')">
+                                <option value="es" selected>Español</option>
+                                <option value="en">English</option>
                             </select>
                         </div>
                     </div>

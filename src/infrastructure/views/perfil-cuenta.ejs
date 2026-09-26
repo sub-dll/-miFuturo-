@@ -10,10 +10,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Port+Lligat+Slab&display=swap" rel="stylesheet">
     
     <style>
-        /* Únicamente la fuente general y el color de fondo exacto solicitado */
         body {
+            background-color: #94a3b8;
+            min-height: 100vh;
             font-family: 'Port Lligat Slab', serif;
-            background-color: #8E98A2;
+        }
+        .sidebar {
+            background-color: #cbd5e1;
+            min-height: 100vh;
+            border-right: 1px solid #94a3b8;
+        }
+        .nav-link {
+            color: #334155;
+            font-weight: 500;
+        }
+        .nav-link.active {
+            background-color: #94a3b8;
+            color: #0f172a;
+            border-radius: 0.375rem;
+        }
+        .content-area {
+            color: #f8fafc;
+        }
+        @media (max-width: 767.98px) {
+            body.vh-100 {
+                height: auto !important;
+            }
+            body.overflow-hidden {
+                overflow: auto !important;
+            }
+            .container-fluid.h-100,
+            .row.h-100,
+            .content-area.h-100 {
+                height: auto !important;
+            }
+            .sidebar {
+                min-height: auto;
+            }
+            .content-area {
+                overflow: visible !important;
+                padding: 1rem !important;
+            }
         }
     </style>
 </head>
@@ -26,7 +63,7 @@
         <div class="row g-0 h-100">
             
             <!-- Sidebar / Barra Lateral con clases de Bootstrap (#C2CFDC) -->
-            <div class="col-md-3 col-lg-2 p-3 border-end border-white border-opacity-25" style="background-color: #C2CFDC;">
+            <div class="col-md-3 col-lg-2 sidebar p-3">
                 <div class="text-muted small mb-3 px-2">Cuenta</div>
                 <div class="d-flex align-items-center px-2 mb-4">
                     <!-- Icono de usuario de Bootstrap Icons -->
@@ -37,15 +74,15 @@
                     <span class="fw-bold text-dark">Don quijote</span>
                 </div>
                 <nav class="nav flex-column">
-                    <a class="nav-link active fw-bold rounded px-3 py-2 mb-1 bg-black bg-opacity-10 text-dark" href="#">Cuenta</a>
-                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">Preferencias</a>
-                    <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">Notificaciones</a>
+                    <a class="nav-link active rounded px-3 py-2 mb-1" href="/perfil">Cuenta</a>
+                    <a class="nav-link rounded px-3 py-2 mb-1" href="/perfil/preferencias">Preferencias</a>
+                    <a class="nav-link rounded px-3 py-2 mb-1" href="/perfil/notificaciones">Notificaciones</a>
                     <a class="nav-link fw-bold rounded px-3 py-2 mb-1 text-secondary" href="#">General</a>
                 </nav>
             </div>
 
             <!-- Área Principal con scroll y el fondo #8E98A2 -->
-            <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100" style="background-color: #8E98A2;">
+            <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
                 <div class="container-fluid">
                     <h1 class="fs-3 fw-bold mb-0">Cuenta</h1>
                     <p class="fs-6 text-light opacity-75 mb-4">Cambia configuracion de la cuenta de usuario</p>
@@ -60,7 +97,7 @@
                             <small class="text-light opacity-75">En este correo llegaran notificaciones de mensajes</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <button class="btn btn-link text-white text-decoration-none p-0 fw-normal" onclick="abrirModalModificacion('Correo Electrónico')">[ Modificar ]</button>
+                            <button class="btn btn-outline-light btn-sm" onclick="abrirModalModificacion('Correo Electrónico')">Modificar</button>
                         </div>
                     </div>
 
@@ -71,7 +108,7 @@
                             <small class="text-light opacity-75">Necesario para verificar la cuenta</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <button class="btn btn-link text-white text-decoration-none p-0 fw-normal" onclick="abrirModalModificacion('Número de Teléfono')">[ Modificar ]</button>
+                            <button class="btn btn-outline-light btn-sm" onclick="abrirModalModificacion('Número de Teléfono')">Modificar</button>
                         </div>
                     </div>
 
@@ -85,7 +122,7 @@
                             <small class="text-light opacity-75">Este es el nombre que se visualizara en los foros</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <button class="btn btn-link text-white text-decoration-none p-0 fw-normal" onclick="abrirModalModificacion('Nombre de Usuario')">[ Modificar ]</button>
+                            <button class="btn btn-outline-light btn-sm" onclick="abrirModalModificacion('Nombre de Usuario')">Modificar</button>
                         </div>
                     </div>
 
@@ -96,7 +133,7 @@
                             <small class="text-light opacity-75">Restablece la contraseña si no te acuerdas de ella</small>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <button class="btn btn-link text-white text-decoration-none p-0 fw-normal" onclick="abrirModalModificacion('Contraseña')">[ Modificar ]</button>
+                            <button class="btn btn-outline-light btn-sm" onclick="abrirModalModificacion('Contraseña')">Modificar</button>
                         </div>
                     </div>
 

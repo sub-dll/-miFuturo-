@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router(); // ¡Ya no necesitamos requerir 'path'!
 
-// Ruta para el Home (busca index.ejs)
+// Mostrar el perfil existente al abrir la aplicación.
 router.get('/', (req, res) => {
-    res.render('index');
+    res.render('perfil-cuenta');
 });
 
 // Ruta para el Login (busca login.ejs)
@@ -28,6 +28,10 @@ router.get('/perfil', (req, res) => {
 // NUEVA RUTA: Para el Perfil de preferencias (busca perfil-preferencias.ejs)
 router.get('/perfil/preferencias', (req, res) => {
     res.render('perfil-preferencias');
+});
+
+router.get('/perfil/notificaciones', (req, res) => {
+    res.render('perfil-notificaciones', { user: null });
 });
 
 module.exports = router;

@@ -90,10 +90,111 @@
 
                 </form>
 
-                <a href="/foros/nuevo-hilo" class="btn btn-color-base">
+                <button
+                    type="button"
+                    class="btn btn-color-base"
+                    data-bs-toggle="modal"
+                    data-bs-target="#nuevoHiloModal"
+                >
                     + Nuevo hilo
-                </a>
+                </button>
+                <!-- Modal Nuevo Hilo -->
+                <div
+                    class="modal fade"
+                    id="nuevoHiloModal"
+                    tabindex="-1"
+                    aria-labelledby="nuevoHiloModalLabel"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog modal-dialog-centered">
 
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+
+                                <h5 class="modal-title" id="nuevoHiloModalLabel">
+                                    Crear nuevo hilo
+                                </h5>
+
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Cerrar"
+                                ></button>
+
+                            </div>
+
+                            <form
+                                action="/foros/nuevo-hilo"
+                                method="POST"
+                            >
+
+                                <div class="modal-body">
+
+                                    <div class="mb-3">
+
+                                        <label for="titulo" class="form-label">
+                                            Título
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="titulo"
+                                            name="titulo"
+                                            placeholder="Escribe el título del hilo..."
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="mb-3">
+
+                                        <label for="contenido" class="form-label">
+                                            Contenido
+                                        </label>
+
+                                        <textarea
+                                            class="form-control"
+                                            id="contenido"
+                                            name="contenido"
+                                            rows="6"
+                                            placeholder="Escribe aquí tu pregunta o comentario..."
+                                            required
+                                        ></textarea>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="modal-footer">
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Cancelar
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-color-base"
+                                    >
+                                        Publicar hilo
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
 
@@ -160,7 +261,7 @@
             <!-- Sin hilos -->
             <% if (hilos.length === 0) { %>
 
-                <div class="alert alert-info mt-3">
+                <div class="alert alert-warning mt-3">
                     No hay hilos disponibles en este foro.
                 </div>
             <% } %>

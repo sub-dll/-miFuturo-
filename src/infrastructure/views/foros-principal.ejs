@@ -16,6 +16,14 @@
 
 <body>
 
+<style>
+    .btn-color-base {
+        background-color: #8C9FBA;
+        border-color: #8C9FBA;
+        color: white;
+    }
+    </style>
+
     <!-- 1. Inyectar Navbar -->
     <%- include('partials/navbar') %>
     
@@ -51,7 +59,7 @@
 
                                 <a
                                     href="/foros/universidad/<%= universidad.id_universidad %>"
-                                    class="btn btn-primary"
+                                    class="btn btn-color-base"
                                 >
                                     Ver carreras
                                 </a>

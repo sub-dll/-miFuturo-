@@ -12,6 +12,14 @@
 
 <body>
 
+<style>
+    .btn-color-base {
+        background-color: #8C9FBA;
+        border-color: #8C9FBA;
+        color: white;
+    }
+    </style>
+
     <!-- 1. Inyectar Navbar -->
     <%- include('partials/navbar') %>
     
@@ -53,7 +61,7 @@
                             value="<%= buscar || '' %>"
                         >
 
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-color-base">
                             Buscar
                         </button>
 
@@ -61,7 +69,7 @@
 
                 </form>
 
-                <a href="/foros/nuevo-hilo" class="btn btn-success">
+                <a href="/foros/nuevo-hilo" class="btn btn-color-base">
                     + Nuevo hilo
                 </a>
 

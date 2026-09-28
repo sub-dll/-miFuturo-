@@ -18,6 +18,14 @@
     <!-- 1. Inyectar Navbar -->
     <%- include('partials/navbar') %>
     
+    <style>
+    .btn-color-base {
+        background-color: #8C9FBA;
+        border-color: #8C9FBA;
+        color: white;
+    }
+    </style>
+
     <main>
         <div class="container mt-5">
 
@@ -53,7 +61,7 @@
 
                     <button
                         type="submit"
-                        class="btn btn-primary"
+                        class="btn btn-color-base"
                     >
                         Buscar
                     </button>
@@ -101,7 +109,7 @@
 
                             <a
                                 href="/foros/carrera/<%= carrera.id_carrera_base %>"
-                                class="btn btn-outline-primary"
+                                class="btn btn-outline-color-base"
                             >
                                 Ver foro
 

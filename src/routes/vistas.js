@@ -16,14 +16,49 @@ router.get('/comparador', (req, res) => {
     res.render('comparador');
 });
 
+
+
+// Rutas de >EJEMPLO< para testear sin conectar la base de datos
+
 // Ruta para el Foro (busca foros-principal.ejs)
-router.get('/foros', (req, res) => {
-    res.render('foros-principal', {
-        universidades: []
+router.get("/foros", (req, res) => {
+
+    const universidades = [
+        {
+            id_universidad: 1,
+            nombre: "Universidad de Chile",
+            cantidadCarreras: 12,
+        },
+        {
+            id_universidad: 2,
+            nombre: "Pontificia Universidad Católica de Chile",
+            cantidadCarreras: 10,
+        },
+        {
+            id_universidad: 3,
+            nombre: "Universidad de Concepción",
+            cantidadCarreras: 8,
+        }
+    ];
+
+    res.render("foros-principal", {
+        universidades: universidades
     });
 });
 
-// Rutas de ejemplo para testear sin conectar la base de datos
+router.get("/foros/universidad/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    res.send(`
+        <h1>Prueba del foro de universidad</h1>
+        <p>ID recibido: ${id}</p>
+        <a href="/foros">Volver a foros</a>
+    `);
+});
+
+
+// Ruta para el Foro de una Universidad (busca foros-universidad.ejs)
 
 router.get("/foros/universidad", (req, res) => {
     res.render("foros-universidad", {
@@ -35,6 +70,9 @@ router.get("/foros/universidad", (req, res) => {
         buscar: ""
     });
 });
+
+// Ruta para el Foro de Temas (busca foros-temas.ejs)
+
 router.get("/foros/temas", (req, res) => {
     res.render("foros-temas", {
         tituloForo: "Ingeniería Civil Informática",
@@ -42,6 +80,9 @@ router.get("/foros/temas", (req, res) => {
         buscar: ""
     });
 });
+
+// Ruta para el Foro de un Hilo (busca foros-hilo.ejs)
+
 router.get("/foros/hilo", (req, res) => {
     res.render("foros-hilo", {
         hilo: {

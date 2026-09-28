@@ -106,38 +106,57 @@
 
             <% } else { %>
 
-                <div class="list-group">
+                <% if (carreras.length > 0) { %>
 
-                    <% carreras.forEach(carrera => { %>
+                    <div class="list-group">
 
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <% carreras.forEach(carrera => { %>
 
-                            <div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
 
-                                <h5 class="mb-1">
-                                    <%= carrera.nombre_carrera %>
-                                </h5>
+                                <div>
 
-                                <% if (carrera.descripcion_general) { %>
+                                    <h5 class="mb-1">
+                                        <%= carrera.nombre_carrera %>
+                                    </h5>
 
-                                    <p class="mb-0 text-muted">
-                                        <%= carrera.descripcion_general %>
-                                    </p>
+                                    <% if (carrera.descripcion_general) { %>
 
-                                <% } %>
+                                        <p class="mb-0 text-muted">
+                                            <%= carrera.descripcion_general %>
+                                        </p>
+
+                                    <% } %>
+
+                                </div>
+
+                                <a
+                                    href="/foros/carrera/<%= carrera.id_carrera_base %>"
+                                    class="btn btn-outline-color-base"
+                                >
+                                    Ver foro
+                                </a>
 
                             </div>
 
-                            <a
-                                href="/foros/carrera/<%= carrera.id_carrera_base %>"
-                                class="btn btn-outline-color-base"
-                            >
-                                Ver foro
+                        <% }) %>
 
-                            </a>
-                        </div>
-                    <% }) %>
-                </div>
+                    </div>
+
+                <% } else if (buscar) { %>
+
+                    <div class="alert alert-warning mt-3">
+                        No se encontraron carreras que coincidan con
+                        "<strong><%= buscar %></strong>".
+                    </div>
+
+                <% } else { %>
+
+                    <div class="alert alert-info mt-3">
+                        Esta universidad no tiene carreras disponibles.
+                    </div>
+
+                <% } %>
             <% } %>
                 </div>
             </div>

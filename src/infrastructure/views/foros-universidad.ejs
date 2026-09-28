@@ -24,9 +24,30 @@
         border-color: #8C9FBA;
         color: white;
     }
+
+    .foro-fondo {
+        background-color: #D3DCE5;
+        border-radius: 25px;
+        padding: 25px;
+    }
+
+    .foro-contenido {
+        background-color: white;
+        border-radius: 18px;
+        padding: 30px;
+    }
+
     </style>
 
     <main>
+        <div class="container mt-5 mb-5">
+
+            <!-- Cuadro exterior -->
+            <div class="foro-fondo">
+
+                <!-- Cuadro interior -->
+                <div class="foro-contenido">
+
         <div class="container mt-5">
 
             <a href="/foros" class="btn btn-outline-secondary mb-4">
@@ -118,7 +139,10 @@
                     <% }) %>
                 </div>
             <% } %>
+                </div>
+            </div>
         </div>
+
     </main>
 
     <!-- Inyectar Footer -->

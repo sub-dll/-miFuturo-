@@ -22,13 +22,33 @@
         border-color: #8C9FBA;
         color: white;
     }
+        
+    .foro-fondo {
+        background-color: #D3DCE5;
+        border-radius: 25px;
+        padding: 25px;
+    }
+
+    .foro-contenido {
+        background-color: white;
+        border-radius: 18px;
+        padding: 30px;
+    }
+
     </style>
 
     <!-- 1. Inyectar Navbar -->
     <%- include('partials/navbar') %>
     
     <main>
-        <div class="container mt-5">
+        <div class="container mt-5 mb-5">
+
+            <!-- Cuadro exterior -->
+            <div class="foro-fondo">
+
+                <!-- Cuadro interior -->
+                <div class="foro-contenido">
+
 
             <h1 class="mb-2">Foros universitarios</h1>
 
@@ -74,6 +94,8 @@
 
             </div>
 
+                </div>
+            </div>
         </div>
     </main>
 

@@ -15,99 +15,106 @@
 </head>
 
 <body>
-
-<div class="container mt-5">
-
-    <a href="/foros" class="btn btn-outline-secondary mb-4">
-        ← Volver a universidades
-    </a>
-
-    <h1>
-        Foros de <%= universidad.nombre %>
-    </h1>
-
-    <p class="text-muted">
-        Busca una carrera para acceder a su foro.
-    </p>
-
+    <!-- 1. Inyectar Navbar -->
+    <%- include('partials/navbar') %>
     
-    <!-- Buscador -->
+    <main>
+        <div class="container mt-5">
 
-    <form
-        action="/foros/universidad/<%= universidad.id_universidad %>"
-        method="GET"
-        class="mb-4"
-    >
+            <a href="/foros" class="btn btn-outline-secondary mb-4">
+                ← Volver a universidades
+            </a>
 
-        <div class="input-group">
-            <input
-                type="text"
-                name="buscar"
-                class="form-control"
-                placeholder="Buscar carrera..."
-                value="<%= buscar || '' %>"
+            <h1>
+                Foros de <%= universidad.nombre %>
+            </h1>
+
+            <p class="text-muted">
+                Busca una carrera para acceder a su foro.
+            </p>
+
+            
+            <!-- Buscador -->
+
+            <form
+                action="/foros/universidad/<%= universidad.id_universidad %>"
+                method="GET"
+                class="mb-4"
             >
 
-            <button
-                type="submit"
-                class="btn btn-primary"
-            >
-                Buscar
-            </button>
-
-        </div>
-
-    </form>
-
-
-    <!-- Resultados -->
-
-    <h3 class="mb-3">
-        Carreras
-    </h3>
-
-    <% if (carreras.length === 0) { %>
-
-        <div class="alert alert-warning">
-            No se encontraron carreras.
-        </div>
-
-    <% } else { %>
-
-        <div class="list-group">
-
-            <% carreras.forEach(carrera => { %>
-
-                <div class="list-group-item d-flex justify-content-between align-items-center">
-
-                    <div>
-
-                        <h5 class="mb-1">
-                            <%= carrera.nombre_carrera %>
-                        </h5>
-
-                        <% if (carrera.descripcion_general) { %>
-
-                            <p class="mb-0 text-muted">
-                                <%= carrera.descripcion_general %>
-                            </p>
-
-                        <% } %>
-
-                    </div>
-
-                    <a
-                        href="/foros/carrera/<%= carrera.id_carrera_base %>"
-                        class="btn btn-outline-primary"
+                <div class="input-group">
+                    <input
+                        type="text"
+                        name="buscar"
+                        class="form-control"
+                        placeholder="Buscar carrera..."
+                        value="<%= buscar || '' %>"
                     >
-                        Ver foro
 
-                    </a>
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Buscar
+                    </button>
+
                 </div>
-            <% }) %>
-        </div>
-    <% } %>
-</div>
 
+            </form>
+
+
+            <!-- Resultados -->
+
+            <h3 class="mb-3">
+                Carreras
+            </h3>
+
+            <% if (carreras.length === 0) { %>
+
+                <div class="alert alert-warning">
+                    No se encontraron carreras.
+                </div>
+
+            <% } else { %>
+
+                <div class="list-group">
+
+                    <% carreras.forEach(carrera => { %>
+
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <h5 class="mb-1">
+                                    <%= carrera.nombre_carrera %>
+                                </h5>
+
+                                <% if (carrera.descripcion_general) { %>
+
+                                    <p class="mb-0 text-muted">
+                                        <%= carrera.descripcion_general %>
+                                    </p>
+
+                                <% } %>
+
+                            </div>
+
+                            <a
+                                href="/foros/carrera/<%= carrera.id_carrera_base %>"
+                                class="btn btn-outline-primary"
+                            >
+                                Ver foro
+
+                            </a>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <!-- Inyectar Footer -->
+    <%- include('partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

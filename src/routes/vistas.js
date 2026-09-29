@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router(); // ¡Ya no necesitamos requerir 'path'!
+const router = express.Router(); 
 
 // Ruta para el Home (busca index.ejs)
 router.get('/', (req, res) => {

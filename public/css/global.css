@@ -1,0 +1,23 @@
+/* 1. Efecto del Botón Ver Más */
+.btn-ver-mas {
+    background-color: #8C9FBA;
+    color: white !important;
+    border: 2px solid #8C9FBA;
+    transition: all 0.3s ease;
+}
+
+/* 2. Efecto de la Tarjeta al pasar el mouse (Elevación) */
+.hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px); /* Eleva la tarjeta 5 pixeles hacia arriba */
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; /* Hace la sombra más pronunciada */
+}
+
+/* 3. ¡Toque Pro! Hace que el botón también cambie de color al pasar el mouse por CUALQUIER parte de la tarjeta */
+.hover-card:hover .btn-ver-mas {
+    background-color: transparent;
+    color: #8C9FBA !important;
+}

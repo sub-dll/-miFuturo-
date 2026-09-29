@@ -1,60 +1,47 @@
 const express = require('express');
-const router = express.Router(); // ¡Ya no necesitamos requerir 'path'!
+const path = require('path');   // tenemos que quitar esto despues ajustandotodos los EJS que tienen las lineas res.sendFile(path.join(...)) que era para los antiguo .html yr eplzararlo en todos los archivos EJS llamando a res.render(), la librería path
+const router = express.Router();
 
-// Ruta para el Home (busca index.ejs)
-router.get('/', (req, res) => {
-    res.render('index');
-});
-
-// Ruta para el Login (busca login.ejs)
+// ==========================================
+// 1. RUTAS DE AUTENTICACIÓN (Usan EJS)
+// ==========================================
 router.get('/login', (req, res) => {
-    res.render('login');
+  res.render('login');
 });
 
-// Ruta para el Comparador (busca comparador.ejs)
-router.get('/comparador', (req, res) => {
-    res.render('comparador');
+router.get('/registro', (req, res) => {
+  res.render('registro');
 });
 
-
-
-// Rutas de >EJEMPLO< para testear sin conectar la base de datos
-
-// Ruta para el Foro (busca foros-principal.ejs)
-router.get("/foros", (req, res) => {
-
-    const universidades = [
-        {
-            id_universidad: 1,
-            nombre: "Universidad de Chile",
-            cantidadCarreras: 12,
-        },
-        {
-            id_universidad: 2,
-            nombre: "Pontificia Universidad Católica de Chile",
-            cantidadCarreras: 10,
-        },
-        {
-            id_universidad: 3,
-            nombre: "Universidad de Concepción",
-            cantidadCarreras: 8,
-        }
-    ];
-
-    res.render("foros-principal", {
-        universidades: universidades
-    });
+router.get('/recuperar', (req, res) => {
+  res.render('recuperar');
 });
 
-router.get("/foros/universidad/:id", (req, res) => {
+// ==========================================
+// 2. OTRAS VISTAS DEL PROYECTO
+// ==========================================
 
-    const id = req.params.id;
+// Redirige la raíz '/' automáticamente al Home
+router.get('/', (req, res) => {
+  res.render('index');
+});
 
-    res.send(`
-        <h1>Prueba del foro de universidad</h1>
-        <p>ID recibido: ${id}</p>
-        <a href="/foros">Volver a foros</a>
-    `);
+// NUEVA RUTA: Para el Perfil de cuenta (busca perfil-cuenta.ejs)
+router.get('/perfil', (req, res) => {
+    res.render('vista-panel/perfil-cuenta');
+});
+
+router.get('/perfil/general', (req, res) => {
+    res.render('vista-panel/perfil-general');
+});
+
+// NUEVA RUTA: Para el Perfil de preferencias (busca perfil-preferencias.ejs)
+router.get('/perfil/preferencias', (req, res) => {
+    res.render('vista-panel/perfil-preferencias');
+});
+
+router.get('/perfil/notificaciones', (req, res) => {
+    res.render('vista-panel/perfil-notificaciones', { user: null });
 });
 
 

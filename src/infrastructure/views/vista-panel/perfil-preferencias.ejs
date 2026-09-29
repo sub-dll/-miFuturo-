@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Preferencias</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Port Lligat Slab -->
+    <link href="https://fonts.googleapis.com/css2?family=Port+Lligat+Slab&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #94a3b8;
+            min-height: 100vh;
+            font-family: 'Port Lligat Slab', serif;
+        }
+        .sidebar {
+            background-color: #cbd5e1;
+            min-height: 100vh;
+            border-right: 1px solid #94a3b8;
+        }
+        .nav-link {
+            color: #334155;
+            font-weight: 500;
+        }
+        .nav-link.active {
+            background-color: #94a3b8;
+            color: #0f172a;
+            border-radius: 0.375rem;
+        }
+        .content-area {
+            color: #f8fafc;
+        }
+        @media (max-width: 767.98px) {
+            body.vh-100 {
+                height: auto !important;
+            }
+            body.overflow-hidden {
+                overflow: auto !important;
+            }
+            .container-fluid.h-100,
+            .row.h-100,
+            .content-area.h-100 {
+                height: auto !important;
+            }
+            .sidebar {
+                min-height: auto;
+            }
+            .content-area {
+                overflow: visible !important;
+                padding: 1rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="vh-100 overflow-hidden m-0 text-white">
+
+    <!-- Contenedor para mensajes de éxito flotantes -->
+    <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+
+    <div class="container-fluid p-0 h-100">
+        <div class="row g-0 h-100">
+            <%- include('../partials/navbar', { active: 'preferencias' }) %>
+
+            <!-- Área Principal utilizando utilidades de Bootstrap -->
+            <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
+                <div class="container-fluid">
+                    <h1 class="fs-3 fw-bold mb-0">Preferencias</h1>
+                    <p class="fs-6 text-light opacity-75 mb-4">Elige como quieres ver [miFuturo] y establece sus preferencias</p>
+
+                    <h5 class="fw-bold fs-6 mt-4">Apariencia</h5>
+                    <hr class="border-white border-opacity-50 my-3">
+
+                    <!-- Temas -->
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-8">
+                            <div class="fw-bold">Temas</div>
+                            <small class="text-light opacity-75">Elige un tema para [miFuturo] en este dispositivo</small>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <select class="btn btn-outline-light btn-sm d-inline-block w-auto" onchange="notificarCambio('Temas')">
+                                <option value="oscuro" selected>Oscuro</option>
+                                <option value="claro">Claro</option>
+                                <option value="sistema">Predeterminado del sistema</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Contraste alto -->
+                    <div class="row align-items-center mb-5">
+                        <div class="col-md-8">
+                            <div class="fw-bold">Contraste alto</div>
+                            <small class="text-light opacity-75">Aumenta el contraste para mejorar la visibilidad</small>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <select class="btn btn-outline-light btn-sm d-inline-block w-auto" onchange="notificarCambio('Contraste alto')">
+                                <option value="activado" selected>Activado</option>
+                                <option value="desactivado">Desactivado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold fs-6 mt-4">Idioma </h5>
+                    <hr class="border-white border-opacity-50 my-3">
+
+                    <!-- Idioma -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-md-8">
+                            <div class="fw-bold">Idioma</div>
+                            <small class="text-light opacity-75">Elige el idioma en el que quieres usar </small>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <select class="btn btn-outline-light btn-sm d-inline-block w-auto" onchange="notificarCambio('Idioma')">
+                                <option value="es" selected>Español</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <%- include('../partials/footer') %>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Lógica JavaScript integrada para mostrar las alertas de éxito -->
+    <script>
+        function notificarCambio(opcionNombre) {
+            const alertContainer = document.getElementById('alert-container');
+            const alertId = 'alert-' + Date.now();
+            
+            const alertaHTML = `
+                <div id="${alertId}" class="alert alert-success alert-dismissible fade show shadow" role="alert">
+                    <strong>¡Éxito!</strong> Has actualizado tu preferencia de <strong>${opcionNombre}</strong> correctamente.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            alertContainer.innerHTML = alertaHTML;
+
+            // Ocultar la alerta automáticamente después de 4 segundos
+            setTimeout(() => {
+                const alertaEl = document.getElementById(alertId);
+                if (alertaEl) {
+                    const alertaBs = bootstrap.Alert.getOrCreateInstance(alertaEl);
+                    alertaBs.close();
+                }
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

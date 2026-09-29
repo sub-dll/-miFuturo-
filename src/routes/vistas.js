@@ -1,5 +1,5 @@
 const express = require('express');
-const path = require('path');
+const path = require('path');   // tenemos que quitar esto despues ajustandotodos los EJS que tienen las lineas res.sendFile(path.join(...)) que era para los antiguo .html yr eplzararlo en todos los archivos EJS llamando a res.render(), la librería path
 const router = express.Router();
 
 // ==========================================
@@ -21,9 +21,9 @@ router.get('/recuperar', (req, res) => {
 // 2. OTRAS VISTAS DEL PROYECTO
 // ==========================================
 
-// Redirige la raíz '/' automáticamente al Login
+// Redirige la raíz '/' automáticamente al Home
 router.get('/', (req, res) => {
-  res.redirect('/login');
+  res.render('index');
 });
 
 router.get('/comparador', (req, res) => {

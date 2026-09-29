@@ -34,4 +34,22 @@ router.get('/foros', (req, res) => {
   res.sendFile(path.join(__dirname, '../../public/foro.html'));
 });
 
+// NUEVA RUTA: Para el Perfil de cuenta (busca perfil-cuenta.ejs)
+router.get('/perfil', (req, res) => {
+    res.render('vista-panel/perfil-cuenta');
+});
+
+router.get('/perfil/general', (req, res) => {
+    res.render('vista-panel/perfil-general');
+});
+
+// NUEVA RUTA: Para el Perfil de preferencias (busca perfil-preferencias.ejs)
+router.get('/perfil/preferencias', (req, res) => {
+    res.render('vista-panel/perfil-preferencias');
+});
+
+router.get('/perfil/notificaciones', (req, res) => {
+    res.render('vista-panel/perfil-notificaciones', { user: null });
+});
+
 module.exports = router;

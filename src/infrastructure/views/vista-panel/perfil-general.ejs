@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Perfil - General</title>
+	<!-- Bootstrap 5 CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Google Fonts: Port Lligat Slab -->
+	<link href="https://fonts.googleapis.com/css2?family=Port+Lligat+Slab&display=swap" rel="stylesheet">
+	<style>
+		/* Define el fondo, la altura mínima y la tipografía general de la página. */
+		body {
+			background-color: #94a3b8;
+			min-height: 100vh;
+			font-family: 'Port Lligat Slab', serif;
+		}
+		/* Da color y altura a la barra lateral, con un borde para separarla. */
+		.sidebar {
+			background-color: #cbd5e1;
+			min-height: 100vh;
+			border-right: 1px solid #94a3b8;
+		}
+		/* Estilo base de los enlaces de navegación. */
+		.nav-link {
+			color: #334155;
+			font-weight: 500;
+		}
+		/* Resalta la sección del perfil que está seleccionada. */
+		.nav-link.active {
+			background-color: #94a3b8;
+			color: #0f172a;
+			border-radius: 0.375rem;
+		}
+		/* Define el color del texto en el área principal. */
+		.content-area {
+			color: #f8fafc;
+		}
+		/* Ajusta alturas, desplazamiento y espaciado para pantallas pequeñas. */
+		@media (max-width: 767.98px) {
+			body.vh-100 {
+				height: auto !important;
+			}
+			body.overflow-hidden {
+				overflow: auto !important;
+			}
+			.container-fluid.h-100,
+			.row.h-100,
+			.content-area.h-100 {
+				height: auto !important;
+			}
+			.sidebar {
+				min-height: auto;
+			}
+			.content-area {
+				overflow: visible !important;
+				padding: 1rem !important;
+			}
+		}
+	</style>
+</head>
+<body class="vh-100 overflow-hidden m-0 text-white">
+	<!-- Contenedor para mensajes de éxito -->
+	<div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;" aria-live="polite"></div>
+
+	<div class="container-fluid p-0 h-100">
+		<div class="row g-0 h-100">
+			<%- include('../partials/navbar', { active: 'general' }) %>
+
+			<!-- Área de contenido principal -->
+			<main class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
+				<div class="container-fluid">
+					<h1 class="fs-3 fw-bold mb-0">General</h1>
+					<p class="fs-6 text-light opacity-75 mb-4">Completa la información que quieres compartir en tu perfil</p>
+
+					<h2 class="fw-bold fs-6 mt-4">Sobre mí</h2>
+					<hr class="border-white border-opacity-50 my-3">
+
+					<!-- Formulario de biografía o descripción corta -->
+					<form id="form-biografia">
+						<div class="row mb-3">
+							<div class="col-md-8">
+								<label for="biografia" class="fw-bold mb-1">Biografía o descripción corta</label>
+								<div class="small text-light opacity-75 mb-2">Cuéntanos brevemente sobre ti, tus estudios o la carrera que te interesa.</div>
+								<!-- Campo de texto con límite de 280 caracteres -->
+								<textarea class="form-control" id="biografia" name="biografia" rows="5" maxlength="280" placeholder="Por ejemplo: Estoy estudiando... y me interesa la carrera de..." aria-describedby="biografia-ayuda"></textarea>
+								<div id="biografia-ayuda" class="form-text text-light opacity-75 text-end"><span id="contador">0</span>/280</div>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-outline-light btn-sm">Guardar descripción</button>
+					</form>
+				</div>
+				<%- include('../partials/footer') %>
+			</main>
+		</div>
+	</div>
+
+	<!-- Lógica para cargar, contar y guardar la biografía -->
+	<script>
+		const biografia = document.getElementById('biografia');
+		const contador = document.getElementById('contador');
+		const biografiaGuardada = localStorage.getItem('perfil-biografia') || '';
+		biografia.value = biografiaGuardada;
+		contador.textContent = biografia.value.length;
+
+		biografia.addEventListener('input', () => {
+			contador.textContent = biografia.value.length;
+		});
+
+		document.getElementById('form-biografia').addEventListener('submit', (event) => {
+			event.preventDefault();
+			localStorage.setItem('perfil-biografia', biografia.value.trim());
+
+			const alertContainer = document.getElementById('alert-container');
+			alertContainer.innerHTML = '<div class="alert alert-success alert-dismissible fade show shadow" role="alert">Descripción guardada en este navegador.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>';
+            //desaparece despues de 4 segundos
+			setTimeout(() => {
+				const alerta = alertContainer.querySelector('.alert');
+				if (alerta) {
+					bootstrap.Alert.getOrCreateInstance(alerta).close();
+				}
+			}, 4000);
+		});
+	</script>
+</body>
+</html>

@@ -1,23 +1,84 @@
-<!-- Menú lateral compartido por las páginas del perfil -->
-<style>
-    .profile-navigation {
-        display: flex;
-        flex-direction: column;
-    }
-</style>
-<div class="col-md-3 col-lg-2 sidebar p-3">
-    <div class="text-muted small mb-3 px-2">Cuenta</div>
-    <div class="d-flex align-items-center px-2 mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle text-secondary" viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-        </svg>
-        <span class="fw-bold text-dark">Don quijote</span>
+<nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3" position-relative>
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    
+    <!-- Lado Izquierdo: Icono de menú o mensajes -->
+    <div>
+        <button class="btn btn-light rounded-circle p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chat-left-text" viewBox="0 0 16 16">
+                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+            </svg>
+        </button>
     </div>
-    <nav class="nav flex-column profile-navigation" aria-label="Secciones del perfil">
-        <a class="nav-link <%= active === 'cuenta' ? 'active' : '' %> rounded px-3 py-2 mb-1" href="/perfil">Cuenta</a>
-        <a class="nav-link <%= active === 'preferencias' ? 'active' : '' %> rounded px-3 py-2 mb-1" href="/perfil/preferencias">Preferencias</a>
-        <a class="nav-link <%= active === 'notificaciones' ? 'active' : '' %> rounded px-3 py-2 mb-1" href="/perfil/notificaciones">Notificaciones</a>
-        <a class="nav-link <%= active === 'general' ? 'active' : '' %> rounded px-3 py-2 mb-1" href="/perfil/general">General</a>
-    </nav>
-</div>
+
+    <!-- Centro: Logo -->
+    <a class="navbar-brand fs-3 fw-bold position-absolute start-50 translate-middle-x text-dark m-0" href="/">
+        [miFuturo]
+    </a>
+
+    <!-- Lado Derecho: Botones y Perfil -->
+    <div class="d-flex align-items-center gap-3">
+        <a href="/registro" class="btn btn-secondary btn-sm" style="background-color: #8C9FBA; border: none;">Register</a>
+        <a href="/login" class="btn btn-outline-dark btn-sm">Sign in</a>
+        
+        <!-- Campana -->
+        <!-- Contenedor Dropdown de Notificaciones -->
+        <div class="dropdown">
+            <!-- Botón de la campana (modificado para ser el gatillo del menú) -->
+            <button class="btn btn-light rounded-circle p-2 position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                </svg>
+                <!-- Puntito rojo indicador de notificación nueva (opcional, le da un buen toque) -->
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span class="visually-hidden">Nuevas notificaciones</span>
+                </span>
+            </button>
+
+            <!-- El Menú Desplegable (Rectángulo que cae) -->
+            <!-- dropdown-menu-end asegura que se alinee a la derecha y no se salga de la pantalla -->
+            <ul class="dropdown-menu dropdown-menu-end shadow rounded-3 border-0 mt-2" style="width: 320px; max-height: 400px; overflow-y: auto;">
+                <li><h6 class="dropdown-header fw-bold text-dark fs-6">Notificaciones</h6></li>
+                
+                <!-- Notificación 1: Respuesta en foro -->
+                <li>
+                    <a class="dropdown-item py-3 text-wrap" href="#">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="bg-light rounded-circle p-2 fs-5">💬</div>
+                            <div>
+                                <p class="mb-1" style="font-size: 0.9rem;"><strong>@ramocito123</strong> respondió a tu pregunta sobre la carga académica en la UFRO.</p>
+                                <small class="text-muted">Hace 10 minutos</small>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                
+                <li><hr class="dropdown-divider"></li>
+
+                <!-- Notificación 2: Likes -->
+                <li>
+                    <a class="dropdown-item py-3 text-wrap" href="#">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="bg-light rounded-circle p-2 fs-5 text-danger">❤️</div>
+                            <div>
+                                <p class="mb-1" style="font-size: 0.9rem;">A <strong>12 personas</strong> les gustó tu recomendación de pensionados en Temuco.</p>
+                                <small class="text-muted">Hace 2 horas</small>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                
+                <li><hr class="dropdown-divider"></li>
+                
+                <li><a class="dropdown-item text-center text-primary fw-semibold py-2" href="#">Ver todas las notificaciones</a></li>
+            </ul>
+        </div>
+        <!-- Avatar -->
+        <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+            </svg>
+        </div>
+    </div>
+  </div>
+</nav>

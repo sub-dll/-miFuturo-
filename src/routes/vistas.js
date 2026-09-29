@@ -1,24 +1,37 @@
 const express = require('express');
-const router = express.Router(); // ¡Ya no necesitamos requerir 'path'!
+const path = require('path');   // tenemos que quitar esto despues ajustandotodos los EJS que tienen las lineas res.sendFile(path.join(...)) que era para los antiguo .html yr eplzararlo en todos los archivos EJS llamando a res.render(), la librería path
+const router = express.Router();
 
-// Mostrar el perfil existente al abrir la aplicación.
-router.get('/', (req, res) => {
-    res.render('vista-panel/perfil-cuenta');
-});
-
-// Ruta para el Login (busca login.ejs)
+// ==========================================
+// 1. RUTAS DE AUTENTICACIÓN (Usan EJS)
+// ==========================================
 router.get('/login', (req, res) => {
-    res.render('login');
+  res.render('login');
 });
 
-// Ruta para el Comparador (busca comparador.ejs)
+router.get('/registro', (req, res) => {
+  res.render('registro');
+});
+
+router.get('/recuperar', (req, res) => {
+  res.render('recuperar');
+});
+
+// ==========================================
+// 2. OTRAS VISTAS DEL PROYECTO
+// ==========================================
+
+// Redirige la raíz '/' automáticamente al Home
+router.get('/', (req, res) => {
+  res.render('index');
+});
+
 router.get('/comparador', (req, res) => {
-    res.render('comparador');
+  res.sendFile(path.join(__dirname, '../../public/comparador.html'));
 });
 
-// Ruta para el Foro (busca foro.ejs)
 router.get('/foros', (req, res) => {
-    res.render('foro');
+  res.sendFile(path.join(__dirname, '../../public/foro.html'));
 });
 
 // NUEVA RUTA: Para el Perfil de cuenta (busca perfil-cuenta.ejs)

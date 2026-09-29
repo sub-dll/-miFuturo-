@@ -3,11 +3,8 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 1. Motor de plantillas EJS
+// Configuración del motor de plantillas EJS
 app.set('view engine', 'ejs');
-
-// 2. Como server.js está en 'src', subimos un nivel con '..' para entrar a 'src/infrastructure/views' 
-// o simplemente apuntamos directo si estás en la misma ruta:
 app.set('views', path.join(__dirname, 'infrastructure/views'));
 
 // 3. Como 'public' está en la raíz (fuera de 'src'), subimos un nivel con '..' para encontrarla:

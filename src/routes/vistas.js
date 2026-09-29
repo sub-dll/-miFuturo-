@@ -26,14 +26,6 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/comparador', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public/comparador.html'));
-});
-
-router.get('/foros', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public/foro.html'));
-});
-
 // NUEVA RUTA: Para el Perfil de cuenta (busca perfil-cuenta.ejs)
 router.get('/perfil', (req, res) => {
     res.render('vista-panel/perfil-cuenta');
@@ -51,5 +43,47 @@ router.get('/perfil/preferencias', (req, res) => {
 router.get('/perfil/notificaciones', (req, res) => {
     res.render('vista-panel/perfil-notificaciones', { user: null });
 });
+
+
+// Ruta para el Foro de una Universidad (busca foros-universidad.ejs)
+
+router.get("/foros/universidad", (req, res) => {
+    res.render("foros-universidad", {
+        universidad: {
+            id_universidad: 1,
+            nombre: "Universidad Católica de Temuco"
+        },
+        carreras: [],
+        buscar: ""
+    });
+});
+
+// Ruta para el Foro de Temas (busca foros-temas.ejs)
+
+router.get("/foros/temas", (req, res) => {
+    res.render("foros-temas", {
+        tituloForo: "Ingeniería Civil Informática",
+        hilos: [],
+        buscar: ""
+    });
+});
+
+// Ruta para el Foro de un Hilo (busca foros-hilo.ejs)
+
+router.get("/foros/hilo", (req, res) => {
+    res.render("foros-hilo", {
+        hilo: {
+            id_hilo: 1,
+            titulo: "Hilo de prueba",
+            usuario: "Usuario de prueba",
+            contenido: "Contenido de prueba",
+            likes: 5,
+            fecha: "28/09/2026"
+        },
+        respuestas: []
+    });
+});
+
+
 
 module.exports = router;

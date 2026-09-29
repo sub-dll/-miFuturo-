@@ -1,24 +1,37 @@
 const express = require('express');
-const router = express.Router(); 
+const path = require('path');   // tenemos que quitar esto despues ajustandotodos los EJS que tienen las lineas res.sendFile(path.join(...)) que era para los antiguo .html yr eplzararlo en todos los archivos EJS llamando a res.render(), la librería path
+const router = express.Router();
 
-// Ruta para el Home (busca index.ejs)
-router.get('/', (req, res) => {
-    res.render('index');
-});
-
-// Ruta para el Login (busca login.ejs)
+// ==========================================
+// 1. RUTAS DE AUTENTICACIÓN (Usan EJS)
+// ==========================================
 router.get('/login', (req, res) => {
-    res.render('login');
+  res.render('login');
 });
 
-// Ruta para el Comparador (busca comparador.ejs)
+router.get('/registro', (req, res) => {
+  res.render('registro');
+});
+
+router.get('/recuperar', (req, res) => {
+  res.render('recuperar');
+});
+
+// ==========================================
+// 2. OTRAS VISTAS DEL PROYECTO
+// ==========================================
+
+// Redirige la raíz '/' automáticamente al Login
+router.get('/', (req, res) => {
+  res.redirect('/login');
+});
+
 router.get('/comparador', (req, res) => {
-    res.render('comparador');
+  res.sendFile(path.join(__dirname, '../../public/comparador.html'));
 });
 
-// Ruta para el Foro (busca foro.ejs)
 router.get('/foros', (req, res) => {
-    res.render('foro');
+  res.sendFile(path.join(__dirname, '../../public/foro.html'));
 });
 
 module.exports = router;

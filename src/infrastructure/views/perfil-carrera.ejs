@@ -1,0 +1,135 @@
+<%
+/* Se espera recibir `carrera`:
+   carrera: {
+     universidad: { nombre, ciudad, logo_url },
+     carrera_nombre, descripcion,
+     requisitos: { corte, ranking, nem, lectora, m1, m2, ciencias_historia },
+     matriculas_vs_titulados: [{ anio, matriculados, titulados }, ...],
+     empleabilidad_texto, sueldo_1er_ano, sueldo_2do_ano,
+     sitio_web
+   }
+   Si la ruta no pasa datos se usa un ejemplo basado en el mockup. */
+const _carrera = typeof carrera !== 'undefined' ? carrera : {
+    universidad: { nombre: 'Universidad Catolica de Temuco', ciudad: 'Temuco', logo_url: '/img/logo-uct.png' },
+    carrera_nombre: 'Ingeniería Civil Informática',
+    descripcion: 'La Ingeniería Civil en Informática forma profesionales con habilidades de análisis, diseño, implementación, mejora y gestión en proyectos públicos y privados de desarrollo de software, infraestructura de servicios informáticos y sistemas inteligentes. Los egresados de la UCT quedan habilitados para trabajar tanto en empresas de desarrollo de productos y servicios como en investigación y ejercicio libre de la profesión.',
+    requisitos: { corte: 458, ranking: 40, nem: 10, lectora: 10, m1: 25, m2: 5, ciencias_historia: 10 },
+    matriculas_vs_titulados: [
+        { anio: 2021, matriculados: 78, titulados: 40 },
+        { anio: 2022, matriculados: 62, titulados: 38 },
+        { anio: 2023, matriculados: 45, titulados: 32 },
+        { anio: 2024, matriculados: 70, titulados: 44 },
+        { anio: 2025, matriculados: 66, titulados: 41 }
+    ],
+    empleabilidad_texto: 'El 89,7% de los egresados de Ingeniería Civil en Informática se encuentra trabajando durante su primer año tras titularse (promedio nacional, fuente: mifuturo.cl).',
+    sueldo_1er_ano: 850000,
+    sueldo_2do_ano: 1050000,
+    sitio_web: 'https://www.uct.cl'
+};
+
+const _maxBar = Math.max(..._carrera.matriculas_vs_titulados.flatMap(d => [d.matriculados, d.titulados]));
+%>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= _carrera.carrera_nombre %> - <%= _carrera.universidad.nombre %> - miFuturo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/global.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<%- include('partials/navbar') %>
+
+<main class="container py-4" style="max-width: 900px;">
+
+    <a href="/comparador" class="btn btn-light btn-sm rounded-pill mb-3">volver</a>
+
+    <!-- Encabezado universidad -->
+    <div class="card border-0 shadow-sm rounded-4 hover-card p-3 mb-3 d-flex flex-row align-items-center gap-3">
+        <% if (_carrera.universidad.logo_url) { %>
+            <img src="<%= _carrera.universidad.logo_url %>" alt="Logo <%= _carrera.universidad.nombre %>"
+                 style="width:56px;height:56px;border-radius:50%;object-fit:cover;">
+        <% } else { %>
+            <div style="width:56px;height:56px;border-radius:50%;background:#EAEEF5;"></div>
+        <% } %>
+        <div>
+            <h1 class="h4 fw-bold mb-0"><%= _carrera.universidad.nombre %></h1>
+            <span class="text-muted small"><%= _carrera.universidad.ciudad %></span>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <!-- Columna izquierda: carrera + descripcion + requisitos -->
+        <div class="col-lg-6 d-flex flex-column gap-3">
+            <div class="card border-0 shadow-sm rounded-4 hover-card p-3">
+                <h2 class="h5 fw-bold mb-2">[<%= _carrera.carrera_nombre %>]</h2>
+                <p class="small mb-0"><%= _carrera.descripcion %></p>
+            </div>
+            <div class="card border-0 shadow-sm rounded-4 hover-card p-3">
+                <h2 class="h5 fw-bold mb-2">[Requisitos]</h2>
+                <p class="small mb-1">Puntaje de corte: <%= _carrera.requisitos.corte %> puntos (promedio mínimo de postulación)</p>
+                <p class="small mb-1">Ranking mínimo: <%= _carrera.requisitos.ranking %>% de ponderación</p>
+                <p class="small mb-0">
+                    Otros requisitos: NEM <%= _carrera.requisitos.nem %>%,
+                    Competencia Lectora <%= _carrera.requisitos.lectora %>%,
+                    Matemática M1 <%= _carrera.requisitos.m1 %>%,
+                    Matemática M2 <%= _carrera.requisitos.m2 %>%,
+                    Historia/Ciencias <%= _carrera.requisitos.ciencias_historia %>%
+                </p>
+            </div>
+        </div>
+
+        <!-- Columna derecha: grafico + empleabilidad + sueldos -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 hover-card p-3 h-100">
+                <p class="small fw-semibold mb-2">Matriculados vs. Titulados por año</p>
+                <div class="d-flex align-items-center gap-3 small mb-2">
+                    <span><span style="display:inline-block;width:10px;height:10px;background:#dfe6ee;margin-right:4px;"></span>Matriculados</span>
+                    <span><span style="display:inline-block;width:10px;height:10px;background:#8C9FBA;margin-right:4px;"></span>Titulados</span>
+                </div>
+
+                <div class="d-flex align-items-end justify-content-between rounded-3 p-3 mb-3"
+                     style="background-color: #8C9FBA1A; height: 160px;">
+                    <% _carrera.matriculas_vs_titulados.forEach(function (d) { %>
+                        <div class="d-flex flex-column align-items-center justify-content-end h-100">
+                            <div class="d-flex align-items-end gap-1" style="height: 100%;">
+                                <div style="width:10px;background:#dfe6ee;border-radius:2px 2px 0 0;
+                                     height: <%= Math.round((d.matriculados / _maxBar) * 100) %>%;"></div>
+                                <div style="width:10px;background:#8C9FBA;border-radius:2px 2px 0 0;
+                                     height: <%= Math.round((d.titulados / _maxBar) * 100) %>%;"></div>
+                            </div>
+                            <span class="small mt-1"><%= d.anio %></span>
+                        </div>
+                    <% }); %>
+                </div>
+
+                <p class="small fw-semibold mb-1">Empleabilidad:</p>
+                <p class="small text-muted mb-3"><%= _carrera.empleabilidad_texto %></p>
+
+                <p class="small fw-semibold mb-1">Monto que se gana el primer y segundo año</p>
+                <p class="small text-muted mb-0">
+                    $<%= _carrera.sueldo_1er_ano.toLocaleString('es-CL') %> al primer año y
+                    $<%= _carrera.sueldo_2do_ano.toLocaleString('es-CL') %> al segundo año de titulación.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sitio web oficial -->
+    <div class="card border-0 shadow-sm rounded-4 hover-card text-center p-4 mb-3">
+        <p class="fw-bold mb-3">sitio web oficial</p>
+        <a href="<%= _carrera.sitio_web %>" target="_blank" rel="noopener" class="btn btn-light rounded-pill mx-auto" style="width: fit-content;">ir</a>
+    </div>
+
+    <!-- Foro -->
+    <div class="text-center">
+        <a href="/foros" class="btn btn-sm rounded-pill px-4 text-white" style="background-color: #2c3e50;">FORO</a>
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

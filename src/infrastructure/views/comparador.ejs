@@ -1,0 +1,125 @@
+<%
+/* Se espera recibir `programas`: arreglo de objetos con la forma
+   { universidad: { nombre, logo_url }, carrera_nombre, descripcion,
+     requisitos: { nem, ranking, m1, m2, lectora, ciencias_historia, corte },
+     ingresados_anual, egresados_anual }
+   Si la ruta no pasa datos, se usa un arreglo de ejemplo (datos_prueba.sql). */
+const _programas = typeof programas !== 'undefined' ? programas : [
+    {
+        universidad: { nombre: 'Universidad Católica de Temuco', logo_url: '/img/logo-uct.png' },
+        carrera_nombre: 'Ingeniería Civil Informática',
+        descripcion: 'La Ingeniería Civil en Informática forma profesionales con habilidades de análisis, diseño, implementación, mejora y gestión en proyectos públicos y privados de desarrollo de software.',
+        requisitos: { nem: 10, ranking: 40, m1: 25, m2: 5, lectora: 10, ciencias_historia: 10, corte: 458 },
+        ingresados_anual: 70,
+        egresados_anual: 45
+    },
+    {
+        universidad: { nombre: 'Universidad de la Frontera', logo_url: '/img/logo-ufro.png' },
+        carrera_nombre: 'Ingeniería Civil Informática',
+        descripcion: 'La Ingeniería Civil en Informática forma profesionales con habilidades de análisis, diseño, implementación, mejora y gestión en proyectos públicos y privados de desarrollo de software.',
+        requisitos: { nem: 10, ranking: 40, m1: 25, m2: 5, lectora: 10, ciencias_historia: 10, corte: 458 },
+        ingresados_anual: 80,
+        egresados_anual: 50
+    }
+];
+%>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparador - miFuturo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/global.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<%- include('partials/navbar') %>
+
+<main class="container py-4">
+
+    <!-- Filtros -->
+    <section class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h2 class="h5 fw-bold mb-3">Filtros</h2>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <select class="form-select rounded-3" style="background-color: #EAEEF5;">
+                    <option>[ Carrera 1 ]</option>
+                    <% _programas.forEach(function (p) { %>
+                        <option><%= p.carrera_nombre %> - <%= p.universidad.nombre %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <select class="form-select rounded-3" style="background-color: #EAEEF5;">
+                    <option>[ Carrera 2 ]</option>
+                    <% _programas.forEach(function (p) { %>
+                        <option><%= p.carrera_nombre %> - <%= p.universidad.nombre %></option>
+                    <% }); %>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tarjetas por universidad -->
+    <div class="row g-4">
+        <% _programas.forEach(function (p) { %>
+        <div class="col-md-6 d-flex flex-column gap-3">
+
+            <!-- Encabezado universidad -->
+            <div class="card border-0 shadow-sm rounded-4 hover-card p-3 d-flex flex-row align-items-center gap-3">
+                <% if (p.universidad.logo_url) { %>
+                    <img src="<%= p.universidad.logo_url %>" alt="Logo <%= p.universidad.nombre %>"
+                         style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
+                <% } else { %>
+                    <div style="width:48px;height:48px;border-radius:50%;background:#EAEEF5;"></div>
+                <% } %>
+                <span class="fw-semibold"><%= p.universidad.nombre %></span>
+            </div>
+
+            <!-- Requisitos -->
+            <div class="card border-0 shadow-sm rounded-4 hover-card p-3">
+                <p class="fw-bold text-center mb-3">Requisitos:</p>
+                <div class="p-3 rounded-3" style="background-color: #8C9FBA1A;">
+                    <div class="row row-cols-2 g-2 small">
+                        <div class="col"><strong>NEM:</strong><br><%= p.requisitos.nem %>%</div>
+                        <div class="col"><strong>Ranking:</strong><br><%= p.requisitos.ranking %>%</div>
+                        <div class="col"><strong>Matematica M1:</strong><br><%= p.requisitos.m1 %>%</div>
+                        <div class="col"><strong>Competencia lectora:</strong><br><%= p.requisitos.lectora %>%</div>
+                        <div class="col"><strong>Historia o ciencias:</strong><br><%= p.requisitos.ciencias_historia %>%</div>
+                        <div class="col"><strong>Matematica M2:</strong><br><%= p.requisitos.m2 %>%</div>
+                        <div class="col-12"><strong>Puntaje de corte:</strong><br><%= p.requisitos.corte %> pts</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descripcion + estadisticas -->
+            <div class="row g-3">
+                <div class="col-8">
+                    <div class="card border-0 shadow-sm rounded-4 hover-card p-3 h-100">
+                        <p class="small fw-semibold mb-1">Descripción de la carrera:</p>
+                        <p class="small text-muted mb-0"><%= p.descripcion %></p>
+                    </div>
+                </div>
+                <div class="col-4 d-flex flex-column gap-2">
+                    <div class="p-2 rounded-3 text-center small" style="background-color: #8C9FBA1A;">
+                        Cantidad de ingresados anual:<br>
+                        <strong><%= p.ingresados_anual %></strong>
+                    </div>
+                    <div class="p-2 rounded-3 text-center small" style="background-color: #8C9FBA1A;">
+                        Cantidad de egresados anual:<br>
+                        <strong><%= p.egresados_anual %></strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <% }); %>
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

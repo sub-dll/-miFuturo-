@@ -35,6 +35,30 @@ router.get('/perfil/general', (req, res) => {
     res.render('vista-panel/perfil-general');
 });
 
+// Ruta principal de Foros
+router.get('/foros', (req, res) => {
+    res.render('foros-principal', {
+        // Datos de prueba para que el EJS cargue las tarjetas correctamente en la demo
+        universidades: [
+            {
+                id_universidad: 1,
+                nombre: "Universidad Católica de Temuco",
+                cantidadCarreras: 45
+            },
+            {
+                id_universidad: 2,
+                nombre: "Universidad de La Frontera",
+                cantidadCarreras: 52
+            },
+            {
+                id_universidad: 3,
+                nombre: "Universidad Mayor",
+                cantidadCarreras: 28
+            }
+        ]
+    });
+});
+
 // NUEVA RUTA: Para el Perfil de preferencias (busca perfil-preferencias.ejs)
 router.get('/perfil/preferencias', (req, res) => {
     res.render('vista-panel/perfil-preferencias');

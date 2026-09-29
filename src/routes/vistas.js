@@ -31,6 +31,14 @@ router.get('/perfil', (req, res) => {
     res.render('vista-panel/perfil-cuenta');
 });
 
+router.get('/comparador', (req, res) => {
+  res.render('comparador');
+});
+
+router.get('/perfil-carrera', (req, res) => {
+  res.render('perfil-carrera');
+});
+
 router.get('/perfil/general', (req, res) => {
     res.render('vista-panel/perfil-general');
 });
@@ -83,7 +91,5 @@ router.get("/foros/hilo", (req, res) => {
         respuestas: []
     });
 });
-
-
 
 module.exports = router;

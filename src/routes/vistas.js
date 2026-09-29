@@ -21,9 +21,9 @@ router.get('/recuperar', (req, res) => {
 // 2. OTRAS VISTAS DEL PROYECTO
 // ==========================================
 
-// Redirige la raíz '/' automáticamente al Login
+// Redirige la raíz '/' automáticamente al Home
 router.get('/', (req, res) => {
-  res.redirect('/login');
+  res.render('index');
 });
 
 router.get('/comparador', (req, res) => {

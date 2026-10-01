@@ -1,6 +1,15 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+
+// Middleware para entender los datos de los formularios HTML/EJS
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Aquí conectamos las rutas de autenticación (si creaste el authRoutes.js)
+const authRoutes = require('./routes/authRoutes');
+app.use('/', authRoutes);
+
 const PORT = process.env.PORT || 3000;
 
 // Configuración del motor de plantillas EJS

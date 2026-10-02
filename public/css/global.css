@@ -21,3 +21,22 @@
     background-color: transparent;
     color: #8C9FBA !important;
 }
+
+.btn-color-base {
+    background-color: #8C9FBA;
+    border-color: #8C9FBA;
+    color: white;
+}
+
+.foro-fondo {
+    background-color: #D3DCE5;
+    border-radius: 25px;
+    padding: 25px;
+}
+
+.foro-contenido {
+    background-color: white;
+    border-radius: 18px;
+    padding: 30px;
+}
+

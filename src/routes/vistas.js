@@ -297,4 +297,269 @@ router.get("/foros/hilo", (req, res) => {
 
 
 
+// ============================================================
+// FOROS - DATOS DE PRUEBA
+// Libres de borrarlo en el futuro
+// ============================================================
+
+const universidadesPrueba = [
+    {
+        id_universidad: 1,
+        nombre: "Universidad Católica de Temuco",
+        logo_url: "/img/uct.png",
+        ciudad: "Temuco"
+    },
+    {
+        id_universidad: 2,
+        nombre: "Universidad de Chile",
+        logo_url: "/img/uchile.png",
+        ciudad: "Santiago"
+    }
+];
+
+
+const carrerasPrueba = [
+    {
+        id_carrera_base: 5,
+        nombre_carrera: "Ingeniería Civil Informática",
+        descripcion_general: "Carrera relacionada con informática y tecnologías."
+    },
+    {
+        id_carrera_base: 6,
+        nombre_carrera: "Medicina",
+        descripcion_general: "Carrera orientada al área de la salud."
+    }
+];
+
+
+const programasPrueba = [
+    {
+        id_programa: 10,
+        id_universidad: 1,
+        id_carrera_base: 5,
+        nombre_carrera: "Ingeniería Civil Informática"
+    },
+    {
+        id_programa: 11,
+        id_universidad: 1,
+        id_carrera_base: 5,
+        nombre_carrera: "Ingeniería Civil Informática"
+    },
+    {
+        id_programa: 20,
+        id_universidad: 1,
+        id_carrera_base: 6,
+        nombre_carrera: "Medicina"
+    }
+];
+
+
+const hilosPrueba = [
+    {
+        id_hilo: 1,
+        titulo: "¿Qué tal es la carrera?",
+        contenido: "Me gustaría conocer opiniones sobre la carrera.",
+        fecha_publicacion: "2026-10-01 18:30:00",
+        likes: 5,
+        dislikes: 0,
+        id_usuario: 1,
+        id_programa: 10,
+
+        username: "usuario1",
+        nombres: "Juan",
+        apellidos: "Pérez",
+        avatar_url: "/img/avatar1.png",
+
+        id_universidad: 1,
+        id_carrera_base: 5,
+
+        nombre_carrera: "Ingeniería Civil Informática",
+        nombre_universidad: "Universidad Católica de Temuco"
+    },
+
+    {
+        id_hilo: 2,
+        titulo: "¿Es difícil primer año?",
+        contenido: "Quería saber cómo es la carga académica.",
+        fecha_publicacion: "2026-09-30 14:20:00",
+        likes: 8,
+        dislikes: 1,
+        id_usuario: 2,
+        id_programa: 11,
+
+        username: "usuario2",
+        nombres: "María",
+        apellidos: "González",
+        avatar_url: "/img/avatar2.png",
+
+        id_universidad: 1,
+        id_carrera_base: 5,
+
+        nombre_carrera: "Ingeniería Civil Informática",
+        nombre_universidad: "Universidad Católica de Temuco"
+    },
+
+    {
+        id_hilo: 3,
+        titulo: "Material para estudiar programación",
+        contenido: "¿Qué material recomiendan para comenzar?",
+        fecha_publicacion: "2026-09-29 10:15:00",
+        likes: 12,
+        dislikes: 0,
+        id_usuario: 3,
+        id_programa: 10,
+
+        username: "usuario3",
+        nombres: "Pedro",
+        apellidos: "Soto",
+        avatar_url: "/img/avatar3.png",
+
+        id_universidad: 1,
+        id_carrera_base: 5,
+
+        nombre_carrera: "Ingeniería Civil Informática",
+        nombre_universidad: "Universidad Católica de Temuco"
+    }
+];
+
+
+// ============================================================
+// /forose/:id_universidad
+// ============================================================
+
+router.get("/forose/:id_universidad", (req, res) => {
+
+    const { id_universidad } = req.params;
+
+    const universidad = universidadesPrueba.find(
+        universidad =>
+            universidad.id_universidad == id_universidad
+    );
+
+    if (!universidad) {
+        return res.status(404).send("Universidad no encontrada");
+    }
+
+    const carreras = carrerasPrueba.filter(
+        carrera =>
+            programasPrueba.some(
+                programa =>
+                    programa.id_universidad == id_universidad &&
+                    programa.id_carrera_base == carrera.id_carrera_base
+            )
+    );
+
+    res.render("foros-universidad", {
+        universidad: universidad,
+        carreras: carreras,
+        buscar: ""
+    });
+});
+
+
+// ============================================================
+// /forose/:id_universidad/:id_carrera
+// ============================================================
+
+router.get(
+    "/forose/:id_universidad/:id_carrera",
+    (req, res) => {
+
+        const {
+            id_universidad,
+            id_carrera
+        } = req.params;
+
+        const {
+            programa
+        } = req.query;
+
+
+        // ----------------------------------------
+        // Obtener programas de la carrera
+        // ----------------------------------------
+
+        const programas = programasPrueba.filter(
+            programaPrueba =>
+                programaPrueba.id_universidad == id_universidad &&
+                programaPrueba.id_carrera_base == id_carrera
+        );
+
+
+        // ----------------------------------------
+        // Obtener hilos de la carrera
+        // ----------------------------------------
+
+        let hilos = hilosPrueba.filter(
+            hilo =>
+                hilo.id_universidad == id_universidad &&
+                hilo.id_carrera_base == id_carrera
+        );
+
+
+        // ----------------------------------------
+        // Filtrar por programa
+        // ----------------------------------------
+
+        if (programa) {
+
+            hilos = hilos.filter(
+                hilo =>
+                    hilo.id_programa == programa
+            );
+
+        }
+
+
+        // ----------------------------------------
+        // Ordenar por fecha
+        // ----------------------------------------
+
+        hilos.sort(
+            (a, b) =>
+                new Date(b.fecha_publicacion) -
+                new Date(a.fecha_publicacion)
+        );
+
+
+        // ----------------------------------------
+        // Título del foro
+        // ----------------------------------------
+
+        let tituloForo = "";
+
+        if (programas.length > 0) {
+            tituloForo = programas[0].nombre_carrera;
+        }
+
+
+        // ----------------------------------------
+        // Renderizar
+        // ----------------------------------------
+
+        res.render("foros-temas", {
+
+            hilos: hilos,
+
+            programas: programas,
+
+            tituloForo: tituloForo,
+
+            id_universidad: id_universidad,
+
+            id_carrera: id_carrera,
+
+            programaSeleccionado: programa || "",
+
+            buscar: ""
+
+        });
+
+    }
+);
+
+
+
+
+
 module.exports = router;

@@ -12,15 +12,20 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Importar el enrutador de vistas (está dentro de src/routes/vistas.js)
 const vistasRoutes = require('./routes/vistas');
+const configuracionRoutes = require('./routes/configuracionroutes');
+
 
 // Middlewares para procesar peticiones HTTP
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 // Registrar las rutas principales
 app.use('/', vistasRoutes);
+app.use('/configuracion', configuracionRoutes);
 
 // Encender el servidor
 app.listen(PORT, () => {
-  console.log(` Servidor ejecutándose en http://localhost:${PORT}`);
+  console.log(` Servidor ejecutándose en http://localhost:${PORT}`);
 });
+

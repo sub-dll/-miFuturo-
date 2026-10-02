@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil - Preferencias</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts: Port Lligat Slab -->
     <link href="https://fonts.googleapis.com/css2?family=Port+Lligat+Slab&display=swap" rel="stylesheet">
     
     <style>
@@ -67,56 +65,66 @@
             <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
                 <div class="container-fluid">
                     <h1 class="fs-3 fw-bold mb-0">Preferencias</h1>
-                    <p class="fs-6 text-light opacity-75 mb-4">Elige como quieres ver [miFuturo] y establece sus preferencias</p>
+                    <p class="fs-6 text-light opacity-75 mb-4">Elige cómo quieres ver [miFuturo] y establece sus preferencias</p>
 
-                    <h5 class="fw-bold fs-6 mt-4">Apariencia</h5>
-                    <hr class="border-white border-opacity-50 my-3">
+                    <!-- Formulario de actualización a MySQL -->
+                    <form action="/configuracion" method="POST">
+                        
+                        <h5 class="fw-bold fs-6 mt-4">Apariencia</h5>
+                        <hr class="border-white border-opacity-50 my-3">
 
-                    <!-- Temas -->
-                    <div class="row align-items-center mb-4">
-                        <div class="col-md-8">
-                            <div class="fw-bold">Temas</div>
-                            <small class="text-light opacity-75">Elige un tema para [miFuturo] en este dispositivo</small>
+                        <!-- Temas -->
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-8">
+                                <div class="fw-bold">Temas</div>
+                                <small class="text-light opacity-75">Elige un tema para [miFuturo] en este dispositivo</small>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <select name="tema" class="btn btn-outline-light btn-sm d-inline-block w-auto">
+                                    <option value="oscuro" <%= configuracion && configuracion.tema === 'oscuro' ? 'selected' : '' %>>Oscuro</option>
+                                    <option value="claro" <%= configuracion && configuracion.tema === 'claro' ? 'selected' : '' %>>Claro</option>
+                                    <option value="sistema" <%= configuracion && configuracion.tema === 'sistema' ? 'selected' : '' %>>Predeterminado del sistema</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-4 text-md-end">
-                            <select class="btn btn-outline-light btn-sm d-inline-block w-auto" onchange="notificarCambio('Temas')">
-                                <option value="oscuro" selected>Oscuro</option>
-                                <option value="claro">Claro</option>
-                                <option value="sistema">Predeterminado del sistema</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <!-- Contraste alto -->
-                    <div class="row align-items-center mb-5">
-                        <div class="col-md-8">
-                            <div class="fw-bold">Contraste alto</div>
-                            <small class="text-light opacity-75">Aumenta el contraste para mejorar la visibilidad</small>
+                        <!-- Contraste alto -->
+                        <div class="row align-items-center mb-5">
+                            <div class="col-md-8">
+                                <div class="fw-bold">Contraste alto</div>
+                                <small class="text-light opacity-75">Aumenta el contraste para mejorar la visibilidad</small>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <select name="contraste_alto" class="btn btn-outline-light btn-sm d-inline-block w-auto">
+                                    <option value="1" <%= configuracion && configuracion.contraste_alto == 1 ? 'selected' : '' %>>Activado</option>
+                                    <option value="0" <%= configuracion && configuracion.contraste_alto == 0 ? 'selected' : '' %>>Desactivado</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-4 text-md-end">
-                            <select class="btn btn-outline-light btn-sm d-inline-block w-auto" onchange="notificarCambio('Contraste alto')">
-                                <option value="activado" selected>Activado</option>
-                                <option value="desactivado">Desactivado</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <h5 class="fw-bold fs-6 mt-4">Idioma </h5>
-                    <hr class="border-white border-opacity-50 my-3">
+                        <h5 class="fw-bold fs-6 mt-4">Idioma</h5>
+                        <hr class="border-white border-opacity-50 my-3">
 
-                    <!-- Idioma -->
-                    <div class="row align-items-center mb-3">
-                        <div class="col-md-8">
-                            <div class="fw-bold">Idioma</div>
-                            <small class="text-light opacity-75">Elige el idioma en el que quieres usar </small>
+                        <!-- Idioma -->
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-8">
+                                <div class="fw-bold">Idioma</div>
+                                <small class="text-light opacity-75">Elige el idioma en el que quieres usar la plataforma</small>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <select name="idioma" class="btn btn-outline-light btn-sm d-inline-block w-auto">
+                                    <option value="es" <%= configuracion && configuracion.idioma === 'es' ? 'selected' : '' %>>Español</option>
+                                    <option value="en" <%= configuracion && configuracion.idioma === 'en' ? 'selected' : '' %>>English</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-4 text-md-end">
-                            <select class="btn btn-outline-light btn-sm d-inline-block w-auto" onchange="notificarCambio('Idioma')">
-                                <option value="es" selected>Español</option>
-                                <option value="en">English</option>
-                            </select>
+
+                        <!-- Botón de guardar cambios -->
+                        <div class="text-end my-4">
+                            <button type="submit" class="btn btn-light px-4 fw-bold shadow-sm">Guardar Cambios</button>
                         </div>
-                    </div>
+
+                    </form>
 
                 </div>
                 <%- include('../partials/footer') %>

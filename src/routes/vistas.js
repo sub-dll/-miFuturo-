@@ -107,13 +107,50 @@ router.get("/foros/hilo", (req, res) => {
         hilo: {
             id_hilo: 1,
             titulo: "Hilo de prueba",
-            usuario: "Usuario de prueba",
             contenido: "Contenido de prueba",
+            fecha: "28/09/2026",
             likes: 5,
-            fecha: "28/09/2026"
+            dislikes: 2,
+            usuario: "Usuario de prueba",
+            programa: "Ingeniería Civil Informática"
         },
         respuestas: []
     });
+});
+
+
+// Ruta para crear un nuevo hilo, insertando un registro en la base de datos
+// Se entra desde /foros/temas con el boton de + Nuevo hilo
+
+router.post('/nuevo-hilo', async (req, res) => {
+
+    const { titulo, contenido } = req.body;
+    const id_usuario = req.session.id_usuario;
+
+    const id_programa = req.body.id_programa;
+
+    const sql = `
+        INSERT INTO Hilo
+        (titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa)
+        VALUES (?, ?, NOW(), 0, 0, ?, ?)
+    `;
+
+    try {
+        await db.query(sql, [
+            titulo,
+            contenido,
+            id_usuario,
+            id_programa
+        ]);
+
+        const id_hilo = resultado.insertId;
+
+        res.redirect(`/foros/hilo/${id_hilo}`);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al crear el hilo');
+    }
 });
 
 module.exports = router;

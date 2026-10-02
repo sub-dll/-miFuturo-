@@ -122,9 +122,13 @@
                                 </button>
 
                                 <button class="btn btn-sm btn-outline-color-base">
-                                    💬 Comentar
+                                    👍 <%= hilo.dislikes || 0 %> Dislikes
                                 </button>
-
+                            
+                                <button class="btn btn-sm btn-outline-color-base">
+                                    💬 <%= hilo.comentarios || 0 %> Comentarios
+                                </button> 
+                                <!-- hilo.comentarios deberia sacar un comando en sql que cuente cuantos hay -->
                             </div>
                         </div>
                     </div>

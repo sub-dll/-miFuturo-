@@ -90,15 +90,6 @@ router.get("/foros/universidad", (req, res) => {
     });
 });
 
-// Ruta para el Foro de Temas (busca foros-temas.ejs)
-
-router.get("/foros/temas", (req, res) => {
-    res.render("foros-temas", {
-        tituloForo: "Ingeniería Civil Informática",
-        hilos: [],
-        buscar: ""
-    });
-});
 
 // Ruta para el Foro de un Hilo (busca foros-hilo.ejs)
 
@@ -114,6 +105,98 @@ router.get("/foros/hilo", (req, res) => {
         },
         respuestas: []
     });
+});
+
+
+// Ruta para el Foro de Temas (busca foros-temas.ejs) con el id_programa como parámetro
+
+router.get("/foros/temas/:id_programa", async (req, res) => {
+
+    const id_programa = req.params.id_programa;
+
+    const sql = `
+        SELECT
+            H.id_hilo,
+            H.titulo,
+            H.contenido,
+            H.fecha_publicacion,
+            H.likes,
+            H.dislikes,
+            H.id_usuario,
+            H.id_programa,
+            U.username,
+            U.nombres,
+            U.apellidos,
+            U.avatar_url,
+            C.nombre_carrera
+        FROM Hilo H
+        INNER JOIN Usuario U
+            ON H.id_usuario = U.id_usuario
+        INNER JOIN Programa_Universitario P
+            ON H.id_programa = P.id_programa
+        INNER JOIN Carrera_Base C
+            ON P.id_carrera_base = C.id_carrera_base
+        WHERE H.id_programa = ?
+        ORDER BY H.fecha_publicacion DESC
+    `;
+
+    try {
+
+        const [hilos] = await db.query(sql, [id_programa]);
+
+        // Si existen hilos, todos tendrán el mismo programa/carrera
+        // por lo que podemos obtener el nombre desde el primer resultado.
+        const tituloForo = hilos.length > 0
+            ? hilos[0].nombre_carrera
+            : "Foro";
+
+        res.render("foros-temas", {
+            tituloForo: tituloForo,
+            hilos: hilos,
+            buscar: ""
+        });
+
+    } catch (error) {
+
+        console.error("Error al obtener los hilos:", error);
+        res.status(500).send("Error al obtener los hilos");
+
+    }
+});
+
+
+// Ruta para crear un nuevo hilo, insertando un registro en la base de datos
+// Se entra desde /foros/temas con el boton de + Nuevo hilo
+
+router.post('/nuevo-hilo', async (req, res) => {
+
+    const { titulo, contenido } = req.body;
+    const id_usuario = req.session.id_usuario;
+
+    const id_programa = req.body.id_programa;
+
+    const sql = `
+        INSERT INTO Hilo
+        (titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa)
+        VALUES (?, ?, NOW(), 0, 0, ?, ?)
+    `;
+
+    try {
+        await db.query(sql, [
+            titulo,
+            contenido,
+            id_usuario,
+            id_programa
+        ]);
+
+        const id_hilo = resultado.insertId;
+
+        res.redirect(`/foros/hilo/${id_hilo}`);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al crear el hilo');
+    }
 });
 
 module.exports = router;

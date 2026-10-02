@@ -107,7 +107,6 @@ router.get("/foros/hilo", (req, res) => {
     });
 });
 
-
 // Ruta para el Foro de Temas (busca foros-temas.ejs) con el id_programa como parámetro
 
 router.get("/foros/temas/:id_programa", async (req, res) => {
@@ -161,41 +160,6 @@ router.get("/foros/temas/:id_programa", async (req, res) => {
         console.error("Error al obtener los hilos:", error);
         res.status(500).send("Error al obtener los hilos");
 
-    }
-});
-
-
-// Ruta para crear un nuevo hilo, insertando un registro en la base de datos
-// Se entra desde /foros/temas con el boton de + Nuevo hilo
-
-router.post('/nuevo-hilo', async (req, res) => {
-
-    const { titulo, contenido } = req.body;
-    const id_usuario = req.session.id_usuario;
-
-    const id_programa = req.body.id_programa;
-
-    const sql = `
-        INSERT INTO Hilo
-        (titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa)
-        VALUES (?, ?, NOW(), 0, 0, ?, ?)
-    `;
-
-    try {
-        await db.query(sql, [
-            titulo,
-            contenido,
-            id_usuario,
-            id_programa
-        ]);
-
-        const id_hilo = resultado.insertId;
-
-        res.redirect(`/foros/hilo/${id_hilo}`);
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al crear el hilo');
     }
 });
 

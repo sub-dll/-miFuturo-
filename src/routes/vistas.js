@@ -77,17 +77,205 @@ router.get('/perfil/notificaciones', (req, res) => {
 });
 
 
-// Ruta para el Foro de una Universidad (busca foros-universidad.ejs)
 
-router.get("/foros/universidad", (req, res) => {
-    res.render("foros-universidad", {
-        universidad: {
-            id_universidad: 1,
-            nombre: "Universidad Católica de Temuco"
-        },
-        carreras: [],
-        buscar: ""
-    });
+// ==========================================
+//  VISTAS DE LOS FOROS
+// ==========================================
+
+// Foro de una universidad
+router.get("/foros/:id_universidad", async (req, res) => {
+    const { id_universidad } = req.params;
+
+    const sqlUniversidad = `
+        SELECT
+            id_universidad,
+            nombre,
+            logo_url,
+            ciudad
+        FROM Universidad
+        WHERE id_universidad = ?
+    `;
+
+    const sqlCarreras = `
+        SELECT DISTINCT
+            C.id_carrera_base,
+            C.nombre_carrera,
+            C.descripcion_general
+        FROM Programa_Universitario P
+        INNER JOIN Carrera_Base C
+            ON P.id_carrera_base = C.id_carrera_base
+        WHERE P.id_universidad = ?
+        ORDER BY C.nombre_carrera ASC
+    `;
+
+    try {
+        const [universidades] = await db.query(sqlUniversidad, [
+            id_universidad
+        ]);
+
+        if (universidades.length === 0) {
+            return res.status(404).send("Universidad no encontrada");
+        }
+
+        const [carreras] = await db.query(sqlCarreras, [
+            id_universidad
+        ]);
+
+        res.render("foros-universidad", {
+            universidad: universidades[0],
+            carreras: carreras,
+            buscar: ""
+        });
+
+    } catch (error) {
+        console.error("Error al obtener la universidad:", error);
+        res.status(500).send("Error al cargar el foro de la universidad");
+    }
+});
+
+
+// Foros de una carrera específica + programa especifico dentro de una universidad
+
+router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
+
+    const { id_universidad, id_carrera } = req.params;
+    const { programa } = req.query;
+
+    //
+    // 1. Obtener los programas de esta carrera
+    //
+
+    const sqlProgramas = `
+        SELECT
+            P.id_programa,
+            C.nombre_carrera
+        FROM Programa_Universitario P
+        INNER JOIN Carrera_Base C
+            ON P.id_carrera_base = C.id_carrera_base
+        WHERE P.id_universidad = ?
+          AND P.id_carrera_base = ?
+        ORDER BY C.nombre_carrera ASC
+    `;
+
+    //
+    // 2. Obtener los hilos
+    //
+
+    let sqlHilos = `
+        SELECT
+            H.id_hilo,
+            H.titulo,
+            H.contenido,
+            H.fecha_publicacion,
+            H.likes,
+            H.dislikes,
+            H.id_usuario,
+            H.id_programa,
+
+            U.username,
+            U.nombres,
+            U.apellidos,
+            U.avatar_url,
+
+            P.id_universidad,
+            P.id_carrera_base,
+
+            C.nombre_carrera,
+
+            Uni.nombre AS nombre_universidad
+
+        FROM Hilo H
+
+        INNER JOIN Usuario U
+            ON H.id_usuario = U.id_usuario
+        INNER JOIN Programa_Universitario P
+            ON H.id_programa = P.id_programa
+        INNER JOIN Carrera_Base C
+            ON P.id_carrera_base = C.id_carrera_base
+        INNER JOIN Universidad Uni
+            ON P.id_universidad = Uni.id_universidad
+
+        WHERE P.id_universidad = ?
+          AND P.id_carrera_base = ?
+    `;
+
+    const parametrosHilos = [
+        id_universidad,
+        id_carrera
+    ];
+
+
+    // 
+    // 3. Aplicar filtro por programa
+    // 
+
+    if (programa) {
+
+        sqlHilos += `
+            AND H.id_programa = ?
+        `;
+
+        parametrosHilos.push(programa);
+    }
+
+    sqlHilos += `
+        ORDER BY H.fecha_publicacion DESC
+    `;
+
+    try {
+
+        // Obtener programas
+        const [programas] = await db.query(
+            sqlProgramas,
+            [
+                id_universidad,
+                id_carrera
+            ]
+        );
+
+
+        // Obtener hilos
+        const [hilos] = await db.query(
+            sqlHilos,
+            parametrosHilos
+        );
+
+        // Obtener título de la carrera
+
+        let tituloForo = "";
+
+        if (programas.length > 0) {
+            tituloForo = programas[0].nombre_carrera;
+        }
+
+        // 
+        // Enviar todo a foros-temas.ejs
+        // 
+
+        res.render("foros-temas", {
+
+            hilos: hilos,
+            programas: programas,
+            tituloForo: tituloForo,
+            id_universidad: id_universidad,
+            id_carrera: id_carrera,
+            programaSeleccionado: programa || "",
+            buscar: ""
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Error al obtener los hilos y programas:",
+            error
+        );
+
+        res.status(500).send(
+            "Error al cargar los hilos"
+        );
+    }
+
 });
 
 
@@ -107,60 +295,6 @@ router.get("/foros/hilo", (req, res) => {
     });
 });
 
-// Ruta para el Foro de Temas (busca foros-temas.ejs) con el id_programa como parámetro
 
-router.get("/foros/temas/:id_programa", async (req, res) => {
-
-    const id_programa = req.params.id_programa;
-
-    const sql = `
-        SELECT
-            H.id_hilo,
-            H.titulo,
-            H.contenido,
-            H.fecha_publicacion,
-            H.likes,
-            H.dislikes,
-            H.id_usuario,
-            H.id_programa,
-            U.username,
-            U.nombres,
-            U.apellidos,
-            U.avatar_url,
-            C.nombre_carrera
-        FROM Hilo H
-        INNER JOIN Usuario U
-            ON H.id_usuario = U.id_usuario
-        INNER JOIN Programa_Universitario P
-            ON H.id_programa = P.id_programa
-        INNER JOIN Carrera_Base C
-            ON P.id_carrera_base = C.id_carrera_base
-        WHERE H.id_programa = ?
-        ORDER BY H.fecha_publicacion DESC
-    `;
-
-    try {
-
-        const [hilos] = await db.query(sql, [id_programa]);
-
-        // Si existen hilos, todos tendrán el mismo programa/carrera
-        // por lo que podemos obtener el nombre desde el primer resultado.
-        const tituloForo = hilos.length > 0
-            ? hilos[0].nombre_carrera
-            : "Foro";
-
-        res.render("foros-temas", {
-            tituloForo: tituloForo,
-            hilos: hilos,
-            buscar: ""
-        });
-
-    } catch (error) {
-
-        console.error("Error al obtener los hilos:", error);
-        res.status(500).send("Error al obtener los hilos");
-
-    }
-});
 
 module.exports = router;

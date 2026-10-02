@@ -198,10 +198,35 @@
             </div>
 
 
-            <!-- Titulo -->
-            <h3 class="mb-3">
-                Hilos
-            </h3>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <!-- Titulo -->
+                <h3 class="mb-0">
+                    Hilos
+                </h3>
+
+                <!-- Filtro por programa -->
+                <select
+                    class="form-select"
+                    style="width: 280px;"
+                    id="filtroPrograma"
+                    name="programa"
+                >
+                    <option value="">
+                        Todos los programas
+                    </option>
+
+                    <% programas.forEach(programa => { %>
+
+                        <option value="<%= programa.id_programa %>">
+                            <%= programa.nombre_carrera %>
+                        </option>
+
+                    <% }) %>
+
+                </select>
+
+            </div>
 
 
             <!-- Lista de hilos -->

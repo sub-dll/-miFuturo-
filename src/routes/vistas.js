@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');   // tenemos que quitar esto despues ajustandotodos los EJS que tienen las lineas res.sendFile(path.join(...)) que era para los antiguo .html yr eplzararlo en todos los archivos EJS llamando a res.render(), la librería path
+const db = require('../infrastructure/database/db');
 const router = express.Router();
 
 // ==========================================
@@ -100,20 +101,45 @@ router.get("/foros/temas", (req, res) => {
     });
 });
 
-// Ruta para el Foro de un Hilo (busca foros-hilo.ejs)
+// Ruta para consultar un hilo y sus comentarios
+router.get(['/foro/hilo/:id', '/foros/hilo/:id'], (req, res) => {
+    const { id } = req.params;
 
-router.get("/foros/hilo", (req, res) => {
-    res.render("foros-hilo", {
-        hilo: {
-            id_hilo: 1,
-            titulo: "Hilo de prueba",
-            usuario: "Usuario de prueba",
-            contenido: "Contenido de prueba",
-            likes: 5,
-            fecha: "28/09/2026"
-        },
-        respuestas: []
-    });
+    db.query(
+        `SELECT Hilo.*, Usuario.username AS usuario, Usuario.avatar_url,
+                Hilo.fecha_publicacion AS fecha
+         FROM Hilo
+         LEFT JOIN Usuario ON Usuario.id_usuario = Hilo.id_usuario
+         WHERE Hilo.id_hilo = ?`,
+        [id],
+        (error, hilos) => {
+            if (error) {
+                console.error('Error al consultar el hilo:', error.message);
+                return res.status(500).send('Error al consultar el hilo');
+            }
+
+            if (hilos.length === 0) {
+                return res.status(404).send('Hilo no encontrado');
+            }
+
+            db.query(
+                `SELECT Comentario.*, Usuario.username AS usuario, Usuario.avatar_url,
+                        Comentario.fecha_publicacion AS fecha
+                 FROM Comentario
+                 LEFT JOIN Usuario ON Usuario.id_usuario = Comentario.id_usuario
+                 WHERE Comentario.id_hilo = ?`,
+                [id],
+                (error, respuestas) => {
+                    if (error) {
+                        console.error('Error al consultar los comentarios:', error.message);
+                        return res.status(500).send('Error al consultar los comentarios');
+                    }
+
+                    res.render('foros-hilo', { hilo: hilos[0], respuestas });
+                }
+            );
+        }
+    );
 });
 
 module.exports = router;

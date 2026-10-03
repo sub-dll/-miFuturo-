@@ -2,8 +2,12 @@ const express = require('express');
 const path = require('path');   // tenemos que quitar esto despues ajustandotodos los EJS que tienen las lineas res.sendFile(path.join(...)) que era para los antiguo .html yr eplzararlo en todos los archivos EJS llamando a res.render(), la librería path
 const router = express.Router();
 
+// MIDDLEWARE
+const { protegerRuta } = require('../middlewares/authMiddleware');
+
 // ==========================================
-// 1. RUTAS DE AUTENTICACIÓN (Usan EJS)
+// 1. RUTAS PÚBLICAS Y DE AUTENTICACIÓN
+// (No llevan protegerRuta porque cualquiera debe poder verlas)
 // ==========================================
 router.get('/login', (req, res) => {
   res.render('login');
@@ -17,18 +21,8 @@ router.get('/recuperar', (req, res) => {
   res.render('recuperar');
 });
 
-// ==========================================
-// 2. OTRAS VISTAS DEL PROYECTO
-// ==========================================
-
-// Redirige la raíz '/' automáticamente al Home
 router.get('/', (req, res) => {
   res.render('index');
-});
-
-// NUEVA RUTA: Para el Perfil de cuenta (busca perfil-cuenta.ejs)
-router.get('/perfil', (req, res) => {
-    res.render('vista-panel/perfil-cuenta');
 });
 
 router.get('/comparador', (req, res) => {
@@ -39,58 +33,47 @@ router.get('/perfil-carrera', (req, res) => {
   res.render('perfil-carrera');
 });
 
-router.get('/perfil/general', (req, res) => {
+// ==========================================
+// 2. RUTAS PRIVADAS (Requieren inicio de sesión)
+// (Aquí inyectamos protegerRuta justo antes de (req, res))
+// ==========================================
+
+router.get('/perfil', protegerRuta, (req, res) => {
+    res.render('vista-panel/perfil-cuenta');
+});
+
+router.get('/perfil/general', protegerRuta, (req, res) => {
     res.render('vista-panel/perfil-general');
 });
 
-// Ruta principal de Foros
+router.get('/perfil/preferencias', protegerRuta, (req, res) => {
+    res.render('vista-panel/perfil-preferencias');
+});
+
+router.get('/perfil/notificaciones', protegerRuta, (req, res) => {
+    res.render('vista-panel/perfil-notificaciones', { user: null });
+});
+
+// ==========================================
+// 3. RUTAS DE FOROS (Públicas por ahora)
+// ==========================================
 router.get('/foros', (req, res) => {
     res.render('foros-principal', {
-        // Datos de prueba para que el EJS cargue las tarjetas correctamente en la demo
         universidades: [
-            {
-                id_universidad: 1,
-                nombre: "Universidad Católica de Temuco",
-                cantidadCarreras: 45
-            },
-            {
-                id_universidad: 2,
-                nombre: "Universidad de La Frontera",
-                cantidadCarreras: 52
-            },
-            {
-                id_universidad: 3,
-                nombre: "Universidad Mayor",
-                cantidadCarreras: 28
-            }
+            { id_universidad: 1, nombre: "Universidad Católica de Temuco", cantidadCarreras: 45 },
+            { id_universidad: 2, nombre: "Universidad de La Frontera", cantidadCarreras: 52 },
+            { id_universidad: 3, nombre: "Universidad Mayor", cantidadCarreras: 28 }
         ]
     });
 });
 
-// NUEVA RUTA: Para el Perfil de preferencias (busca perfil-preferencias.ejs)
-router.get('/perfil/preferencias', (req, res) => {
-    res.render('vista-panel/perfil-preferencias');
-});
-
-router.get('/perfil/notificaciones', (req, res) => {
-    res.render('vista-panel/perfil-notificaciones', { user: null });
-});
-
-
-// Ruta para el Foro de una Universidad (busca foros-universidad.ejs)
-
 router.get("/foros/universidad", (req, res) => {
     res.render("foros-universidad", {
-        universidad: {
-            id_universidad: 1,
-            nombre: "Universidad Católica de Temuco"
-        },
+        universidad: { id_universidad: 1, nombre: "Universidad Católica de Temuco" },
         carreras: [],
         buscar: ""
     });
 });
-
-// Ruta para el Foro de Temas (busca foros-temas.ejs)
 
 router.get("/foros/temas", (req, res) => {
     res.render("foros-temas", {
@@ -99,8 +82,6 @@ router.get("/foros/temas", (req, res) => {
         buscar: ""
     });
 });
-
-// Ruta para el Foro de un Hilo (busca foros-hilo.ejs)
 
 router.get("/foros/hilo", (req, res) => {
     res.render("foros-hilo", {

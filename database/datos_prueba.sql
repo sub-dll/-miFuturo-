@@ -33,3 +33,10 @@ INSERT INTO Requisitos_Programa (id_programa, pct_nem, pct_ranking, pct_m1, pct_
 INSERT INTO Usuario (nombres, apellidos, email, telefono, password, username, avatar_url, tipo_perfil) VALUES
 ('Diego', 'Fonseca', 'diego.fonseca@ejemplo.com', '+56912345678', 'contrasena_encriptada_123', 'Don quijote', 'https://ejemplo.com/avatar1.png', 'Estudiante'),
 ('Bayron', 'Apellido', 'bayron@ejemplo.com', '+56987654321', 'contrasena_encriptada_456', 'BayronDev', 'https://ejemplo.com/avatar2.png', 'Egresado');
+
+-- Hilo y respuesta de prueba para la vista del hilo
+INSERT INTO Hilo (titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
+('Experiencia en Ingeniería Civil en Informática', '¿Cómo ha sido su experiencia en esta carrera?', NOW(), 3, 0, 1, 1);
+
+INSERT INTO Comentario (id_hilo, id_usuario, contenido, fecha_publicacion, likes, dislikes) VALUES
+(LAST_INSERT_ID(), 2, 'Me ha gustado mucho; recomiendo participar en los proyectos y ayudantías.', NOW(), 1, 0);

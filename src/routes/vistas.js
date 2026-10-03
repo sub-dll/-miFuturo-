@@ -80,14 +80,23 @@ router.get('/perfil/notificaciones', (req, res) => {
 
 // Ruta para el Foro de una Universidad (busca foros-universidad.ejs)
 
-router.get("/foros/universidad", (req, res) => {
+router.get(["/foros/universidad", "/foros/universidad/:id"], (req, res) => {
+    const universidades = [
+        { id_universidad: 1, nombre: "Universidad Católica de Temuco" },
+        { id_universidad: 2, nombre: "Universidad de La Frontera" },
+        { id_universidad: 3, nombre: "Universidad Mayor" }
+    ];
+    const idUniversidad = Number(req.params.id) || 1;
+    const universidad = universidades.find(item => item.id_universidad === idUniversidad);
+
+    if (!universidad) {
+        return res.status(404).send("Universidad no encontrada");
+    }
+
     res.render("foros-universidad", {
-        universidad: {
-            id_universidad: 1,
-            nombre: "Universidad Católica de Temuco"
-        },
+        universidad,
         carreras: [],
-        buscar: ""
+        buscar: req.query.buscar || ""
     });
 });
 

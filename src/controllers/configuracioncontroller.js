@@ -1,4 +1,4 @@
-const db = require("../infrastructure/database/db");
+const db = require('../infrastructure/database/db');
 
 // Función para obtener la configuración
 const obtenerConfiguracion = async (req, res) => {
@@ -28,7 +28,7 @@ const obtenerConfiguracion = async (req, res) => {
         }
 
         // Se especifica la ruta completa dentro de la carpeta 'vista-panel'
-        res.render('vista-panel/perfil-preferencias', { configuracion });
+        res.render('perfil-preferencias', { configuracion });
 
     } catch (error) {
         console.error("Error al obtener la configuración", error);

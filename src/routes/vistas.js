@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
 
 // NUEVA RUTA: Para el Perfil de cuenta (busca perfil-cuenta.ejs)
 router.get('/perfil', (req, res) => {
-    res.render('vista-panel/perfil-cuenta');
+    res.render('perfil-cuenta'); // <-- Corregido
 });
 
 router.get('/comparador', (req, res) => {
@@ -40,9 +40,9 @@ router.get('/perfil-carrera', (req, res) => {
 });
 
 router.get('/perfil/general', (req, res) => {
-    res.render('vista-panel/perfil-general');
+    res.render('perfil-general'); // <-- Corregido
 });
-+
+
 // Ruta principal de Foros
 router.get('/foros', (req, res) => {
     res.render('foros-principal', {
@@ -69,11 +69,11 @@ router.get('/foros', (req, res) => {
 
 // NUEVA RUTA: Para el Perfil de preferencias (busca perfil-preferencias.ejs)
 router.get('/perfil/preferencias', (req, res) => {
-    res.render('vista-panel/perfil-preferencias');
+    res.render('perfil-preferencias'); // <-- Corregido
 });
 
 router.get('/perfil/notificaciones', (req, res) => {
-    res.render('vista-panel/perfil-notificaciones', { user: null });
+    res.render('perfil-notificaciones', { user: null }); // <-- Corregido
 });
 
 

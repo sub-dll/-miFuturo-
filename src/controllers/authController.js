@@ -1,36 +1,36 @@
-const loginUsuario = async (req, res) => {
+const db = require('../infrastructure/database/db');
+const bcrypt = require('bcryptjs');
+
+const registrarUsuario = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        // 1. Recibir los datos exactos del formulario
+        const { nombres, email, telefono, password } = req.body;
 
-        // 1. Buscar si el correo existe en la base de datos
-        const [usuarios] = await db.query('SELECT * FROM Usuario WHERE email = ?', [email]);
-        
-        if (usuarios.length === 0) {
-            return res.status(401).send('Credenciales incorrectas');
+        // 2. Verificar si el email ya existe en la base de datos
+        const [usuariosExistentes] = await db.query('SELECT * FROM Usuario WHERE email = ?', [email]);
+        if (usuariosExistentes.length > 0) {
+            return res.status(400).send('El correo electrónico ya está registrado.');
         }
 
-        const usuario = usuarios[0]; // Extraemos el usuario encontrado
+        // 3. Encriptar la contraseña (hash)
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        // 2. Comparar la contraseña ingresada con la encriptada
-        const coinciden = await bcrypt.compare(password, usuario.password);
+        // 4. Guardar en tu tabla Usuario
+        const [resultado] = await db.query(
+            'INSERT INTO Usuario (nombres, email, telefono, password) VALUES (?, ?, ?, ?)',
+            [nombres, email, telefono, hashedPassword]
+        );
 
-        if (!coinciden) {
-            return res.status(401).send('Credenciales incorrectas');
-        }
+        console.log('✅ Nuevo usuario registrado con ID:', resultado.insertId);
 
-        // 3. Guardar la ID en la sesión
-        req.session.userId = usuario.id_usuario;
-        
-        console.log(`✅ Sesión iniciada exitosamente para el usuario ID: ${usuario.id_usuario}`);
-        
-        // 4. Redirigir a la página principal tras entrar
-        res.redirect('/'); // Ajusta esta ruta a donde quieras llevar al usuario (ej: '/dashboard', '/inicio')
+        // 5. Redirigir a la vista de login tras el éxito
+        res.redirect('/login');
 
     } catch (error) {
-        console.error('❌ Error en el login:', error.message);
-        res.status(500).send('Error interno del servidor al iniciar sesión');
+        console.error('❌ Error en el registro:', error.message);
+        res.status(500).send('Error interno del servidor al registrar');
     }
 };
 
-// No olvides exportar ambas funciones al final de tu archivo:
-module.exports = { registrarUsuario, loginUsuario };
+module.exports = { registrarUsuario };

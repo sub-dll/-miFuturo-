@@ -1,5 +1,5 @@
 require('dotenv').config();
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise'); // <-- El '/promise' arregla el error
 
 
 const pool = mysql.createPool({

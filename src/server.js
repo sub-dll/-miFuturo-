@@ -17,6 +17,11 @@ const vistasRoutes = require('./routes/vistas');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+    // Si existe la sesión, la pasamos a la vista. Si no, pasamos null.
+    res.locals.usuario = (req.session && req.session.usuario) ? req.session.usuario : null;
+    next();
+});
 
 // Registrar las rutas principales
 app.use('/', vistasRoutes);

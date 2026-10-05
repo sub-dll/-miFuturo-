@@ -43,6 +43,7 @@ router.get('/perfil/general', (req, res) => {
     res.render('vista-panel/perfil-general');
 });
 
+
 // Ruta principal de Foros
 router.get('/foros', (req, res) => {
     res.render('foros-principal', {

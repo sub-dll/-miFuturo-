@@ -17,6 +17,7 @@ const vistasRoutes = require('./routes/vistas');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 // Registrar las rutas principales
 app.use('/', vistasRoutes);
 

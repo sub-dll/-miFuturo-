@@ -11,6 +11,7 @@ const authRoutes = require('./routes/authRoutes');
 app.use('/', authRoutes);
 
 const PORT = process.env.PORT || 3000;
+require('./infrastructure/database/db.js');
 
 // Configuración del motor de plantillas EJS
 app.set('view engine', 'ejs');

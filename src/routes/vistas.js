@@ -120,14 +120,15 @@ router.get("/foros/hilo", (req, res) => {
 // 3. RUTAS DE ACCIONES (APIs internas)
 // ==========================================
 
+
 // NUEVA RUTA: Backend para dar "Like" a un hilo
 router.post("/hilos/:id/like", async (req, res) => {
     const { id } = req.params;
 
     try {
-        // Ejecutamos el UPDATE en MySQL según el requerimiento
+        // Ejecutamos el UPDATE en MySQL usando la columna correcta: id_hilo
         const [resultado] = await db.query(
-            'UPDATE Hilo SET likes = likes + 1 WHERE id = ?',
+            'UPDATE Hilo SET likes = likes + 1 WHERE id_hilo = ?',
             [id]
         );
 

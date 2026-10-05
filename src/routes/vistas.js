@@ -4,9 +4,12 @@ const router = express.Router();
 
 // Importar la conexión a la base de datos para las consultas SQL
 const db = require('../infrastructure/database/db');
+// MIDDLEWARE
+const { protegerRuta } = require('../middlewares/authMiddleware');
 
 // ==========================================
-// 1. RUTAS DE AUTENTICACIÓN (Usan EJS)
+// 1. RUTAS PÚBLICAS Y DE AUTENTICACIÓN
+// (No llevan protegerRuta porque cualquiera debe poder verlas)
 // ==========================================
 router.get('/login', (req, res) => {
   res.render('login');
@@ -20,18 +23,8 @@ router.get('/recuperar', (req, res) => {
   res.render('recuperar');
 });
 
-// ==========================================
-// 2. OTRAS VISTAS DEL PROYECTO
-// ==========================================
-
-// Redirige la raíz '/' automáticamente al Home
 router.get('/', (req, res) => {
   res.render('index');
-});
-
-// NUEVA RUTA: Para el Perfil de cuenta (busca perfil-cuenta.ejs)
-router.get('/perfil', (req, res) => {
-    res.render('vista-panel/perfil-cuenta');
 });
 
 router.get('/comparador', (req, res) => {
@@ -42,9 +35,15 @@ router.get('/perfil-carrera', (req, res) => {
   res.render('perfil-carrera');
 });
 
-router.get('/perfil/general', (req, res) => {
-    res.render('vista-panel/perfil-general');
+// ==========================================
+// 2. RUTAS PRIVADAS (Requieren inicio de sesión)
+// (Aquí inyectamos protegerRuta justo antes de (req, res))
+// ==========================================
+
+router.get('/perfil', protegerRuta, (req, res) => {
+    res.render('vista-panel/perfil-cuenta');
 });
+
 
 // Ruta principal de Foros
 router.get('/foros', (req, res) => {
@@ -70,29 +69,35 @@ router.get('/foros', (req, res) => {
     });
 });
 
-// NUEVA RUTA: Para el Perfil de preferencias (busca perfil-preferencias.ejs)
-router.get('/perfil/preferencias', (req, res) => {
+router.get('/perfil/preferencias', protegerRuta, (req, res) => {
     res.render('vista-panel/perfil-preferencias');
 });
 
-router.get('/perfil/notificaciones', (req, res) => {
+router.get('/perfil/notificaciones', protegerRuta, (req, res) => {
     res.render('vista-panel/perfil-notificaciones', { user: null });
 });
 
+// ==========================================
+// 3. RUTAS DE FOROS (Públicas por ahora)
+// ==========================================
+router.get('/foros', (req, res) => {
+    res.render('foros-principal', {
+        universidades: [
+            { id_universidad: 1, nombre: "Universidad Católica de Temuco", cantidadCarreras: 45 },
+            { id_universidad: 2, nombre: "Universidad de La Frontera", cantidadCarreras: 52 },
+            { id_universidad: 3, nombre: "Universidad Mayor", cantidadCarreras: 28 }
+        ]
+    });
+});
 
-// Ruta para el Foro de una Universidad (busca foros-universidad.ejs)
 router.get("/foros/universidad", (req, res) => {
     res.render("foros-universidad", {
-        universidad: {
-            id_universidad: 1,
-            nombre: "Universidad Católica de Temuco"
-        },
+        universidad: { id_universidad: 1, nombre: "Universidad Católica de Temuco" },
         carreras: [],
         buscar: ""
     });
 });
 
-// Ruta para el Foro de Temas (busca foros-temas.ejs)
 router.get("/foros/temas", (req, res) => {
     res.render("foros-temas", {
         tituloForo: "Ingeniería Civil Informática",
@@ -101,7 +106,6 @@ router.get("/foros/temas", (req, res) => {
     });
 });
 
-// Ruta para el Foro de un Hilo (busca foros-hilo.ejs)
 router.get("/foros/hilo", (req, res) => {
     res.render("foros-hilo", {
         hilo: {

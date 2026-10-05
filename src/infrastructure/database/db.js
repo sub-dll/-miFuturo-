@@ -1,6 +1,5 @@
 require('dotenv').config();
-const mysql = require('mysql2/promise'); // <-- El '/promise' arregla el error
-
+const mysql = require('mysql2/promise');
 
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
@@ -13,11 +12,9 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
+// Como ya usamos mysql2/promise arriba, pool ya es una promesa directamente.
 
-const promisePool = pool.promise();
-
-
-promisePool.getConnection()
+pool.getConnection()
     .then(connection => {
         console.log('🔥 Conectado al Pool de MySQL (miFuturo)');
         connection.release(); // Libera el tubo para que otro lo use
@@ -26,5 +23,5 @@ promisePool.getConnection()
         console.error('❌ Error al conectar a MySQL:', err.message);
     });
 
-
-module.exports = promisePool;
+// Exportamos el pool directamente
+module.exports = pool;

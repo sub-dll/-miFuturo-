@@ -22,7 +22,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 // 4. Importar y Registrar Rutas
 const vistasRoutes = require('./routes/vistas');
 const authRoutes = require('./routes/authRoutes');
+const perfilRoutes = require('./routes/perfilRoutes'); 
 
+app.use('/', perfilRoutes);  
 app.use('/', vistasRoutes);
 app.use('/', authRoutes); 
 

@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path');   // tenemos que quitar esto despues ajustandotodos los EJS que tienen las lineas res.sendFile(path.join(...)) que era para los antiguo .html yr eplzararlo en todos los archivos EJS llamando a res.render(), la librería path
 const router = express.Router();
 
+// Importa la conexión a la base de datos
+const db = require('../infrastructure/database/db');
+
 // MIDDLEWARE
 const { protegerRuta } = require('../middlewares/authMiddleware');
 
@@ -140,141 +143,6 @@ router.get('/foros', async (req, res) => {
     }
 
 });
-
-
-
-
-// ==========================================
-// RUTA DE PRUEBA PARA FOROS PRINCIPAL /forose
-// Esta se puede borrar sin problema una vez que la ruta principal funcione correctamente
-// =========================================
-
-// Ruta de prueba para Foros
-router.get('/forose', (req, res) => {
-
-    // Carreras disponibles para el filtro
-    const carreras = [
-        {
-            id_carrera_base: 1,
-            nombre_carrera: "Medicina"
-        },
-        {
-            id_carrera_base: 2,
-            nombre_carrera: "Derecho"
-        },
-        {
-            id_carrera_base: 3,
-            nombre_carrera: "Psicología"
-        },
-        {
-            id_carrera_base: 4,
-            nombre_carrera: "Ingeniería Civil Informática"
-        },
-        {
-            id_carrera_base: 5,
-            nombre_carrera: "Enfermería"
-        },
-        {
-            id_carrera_base: 6,
-            nombre_carrera: "Arquitectura"
-        }
-    ];
-
-
-    // Universidades de prueba
-    const universidades = [
-
-        {
-            id_universidad: 1,
-            nombre: "Universidad Católica de Temuco",
-            logo_url: "/img/uct.png",
-            ciudad: "Temuco",
-            cantidadCarreras: 45,
-
-            // Todas las carreras que ofrece esta universidad
-            carrerasIds: [1, 2, 3, 4, 5],
-
-            // Solo las 3 con mayor empleabilidad
-            carrerasPopulares: [
-                {
-                    nombre_carrera: "Medicina",
-                    empleabilidad_pct: 95
-                },
-                {
-                    nombre_carrera: "Enfermería",
-                    empleabilidad_pct: 92
-                },
-                {
-                    nombre_carrera: "Ingeniería Civil Informática",
-                    empleabilidad_pct: 90
-                }
-            ]
-        },
-
-
-        {
-            id_universidad: 2,
-            nombre: "Universidad de La Frontera",
-            logo_url: "/img/ufro.png",
-            ciudad: "Temuco",
-            cantidadCarreras: 52,
-
-            // Esta universidad NO tiene Arquitectura
-            carrerasIds: [1, 2, 3, 4, 5],
-
-            carrerasPopulares: [
-                {
-                    nombre_carrera: "Medicina",
-                    empleabilidad_pct: 97
-                },
-                {
-                    nombre_carrera: "Derecho",
-                    empleabilidad_pct: 94
-                },
-                {
-                    nombre_carrera: "Enfermería",
-                    empleabilidad_pct: 91
-                }
-            ]
-        },
-
-
-        {
-            id_universidad: 3,
-            nombre: "Universidad Mayor",
-            logo_url: "/img/umayor.png",
-            ciudad: "Temuco",
-            cantidadCarreras: 28,
-
-            // Esta universidad sí tiene Arquitectura
-            carrerasIds: [1, 3, 4, 6],
-
-            carrerasPopulares: [
-                {
-                    nombre_carrera: "Medicina",
-                    empleabilidad_pct: 96
-                },
-                {
-                    nombre_carrera: "Psicología",
-                    empleabilidad_pct: 89
-                },
-                {
-                    nombre_carrera: "Arquitectura",
-                    empleabilidad_pct: 87
-                }
-            ]
-        }
-
-    ];
-
-    res.render('foros-principal', {
-        universidades,
-        carreras
-    });
-
-});
-
-
 
 
 // Ruta para el Foro de una Universidad (busca foros-universidad.ejs)

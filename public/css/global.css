@@ -28,6 +28,13 @@
     color: white;
 }
 
+.btn-color-base:hover {
+    background-color: #7B8EA9;
+    border-color: #7B8EA9;
+    color: white;
+}
+
+/* Cuadro exterior de los foros */
 .foro-fondo {
     background-color: #D3DCE5;
     border-radius: 25px;
@@ -38,5 +45,166 @@
     background-color: white;
     border-radius: 18px;
     padding: 30px;
+/* Cuadro pequeño del título */
+}
+
+.foro-titulo {
+    background-color: white;
+    border-radius: 18px;
+    padding: 18px 25px;
+    display: inline-block;
+}
+
+/* Lista vertical de universidades */
+.universidades-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Etiqueta completa de universidad */
+.universidad-item {
+    background-color: white;
+    border-radius: 18px;
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-height: 120px;
+}
+
+/* Logo + nombre */
+.universidad-identidad {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Logo de la universidad */
+.universidad-logo {
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+    margin-right: 18px;
+    border-radius: 10px;
+}
+
+
+/* Logo cuando no existe logo_url */
+.logo-sin-imagen {
+    background-color: #D3DCE5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #8C9FBA;
+    font-size: 32px;
+}
+
+/* Nombre de universidad */
+.universidad-nombre h4 {
+    color: #333;
+    font-weight: 600;
+}
+.universidad-nombre span {
+    color: #777;
+    font-size: 14px;
+}
+
+
+/* Cuadro de información */
+.universidad-info {
+    background-color: #8C9FBA;
+    color: white;
+    border-radius: 12px;
+    padding: 12px 18px;
+    min-width: 300px;
+    font-size: 14px;
+}
+
+.universidad-info strong {
+    color: white;
+}
+
+/* Carreras populares */
+.carreras-populares {
+    margin-top: 4px;
+}
+
+/* Botón */
+.universidad-boton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-width: 120px;
+}
+.universidad-boton .btn {
+    color: white;
+    white-space: nowrap;
+}
+
+.foro-encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 10px;
+}
+
+.foro-filtro {
+    display: flex;
+    flex-direction: column;
+    min-width: 280px;
+}
+
+.foro-filtro .form-label {
+    color: #555;
+    font-weight: 500;
+}
+
+.foro-filtro .form-select {
+    border-color: #8C9FBA;
+}
+
+.foro-filtro .form-select:focus {
+    border-color: #8C9FBA;
+    box-shadow: 0 0 0 0.2rem rgba(140, 159, 186, 0.25);
+}
+
+
+/*
+/* Adaptación para pantallas pequeñas */
+@media (max-width: 768px) {
+    .universidad-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .universidad-identidad {
+        width: 100%;
+    }
+    .universidad-info {
+        width: 100%;
+        min-width: 0;
+    }
+    .universidad-boton {
+        width: 100%;
+    }
+    .universidad-boton .btn {
+        width: 100%;
+    }
+    .foro-encabezado {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .foro-titulo {
+        align-self: flex-start;
+    }
+    .foro-filtro {
+        width: 100%;
+    }
 }
 

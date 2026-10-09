@@ -33,3 +33,20 @@ INSERT INTO Requisitos_Programa (id_programa, pct_nem, pct_ranking, pct_m1, pct_
 INSERT INTO Usuario (nombres, apellidos, email, telefono, password, username, avatar_url, tipo_perfil) VALUES
 ('Diego', 'Fonseca', 'diego.fonseca@ejemplo.com', '+56912345678', 'contrasena_encriptada_123', 'Don quijote', 'https://ejemplo.com/avatar1.png', 'Estudiante'),
 ('Bayron', 'Apellido', 'bayron@ejemplo.com', '+56987654321', 'contrasena_encriptada_456', 'BayronDev', 'https://ejemplo.com/avatar2.png', 'Egresado');
+
+
+--  Insertar un par de Hilos de prueba para la sección de foros
+
+INSERT INTO hilo (id_hilo, titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
+(1, "Hilo de prueba", 
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+Nulla laoreet purus pulvinar malesuada tincidunt.", '2026-09-29 18:20:15', 6, 1, 2, 2);
+
+INSERT INTO hilo (id_hilo, titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
+(2, "Segundo hilo de prueba", "Cras bibendum lectus elit, 
+vel ullamcorper felis condimentum ac.", '2026-10-01 09:15:20', 3, 0, 1, 1);
+
+INSERT INTO hilo (id_hilo, titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
+(3, "Tercer hilo de prueba", "Fusce lobortis lorem vitae sapien scelerisque, 
+id dictum turpis eleifend. Donec tincidunt.", '2026-10-02 14:45:10', 2, 6, 2, 3);
+

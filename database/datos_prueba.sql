@@ -5,6 +5,7 @@
 
 -- universidades de temuco
 
+
 INSERT INTO Universidad (nombre, logo_url, anos_acreditacion, sitio_web, descripcion, ciudad) VALUES
 ('Universidad de la Frontera', 'https://ejemplo.com/logo-ufro.png', 6, 'https://www.ufro.cl', 'La Universidad de La Frontera (UFRO) es una institución pública y estatal de educación superior...', 'Temuco'),
 ('Universidad Católica de Temuco', 'https://ejemplo.com/logo-uct.png', 5, 'https://www.uct.cl', 'La Universidad Católica de Temuco es una institución de educación superior tradicional y privada...', 'Temuco'),

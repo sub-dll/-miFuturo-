@@ -28,10 +28,6 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/comparador', (req, res) => {
-  res.render('comparador');
-});
-
 router.get('/perfil-carrera', (req, res) => {
   res.render('perfil-carrera');
 });

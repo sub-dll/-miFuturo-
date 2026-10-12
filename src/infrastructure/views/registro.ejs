@@ -47,31 +47,31 @@
         <h1 class="h3 fw-semibold text-dark mb-1">Crear Cuenta</h1>
         <p class="text-muted small mb-4">Regístrate para comenzar a usar miFuturo</p>
 
-        <form onsubmit="event.preventDefault();">
-          <!-- Campo Nombre Completo -->
+        <form action="/registro" method="POST">
+        <!-- Campo Nombre Completo -->
           <div class="input-group mb-3">
-            <input type="text" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Nombre completo" required>
+            <input type="text" name="nombres" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Nombre completo" required>
             <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-regular fa-user"></i></span>
           </div>
 
           <!-- Campo Correo -->
           <div class="input-group mb-3">
-            <input type="email" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Correo electrónico" required>
+            <input type="email" name="email" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Correo electrónico" required>
             <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-regular fa-envelope"></i></span>
           </div>
 
           <!-- Campo Teléfono -->
           <div class="input-group mb-3">
-            <input type="tel" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Número de teléfono">
+            <input type="tel" name="telefono" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Número de teléfono">
             <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-solid fa-mobile-screen-button"></i></span>
           </div>
 
           <!-- Campo Contraseña -->
           <div class="input-group mb-3">
-            <input type="password" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Contraseña segura" required>
+            <input type="password" name="password" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Contraseña segura" required>
             <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-solid fa-lock"></i></span>
           </div>
-
+          
           <!-- Aceptación de Términos -->
           <div class="form-check text-start small mb-4">
             <input class="form-check-input" type="checkbox" id="termsCheck" required>
@@ -80,7 +80,8 @@
             </label>
           </div>
 
-          <!-- Botón de Envío -->
+            <!-- Botón de Envío -->
+           
           <button type="submit" class="btn btn-custom-blue btn-lg w-100 rounded-3 fs-6 fw-medium d-flex align-items-center justify-content-center gap-2">
             Siguiente <i class="fa-solid fa-chevron-right small"></i>
           </button>

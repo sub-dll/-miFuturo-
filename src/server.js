@@ -23,6 +23,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 // 4. Importar y Registrar Rutas
 const vistasRoutes = require('./routes/vistas');
 const authRoutes = require('./routes/authRoutes');
+const comparadorRoutes = require('./routes/comparadorRoutes');
 const perfilRoutes = require('./routes/perfilRoutes'); 
 const configuracionRoutes = require('./routes/configuracionroutes');
 
@@ -30,6 +31,7 @@ app.use('/', perfilRoutes);
 app.use('/', vistasRoutes);
 app.use('/', authRoutes); 
 app.use('/configuracion', configuracionRoutes);
+app.use('/comparador', comparadorRoutes);
 
 // 5. Base de Datos y Encendido del Servidor
 require('./infrastructure/database/db.js');

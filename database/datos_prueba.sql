@@ -6,7 +6,7 @@
 -- universidades de temuco
 
 
-INSERT INTO Universidad (nombre, logo_url, anos_acreditacion, sitio_web, descripcion, ciudad) VALUES
+INSERT INTO Universidad (nombre, logo_url, años_acreditacion, sitio_web, descripcion, ciudad) VALUES
 ('Universidad de la Frontera', 'https://ejemplo.com/logo-ufro.png', 6, 'https://www.ufro.cl', 'La Universidad de La Frontera (UFRO) es una institución pública y estatal de educación superior...', 'Temuco'),
 ('Universidad Católica de Temuco', 'https://ejemplo.com/logo-uct.png', 5, 'https://www.uct.cl', 'La Universidad Católica de Temuco es una institución de educación superior tradicional y privada...', 'Temuco'),
 ('Universidad Mayor', 'https://ejemplo.com/logo-mayor.png', 5, 'https://www.umayor.cl', 'Institución privada con sede en Temuco enfocada en la innovación académica.', 'Temuco');
@@ -38,16 +38,8 @@ INSERT INTO Usuario (nombres, apellidos, email, telefono, password, username, av
 
 --  Insertar un par de Hilos de prueba para la sección de foros
 
-INSERT INTO hilo (id_hilo, titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
-(1, "Hilo de prueba", 
-"Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-Nulla laoreet purus pulvinar malesuada tincidunt.", '2026-09-29 18:20:15', 6, 1, 2, 2);
-
-INSERT INTO hilo (id_hilo, titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
-(2, "Segundo hilo de prueba", "Cras bibendum lectus elit, 
-vel ullamcorper felis condimentum ac.", '2026-10-01 09:15:20', 3, 0, 1, 1);
-
-INSERT INTO hilo (id_hilo, titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
-(3, "Tercer hilo de prueba", "Fusce lobortis lorem vitae sapien scelerisque, 
-id dictum turpis eleifend. Donec tincidunt.", '2026-10-02 14:45:10', 2, 6, 2, 3);
+INSERT INTO Hilo (titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
+("Hilo de prueba", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla laoreet purus pulvinar malesuada tincidunt.", '2026-09-29 18:20:15', 6, 1, 2, 2),
+("Segundo hilo de prueba", "Cras bibendum lectus elit, vel ullamcorper felis condimentum ac.", '2026-10-01 09:15:20', 3, 0, 1, 1),
+("Tercer hilo de prueba", "Fusce lobortis lorem vitae sapien scelerisque, id dictum turpis eleifend. Donec tincidunt.", '2026-10-02 14:45:10', 2, 6, 2, 3);
 

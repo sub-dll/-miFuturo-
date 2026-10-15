@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
@@ -24,10 +25,12 @@ const vistasRoutes = require('./routes/vistas');
 const authRoutes = require('./routes/authRoutes');
 const comparadorRoutes = require('./routes/comparadorRoutes');
 const perfilRoutes = require('./routes/perfilRoutes'); 
+const configuracionRoutes = require('./routes/configuracionroutes');
 
 app.use('/', perfilRoutes);  
 app.use('/', vistasRoutes);
 app.use('/', authRoutes); 
+app.use('/configuracion', configuracionRoutes);
 app.use('/comparador', comparadorRoutes);
 
 // 5. Base de Datos y Encendido del Servidor

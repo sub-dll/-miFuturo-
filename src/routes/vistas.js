@@ -134,44 +134,37 @@ router.post(['/foro/hilo/:id/responder', '/foros/hilo/:id/responder'], (req, res
     );
 });
 
-router.get(['/foro/hilo/:id', '/foros/hilo/:id'], (req, res) => {
+router.get(['/foro/hilo/:id', '/foros/hilo/:id'], async (req, res) => {
     const { id } = req.params;
 
-    db.query(
-        `SELECT Hilo.*, Usuario.username AS usuario, Usuario.avatar_url,
-                Hilo.fecha_publicacion AS fecha
-         FROM Hilo
-         LEFT JOIN Usuario ON Usuario.id_usuario = Hilo.id_usuario
-         WHERE Hilo.id_hilo = ?`,
-        [id],
-        (error, hilos) => {
-            if (error) {
-                console.error('Error al consultar el hilo:', error.message);
-                return res.status(500).send('Error al consultar el hilo');
-            }
+    try {
+        const [hilos] = await db.query(
+            `SELECT Hilo.*, Usuario.username AS usuario, Usuario.avatar_url,
+                    Hilo.fecha_publicacion AS fecha
+             FROM Hilo
+             LEFT JOIN Usuario ON Usuario.id_usuario = Hilo.id_usuario
+             WHERE Hilo.id_hilo = ?`,
+            [id]
+        );
 
-            if (hilos.length === 0) {
-                return res.status(404).send('Hilo no encontrado');
-            }
-
-            db.query(
-                `SELECT Comentario.*, Usuario.username AS usuario, Usuario.avatar_url,
-                        Comentario.fecha_publicacion AS fecha
-                 FROM Comentario
-                 LEFT JOIN Usuario ON Usuario.id_usuario = Comentario.id_usuario
-                 WHERE Comentario.id_hilo = ?`,
-                [id],
-                (error, respuestas) => {
-                    if (error) {
-                        console.error('Error al consultar los comentarios:', error.message);
-                        return res.status(500).send('Error al consultar los comentarios');
-                    }
-
-                    res.render('foros-hilo', { hilo: hilos[0], respuestas });
-                }
-            );
+        if (hilos.length === 0) {
+            return res.status(404).send('Hilo no encontrado');
         }
-    );
+
+        const [respuestas] = await db.query(
+            `SELECT Comentario.*, Usuario.username AS usuario, Usuario.avatar_url,
+                    Comentario.fecha_publicacion AS fecha
+             FROM Comentario
+             LEFT JOIN Usuario ON Usuario.id_usuario = Comentario.id_usuario
+             WHERE Comentario.id_hilo = ?`,
+            [id]
+        );
+
+        res.render('foros-hilo', { hilo: hilos[0], respuestas });
+    } catch (error) {
+        console.error('Error al consultar el hilo y sus comentarios:', error.message);
+        return res.status(500).send('Error al consultar el hilo y sus comentarios');
+    }
 });
 
 module.exports = router;

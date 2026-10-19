@@ -34,7 +34,7 @@ const registrarUsuario = async (req, res) => {
 };
 
 // ==========================================
-// NUEVA FUNCIÓN: INICIAR SESIÓN (MIF-3)
+// INICIAR SESIÓN (CORREGIDO Y COMPLETADO)
 // ==========================================
 const iniciarSesion = async (req, res) => {
     try {
@@ -44,25 +44,28 @@ const iniciarSesion = async (req, res) => {
         const [usuarios] = await db.query('SELECT * FROM Usuario WHERE email = ?', [email]);
         
         if (usuarios.length === 0) {
-            // Si el correo no está registrado
             return res.status(401).send('Correo o contraseña incorrectos.');
         }
 
         const usuario = usuarios[0];
 
-        // 2. Comparar la contraseña ingresada con la encriptada en la base de datos
+        // 2. Comparar la contraseña ingresada con la encriptada
         const contrasenaValida = await bcrypt.compare(password, usuario.password);
         
         if (!contrasenaValida) {
-            // Si la contraseña no coincide
             return res.status(401).send('Correo o contraseña incorrectos.');
         }
 
-        // 3. ¡ÉXITO! Crear la sesión del usuario (vital para que funcione el foro)
-        // Aquí le damos el valor real a req.session.id_usuario
+        // 3. ¡CORRECCIÓN CLAVE! Guardar el objeto usuario en la sesión
         req.session.id_usuario = usuario.id_usuario;
+        req.session.usuario = {
+            id_usuario: usuario.id_usuario,
+            nombre: usuario.nombres,
+            email: usuario.email,
+            telefono: usuario.telefono
+        };
         
-        console.log(`✅ Sesión iniciada para el usuario ID: ${usuario.id_usuario} (${usuario.email})`);
+        console.log(`✅ Sesión iniciada para: ${usuario.nombres} (${usuario.email})`);
 
         // 4. Redirigir a la página principal o a los foros
         res.redirect('/foros'); 
@@ -73,5 +76,19 @@ const iniciarSesion = async (req, res) => {
     }
 };
 
-// Asegurarnos de exportar AMBAS funciones para que authRoutes.js las pueda usar
-module.exports = { registrarUsuario, iniciarSesion };
+// ==========================================
+// CERRAR SESIÓN (NUEVA FUNCIÓN)
+// ==========================================
+const cerrarSesion = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('❌ Error al cerrar sesión:', err);
+            return res.status(500).send('Error al cerrar sesión');
+        }
+        res.clearCookie('connect.sid'); // Limpiar la cookie de sesión
+        console.log('🚪 Sesión cerrada correctamente');
+        res.redirect('/login');
+    });
+};
+
+module.exports = { registrarUsuario, iniciarSesion, cerrarSesion };

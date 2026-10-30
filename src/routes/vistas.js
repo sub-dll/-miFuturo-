@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');   // tenemos que quitar esto despues ajustandotodos los EJS que tienen las lineas res.sendFile(path.join(...)) que era para los antiguo .html yr eplzararlo en todos los archivos EJS llamando a res.render(), la librería path
+const db = require('../infrastructure/database/db');
 const router = express.Router();
 
 // Importa la conexión a la base de datos
@@ -369,6 +370,24 @@ router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
         );
     }
 
+router.get(["/foros/universidad", "/foros/universidad/:id"], (req, res) => {
+    const universidades = [
+        { id_universidad: 1, nombre: "Universidad Católica de Temuco" },
+        { id_universidad: 2, nombre: "Universidad de La Frontera" },
+        { id_universidad: 3, nombre: "Universidad Mayor" }
+    ];
+    const idUniversidad = Number(req.params.id) || 1;
+    const universidad = universidades.find(item => item.id_universidad === idUniversidad);
+
+    if (!universidad) {
+        return res.status(404).send("Universidad no encontrada");
+    }
+
+    res.render("foros-universidad", {
+        universidad,
+        carreras: [],
+        buscar: req.query.buscar || ""
+    });
 });
 
 
@@ -380,18 +399,60 @@ router.get("/foros/temas", (req, res) => {
     });
 });
 
-router.get("/foros/hilo", (req, res) => {
-    res.render("foros-hilo", {
-        hilo: {
-            id_hilo: 1,
-            titulo: "Hilo de prueba",
-            usuario: "Usuario de prueba",
-            contenido: "Contenido de prueba",
-            likes: 5,
-            fecha: "28/09/2026"
-        },
-        respuestas: []
-    });
+// Ruta para consultar un hilo y sus comentarios
+router.post(['/foro/hilo/:id/responder', '/foros/hilo/:id/responder'], async (req, res) => {
+    const { id } = req.params;
+    const contenido = typeof req.body.contenido === 'string' ? req.body.contenido.trim() : '';
+
+    if (!contenido) {
+        return res.status(400).send('El comentario no puede estar vacío');
+    }
+
+    try {
+        await db.query(
+            `INSERT INTO Comentario (id_hilo, contenido, fecha_publicacion, likes, dislikes)
+             VALUES (?, ?, NOW(), 0, 0)`,
+            [id, contenido]
+        );
+
+        res.redirect(`/foro/hilo/${encodeURIComponent(id)}`);
+    } catch (error) {
+        console.error('Error al guardar el comentario:', error.message);
+        return res.status(500).send('Error al guardar el comentario');
+    }
+});
+
+router.get(['/foro/hilo/:id', '/foros/hilo/:id'], async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const [hilos] = await db.query(
+            `SELECT Hilo.*, Usuario.username AS usuario, Usuario.avatar_url,
+                    Hilo.fecha_publicacion AS fecha
+             FROM Hilo
+             LEFT JOIN Usuario ON Usuario.id_usuario = Hilo.id_usuario
+             WHERE Hilo.id_hilo = ?`,
+            [id]
+        );
+
+        if (hilos.length === 0) {
+            return res.status(404).send('Hilo no encontrado');
+        }
+
+        const [respuestas] = await db.query(
+            `SELECT Comentario.*, Usuario.username AS usuario, Usuario.avatar_url,
+                    Comentario.fecha_publicacion AS fecha
+             FROM Comentario
+             LEFT JOIN Usuario ON Usuario.id_usuario = Comentario.id_usuario
+             WHERE Comentario.id_hilo = ?`,
+            [id]
+        );
+
+        res.render('foros-hilo', { hilo: hilos[0], respuestas });
+    } catch (error) {
+        console.error('Error al consultar el hilo y sus comentarios:', error.message);
+        return res.status(500).send('Error al consultar el hilo y sus comentarios');
+    }
 });
 
 

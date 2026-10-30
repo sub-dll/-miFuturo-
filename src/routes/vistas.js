@@ -111,7 +111,7 @@ router.get("/foros/temas", (req, res) => {
 });
 
 // Ruta para consultar un hilo y sus comentarios
-router.post(['/foro/hilo/:id/responder', '/foros/hilo/:id/responder'], (req, res) => {
+router.post(['/foro/hilo/:id/responder', '/foros/hilo/:id/responder'], async (req, res) => {
     const { id } = req.params;
     const contenido = typeof req.body.contenido === 'string' ? req.body.contenido.trim() : '';
 
@@ -119,19 +119,18 @@ router.post(['/foro/hilo/:id/responder', '/foros/hilo/:id/responder'], (req, res
         return res.status(400).send('El comentario no puede estar vacío');
     }
 
-    db.query(
-        `INSERT INTO Comentario (id_hilo, contenido, fecha_publicacion, likes, dislikes)
-         VALUES (?, ?, NOW(), 0, 0)`,
-        [id, contenido],
-        (error) => {
-            if (error) {
-                console.error('Error al guardar el comentario:', error.message);
-                return res.status(500).send('Error al guardar el comentario');
-            }
+    try {
+        await db.query(
+            `INSERT INTO Comentario (id_hilo, contenido, fecha_publicacion, likes, dislikes)
+             VALUES (?, ?, NOW(), 0, 0)`,
+            [id, contenido]
+        );
 
-            res.redirect(`/foro/hilo/${encodeURIComponent(id)}`);
-        }
-    );
+        res.redirect(`/foro/hilo/${encodeURIComponent(id)}`);
+    } catch (error) {
+        console.error('Error al guardar el comentario:', error.message);
+        return res.status(500).send('Error al guardar el comentario');
+    }
 });
 
 router.get(['/foro/hilo/:id', '/foros/hilo/:id'], async (req, res) => {

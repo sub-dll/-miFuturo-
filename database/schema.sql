@@ -8,7 +8,8 @@ CREATE TABLE `Usuario` (
   `password` VARCHAR(255) NOT NULL,
   `username` VARCHAR(50) UNIQUE,
   `avatar_url` VARCHAR(255),
-  `tipo_perfil` VARCHAR(20)
+  `tipo_perfil` VARCHAR(20),
+  `biografia` VARCHAR(280)
 );
 
 CREATE TABLE `Universidad` (

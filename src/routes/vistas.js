@@ -32,10 +32,6 @@ router.get('/perfil-carrera', (req, res) => {
 // 2. RUTAS PRIVADAS SECUNDARIAS DEL PERFIL
 // (GET /perfil y POST /perfil/actualizar viven en perfilRoutes.js)
 // ==========================================
-router.get('/perfil/general', protegerRuta, (req, res) => {
-    res.render('perfil-general');
-});
-
 router.get('/perfil/preferencias', protegerRuta, (req, res) => {
     res.render('perfil-preferencias');
 });

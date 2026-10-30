@@ -64,7 +64,7 @@
 </head>
 <body class="vh-100 overflow-hidden m-0 text-white">
 
-    <!-- Mensajes del servidor (éxito / error) -->
+    <!-- Mensajes del servidor (éxito / error) - ESTO ESTÁ PERFECTO -->
     <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
         <% if (typeof error !== 'undefined' && error) { %>
             <div class="alert alert-danger alert-dismissible fade show shadow" role="alert">
@@ -80,10 +80,19 @@
         <% } %>
     </div>
 
-    <div class="container-fluid p-0 h-100">
-        <div class="row g-0 h-100">
-            <%- include('partials/navbar', { active: 'cuenta' }) %>
+    <!-- 1. NAVBAR ARRIBA DE TODO Y FUERA DEL ROW (ya no recibe 'active') -->
+    <%- include('partials/navbar') %>
 
+    <!-- 2. CONTENEDOR CON ALTURA CALCULADA PARA QUE NO SE CORTE EL SCROLL -->
+    <div class="container-fluid p-0" style="height: calc(100vh - 76px);">
+        <div class="row g-0 h-100">
+            
+            <!-- 3. EL NUEVO MENÚ LATERAL (este sí recibe el 'active') -->
+            <%- include('partials/sidebar-perfil', { active: 'cuenta' }) %>
+
+            <!-- Área Principal con scroll -->
+            <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
+                
             <!-- Área Principal con scroll -->
             <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
                 <div class="container-fluid">

@@ -66,10 +66,21 @@
             <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-solid fa-mobile-screen-button"></i></span>
           </div>
 
-          <!-- Campo Contraseña -->
-          <div class="input-group mb-3">
-            <input type="password" name="password" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Contraseña segura" required>
-            <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-solid fa-lock"></i></span>
+         <!-- Campo Contraseña con botón Ver/Ocultar y validación -->
+          <div class="input-group mb-1">
+            <input type="password" id="passwordInput" name="password" 
+                   class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" 
+                   placeholder="Contraseña segura" 
+                   minlength="8" 
+                   pattern="(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&.]{8,}"
+                   title="Mínimo 8 caracteres, al menos una letra y un número" 
+                   required>
+            <button type="button" id="togglePasswordBtn" class="input-group-text bg-light border-0 rounded-end-3 text-muted" style="cursor: pointer;" tabindex="-1">
+              <i class="fa-regular fa-eye" id="togglePasswordIcon"></i>
+            </button>
+          </div>
+          <div class="text-start text-muted mb-3" style="font-size: 0.75rem;">
+            * Mínimo 8 caracteres, incluyendo al menos una letra y un número.
           </div>
           
           <!-- Aceptación de Términos -->
@@ -95,5 +106,20 @@
     </div>
   </div>
 
+  <script>
+    const passwordInput = document.getElementById('passwordInput');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+
+    togglePasswordBtn.addEventListener('click', function () {
+      const isPassword = passwordInput.getAttribute('type') === 'password';
+      passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+      
+      // Alternar el ícono entre ojo abierto y ojo tachado
+      togglePasswordIcon.classList.toggle('fa-eye');
+      togglePasswordIcon.classList.toggle('fa-eye-slash');
+    });
+  </script>
+  
 </body>
 </html>

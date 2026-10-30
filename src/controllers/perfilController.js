@@ -35,7 +35,7 @@ const buscarUsuarioPorId = async (idUsuario) => {
 // Helper: renderiza la vista del perfil con los datos del usuario
 // ==========================================
 const renderPerfil = (res, usuario, { error = null, exito = null, status = 200 } = {}) => {
-    return res.status(status).render('vista-panel/perfil-cuenta', { usuario, error, exito });
+    return res.status(status).render('perfil-cuenta', { usuario, error, exito });
 };
 
 // ==========================================

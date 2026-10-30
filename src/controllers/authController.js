@@ -6,6 +6,12 @@ const registrarUsuario = async (req, res) => {
         // 1. Recibir los datos exactos del formulario
         const { nombres, email, telefono, password } = req.body;
 
+        // 1.5 Validación de seguridad de la contraseña (Mínimo 8 caracteres, 1 letra y 1 número)
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&.]{8,}$/;
+        if (!password || !passwordRegex.test(password)) {
+            return res.status(400).send('La contraseña debe tener al menos 8 caracteres, e incluir como mínimo una letra y un número.');
+        }
+
         // 2. Verificar si el email ya existe en la base de datos
         const [usuariosExistentes] = await db.query('SELECT * FROM Usuario WHERE email = ?', [email]);
         if (usuariosExistentes.length > 0) {

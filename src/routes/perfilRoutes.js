@@ -18,6 +18,8 @@ const requiereSesion = (req, res, next) => {
 
 // Ver el perfil con los datos reales del usuario
 router.get('/perfil', requiereSesion, perfilController.obtenerPerfil);
+// Ver la pestaña General del perfil con datos de BD
+router.get('/perfil/general', requiereSesion, perfilController.obtenerPerfilGeneral);
 
 // Modificar correo, teléfono, nombre de usuario o contraseña
 router.post('/perfil/actualizar', requiereSesion, perfilController.actualizarPerfil);

@@ -1,17 +1,18 @@
 const db = require('../infrastructure/database/db');
 const bcrypt = require('bcryptjs');
 
-// Columnas que se envían a la vista (nunca se manda el hash de la contraseña)
-const COLUMNAS_PERFIL = 'id_usuario, nombres, apellidos, email, telefono, username, avatar_url, tipo_perfil';
+// Columnas que se envían a la vista
+const COLUMNAS_PERFIL = 'id_usuario, nombres, apellidos, email, telefono, username, avatar_url, tipo_perfil, biografia';
 
 // Campos que el formulario del perfil puede modificar
-const CAMPOS_EDITABLES = ['email', 'telefono', 'username', 'password'];
+const CAMPOS_EDITABLES = ['email', 'telefono', 'username', 'password', 'biografia'];
 
 const NOMBRES_CAMPOS = {
     email: 'correo electrónico',
     telefono: 'número de teléfono',
     username: 'nombre de usuario',
-    password: 'contraseña'
+    password: 'contraseña',
+    biografia: 'biografía'
 };
 
 // ==========================================
@@ -68,6 +69,11 @@ const validarCampo = (campo, valor) => {
         case 'password':
             if (valor.length < 8) {
                 return 'La contraseña debe tener al menos 8 caracteres.';
+            }
+            break;
+        case 'biografia':
+            if (valor.length > 280) {
+                return 'La biografía no puede exceder los 280 caracteres.';
             }
             break;
     }
@@ -145,8 +151,9 @@ const actualizarPerfil = async (req, res) => {
 
         console.log(`✅ Usuario ${idUsuario} actualizó su ${campo}`);
 
-        // Patrón PRG (Post/Redirect/Get): evita reenviar el formulario al recargar
-        return res.redirect(`/perfil?ok=${campo}`);
+       // Patrón PRG: redirige a la pestaña correspondiente
+        const rutaDestino = campo === 'biografia' ? '/perfil/general' : '/perfil';
+        return res.redirect(`${rutaDestino}?ok=${campo}`);
 
     } catch (error) {
         // Red de seguridad: UNIQUE de MySQL por si dos peticiones llegan al mismo tiempo
@@ -161,4 +168,21 @@ const actualizarPerfil = async (req, res) => {
     }
 };
 
-module.exports = { obtenerPerfil, actualizarPerfil };
+// ==========================================
+// GET /perfil/general
+// ==========================================
+const obtenerPerfilGeneral = async (req, res) => {
+    try {
+        const usuario = await buscarUsuarioPorId(obtenerIdSesion(req));
+        if (!usuario) {
+            return req.session.destroy(() => res.redirect('/login'));
+        }
+        const exito = req.query.ok === 'biografia' ? 'Se ha guardado tu biografía correctamente.' : null;
+        return res.render('perfil-general', { usuario, exito, error: null });
+    } catch (error) {
+        console.error('❌ Error al cargar perfil general:', error.message);
+        return res.status(500).send('Error interno');
+    }
+};
+
+module.exports = { obtenerPerfil, actualizarPerfil, obtenerPerfilGeneral };

@@ -61,30 +61,51 @@
 </head>
 <body class="vh-100 overflow-hidden m-0 text-white">
 	<!-- Contenedor para mensajes de éxito -->
-	<div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;" aria-live="polite"></div>
+	<div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger alert-dismissible fade show shadow" role="alert">
+                <strong>Error:</strong> <%= error %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <% } %>
+        <% if (typeof exito !== 'undefined' && exito) { %>
+            <div class="alert alert-success alert-dismissible fade show shadow auto-cerrar" role="alert">
+                <strong>¡Éxito!</strong> <%= exito %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <% } %>
+    </div>
 
-	<div class="container-fluid p-0 h-100">
-		<div class="row g-0 h-100">
-			<%- include('partials/navbar', { active: 'general' }) %>
+	<!-- 1. NAVBAR ARRIBA Y FUERA DEL ROW (Se quita el active de aquí) -->
+    <%- include('partials/navbar') %>
 
-			<!-- Área de contenido principal -->
-			<main class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
-				<div class="container-fluid">
-					<h1 class="fs-3 fw-bold mb-0">General</h1>
-					<p class="fs-6 text-light opacity-75 mb-4">Completa la información que quieres compartir en tu perfil</p>
+    <!-- 2. CONTENEDOR CON ALTURA CALCULADA -->
+    <div class="container-fluid p-0" style="height: calc(100vh - 76px);">
+        <div class="row g-0 h-100">
+            
+            <!-- 3. EL NUEVO MENÚ LATERAL (Se pone el active aquí) -->
+            <%- include('partials/sidebar-perfil', { active: 'general' }) %>
 
+            <!-- Área de contenido principal -->
+            <main class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
+                <div class="container-fluid">
+                    <h1 class="fs-3 fw-bold mb-0">General</h1>
+                    <p class="fs-6 text-light opacity-75 mb-4">Completa la información que quieres compartir en tu perfil</p>
 					<h2 class="fw-bold fs-6 mt-4">Sobre mí</h2>
 					<hr class="border-white border-opacity-50 my-3">
 
-					<!-- Formulario de biografía o descripción corta -->
-					<form id="form-biografia">
+					<!-- Formulario conectado a MySQL -->
+					<form action="/perfil/actualizar" method="POST">
+                        <input type="hidden" name="campo" value="biografia">
 						<div class="row mb-3">
 							<div class="col-md-8">
 								<label for="biografia" class="fw-bold mb-1">Biografía o descripción corta</label>
 								<div class="small text-light opacity-75 mb-2">Cuéntanos brevemente sobre ti, tus estudios o la carrera que te interesa.</div>
-								<!-- Campo de texto con límite de 280 caracteres -->
-								<textarea class="form-control" id="biografia" name="biografia" rows="5" maxlength="280" placeholder="Por ejemplo: Estoy estudiando... y me interesa la carrera de..." aria-describedby="biografia-ayuda"></textarea>
-								<div id="biografia-ayuda" class="form-text text-light opacity-75 text-end"><span id="contador">0</span>/280</div>
+								
+                                <!-- El valor de MySQL se inyecta directamente aquí -->
+								<textarea class="form-control" id="biografia" name="valor" rows="5" maxlength="280" placeholder="Por ejemplo: Estoy estudiando... y me interesa la carrera de..."><%= usuario.biografia || '' %></textarea>
+								
+                                <div id="biografia-ayuda" class="form-text text-light opacity-75 text-end"><span id="contador">0</span>/280</div>
 							</div>
 						</div>
 						<button type="submit" class="btn btn-outline-light btn-sm">Guardar descripción</button>
@@ -95,32 +116,26 @@
 		</div>
 	</div>
 
-	<!-- Lógica para cargar, contar y guardar la biografía -->
+	<!-- Script limpio: Solo contador de caracteres visual -->
 	<script>
 		const biografia = document.getElementById('biografia');
 		const contador = document.getElementById('contador');
-		const biografiaGuardada = localStorage.getItem('perfil-biografia') || '';
-		biografia.value = biografiaGuardada;
+		
+        // Contar al cargar la página
 		contador.textContent = biografia.value.length;
 
+        // Contar mientras se escribe
 		biografia.addEventListener('input', () => {
 			contador.textContent = biografia.value.length;
 		});
 
-		document.getElementById('form-biografia').addEventListener('submit', (event) => {
-			event.preventDefault();
-			localStorage.setItem('perfil-biografia', biografia.value.trim());
-
-			const alertContainer = document.getElementById('alert-container');
-			alertContainer.innerHTML = '<div class="alert alert-success alert-dismissible fade show shadow" role="alert">Descripción guardada en este navegador.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button></div>';
-            //desaparece despues de 4 segundos
-			setTimeout(() => {
-				const alerta = alertContainer.querySelector('.alert');
-				if (alerta) {
-					bootstrap.Alert.getOrCreateInstance(alerta).close();
-				}
-			}, 4000);
-		});
+        // Ocultar mensaje de éxito de la URL después de 4 segundos
+        document.querySelectorAll('.auto-cerrar').forEach((alertaEl) => {
+            setTimeout(() => {
+                const alertaBs = bootstrap.Alert.getOrCreateInstance(alertaEl);
+                alertaBs.close();
+            }, 4000);
+        });
 	</script>
 </body>
 </html>

@@ -112,7 +112,29 @@ router.get("/foros/hilo", (req, res) => {
             likes: 5,
             fecha: "28/09/2026"
         },
-        respuestas: []
+        respuestas: [
+            {
+                usuario: "Ana Torres",
+                contenido: "Me resulta útil la información compartida en el hilo.",
+                likes: 3,
+                fecha: "28/09/2026",
+                respuestas: []
+            },
+            {
+                usuario: "Carlos Soto",
+                contenido: "Coincido con la publicación. ¿Podrían compartir más detalles?",
+                likes: 2,
+                fecha: "29/09/2026",
+                respuestas: [
+                    {
+                        usuario: "Usuario de prueba",
+                        contenido: "Claro, pronto voy a añadir más información.",
+                        likes: 1,
+                        fecha: "29/09/2026"
+                    }
+                ]
+            }
+        ]
     });
 });
 

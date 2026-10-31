@@ -1,29 +1,3 @@
-<%
-/* Se espera recibir `programas`: arreglo de objetos con la forma
-   { universidad: { nombre, logo_url }, carrera_nombre, descripcion,
-     requisitos: { nem, ranking, m1, m2, lectora, ciencias_historia, corte },
-     ingresados_anual, egresados_anual }
-   Si la ruta no pasa datos, se usa un arreglo de ejemplo (datos_prueba.sql). */
-const _programas = typeof programas !== 'undefined' ? programas : [
-    {
-        universidad: { nombre: 'Universidad Católica de Temuco', logo_url: '/img/logo-uct.png' },
-        carrera_nombre: 'Ingeniería Civil Informática',
-        descripcion: 'La Ingeniería Civil en Informática forma profesionales con habilidades de análisis, diseño, implementación, mejora y gestión en proyectos públicos y privados de desarrollo de software.',
-        requisitos: { nem: 10, ranking: 40, m1: 25, m2: 5, lectora: 10, ciencias_historia: 10, corte: 458 },
-        ingresados_anual: 70,
-        egresados_anual: 45
-    },
-    {
-        universidad: { nombre: 'Universidad de la Frontera', logo_url: '/img/logo-ufro.png' },
-        carrera_nombre: 'Ingeniería Civil Informática',
-        descripcion: 'La Ingeniería Civil en Informática forma profesionales con habilidades de análisis, diseño, implementación, mejora y gestión en proyectos públicos y privados de desarrollo de software.',
-        requisitos: { nem: 10, ranking: 40, m1: 25, m2: 5, lectora: 10, ciencias_historia: 10, corte: 458 },
-        ingresados_anual: 80,
-        egresados_anual: 50
-    }
-];
-%>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -42,80 +16,106 @@ const _programas = typeof programas !== 'undefined' ? programas : [
     <!-- Filtros -->
     <section class="card border-0 shadow-sm rounded-4 p-4 mb-4">
         <h2 class="h5 fw-bold mb-3">Filtros</h2>
-        <div class="row g-3">
-            <div class="col-md-6">
-                <select class="form-select rounded-3" style="background-color: #EAEEF5;">
-                    <option>[ Carrera 1 ]</option>
-                    <% _programas.forEach(function (p) { %>
-                        <option><%= p.carrera_nombre %> - <%= p.universidad.nombre %></option>
-                    <% }); %>
-                </select>
+        
+        <form method="GET" action="/comparador">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <select name="c1" class="form-select rounded-3" style="background-color: #EAEEF5;" onchange="this.form.submit()">
+                        <option value="">[ Selecciona la Primera Carrera ]</option>
+                        <% listaSelects.forEach(function (opt) { %>
+                            <!-- Mantiene seleccionada la opción si el ID coincide con la URL -->
+                            <option value="<%= opt.id_programa %>" <%= c1 == opt.id_programa ? 'selected' : '' %>>
+                                <%= opt.carrera_nombre %> - <%= opt.universidad_nombre %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <select name="c2" class="form-select rounded-3" style="background-color: #EAEEF5;" onchange="this.form.submit()">
+                        <option value="">[ Selecciona la Segunda Carrera ]</option>
+                        <% listaSelects.forEach(function (opt) { %>
+                            <option value="<%= opt.id_programa %>" <%= c2 == opt.id_programa ? 'selected' : '' %>>
+                                <%= opt.carrera_nombre %> - <%= opt.universidad_nombre %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
             </div>
-            <div class="col-md-6">
-                <select class="form-select rounded-3" style="background-color: #EAEEF5;">
-                    <option>[ Carrera 2 ]</option>
-                    <% _programas.forEach(function (p) { %>
-                        <option><%= p.carrera_nombre %> - <%= p.universidad.nombre %></option>
-                    <% }); %>
-                </select>
-            </div>
-        </div>
+        </form>
+
     </section>
 
     <!-- Tarjetas por universidad -->
     <div class="row g-4">
-        <% _programas.forEach(function (p) { %>
-        <div class="col-md-6 d-flex flex-column gap-3">
-
-            <!-- Encabezado universidad -->
-            <div class="card border-0 shadow-sm rounded-4 hover-card p-3 d-flex flex-row align-items-center gap-3">
-                <% if (p.universidad.logo_url) { %>
-                    <img src="<%= p.universidad.logo_url %>" alt="Logo <%= p.universidad.nombre %>"
-                         style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
-                <% } else { %>
-                    <div style="width:48px;height:48px;border-radius:50%;background:#EAEEF5;"></div>
-                <% } %>
-                <span class="fw-semibold"><%= p.universidad.nombre %></span>
-            </div>
-
-            <!-- Requisitos -->
-            <div class="card border-0 shadow-sm rounded-4 hover-card p-3">
-                <p class="fw-bold text-center mb-3">Requisitos:</p>
-                <div class="p-3 rounded-3" style="background-color: #8C9FBA1A;">
-                    <div class="row row-cols-2 g-2 small">
-                        <div class="col"><strong>NEM:</strong><br><%= p.requisitos.nem %>%</div>
-                        <div class="col"><strong>Ranking:</strong><br><%= p.requisitos.ranking %>%</div>
-                        <div class="col"><strong>Matematica M1:</strong><br><%= p.requisitos.m1 %>%</div>
-                        <div class="col"><strong>Competencia lectora:</strong><br><%= p.requisitos.lectora %>%</div>
-                        <div class="col"><strong>Historia o ciencias:</strong><br><%= p.requisitos.ciencias_historia %>%</div>
-                        <div class="col"><strong>Matematica M2:</strong><br><%= p.requisitos.m2 %>%</div>
-                        <div class="col-12"><strong>Puntaje de corte:</strong><br><%= p.requisitos.corte %> pts</div>
-                    </div>
+        
+        <% if (programas.length === 0) { %>
+            <!-- ESTADO VACÍO (Empty State) -->
+            <div class="col-12 text-center py-5">
+                <div class="card border-0 shadow-sm rounded-4 p-5 d-flex align-items-center justify-content-center" style="background-color: #f8f9fa;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#a0aec0" class="bi bi-search mb-3" viewBox="0 0 16 16">
+                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                    <h3 class="h4 fw-bold text-secondary">¡Comienza tu comparación!</h3>
+                    <p class="text-muted mb-0">Selecciona las carreras que te interesan en los filtros de arriba para ver sus requisitos, mallas y estadísticas lado a lado.</p>
                 </div>
             </div>
+        <% } else { %>
+            
+            <!-- TARJETAS CON RESULTADOS -->
+            <% programas.forEach(function (p) { %>
+            <div class="col-md-6 d-flex flex-column gap-3">
 
-            <!-- Descripcion + estadisticas -->
-            <div class="row g-3">
-                <div class="col-8">
-                    <div class="card border-0 shadow-sm rounded-4 hover-card p-3 h-100">
-                        <p class="small fw-semibold mb-1">Descripción de la carrera:</p>
-                        <p class="small text-muted mb-0"><%= p.descripcion %></p>
+                <!-- Encabezado universidad -->
+                <div class="card border-0 shadow-sm rounded-4 hover-card p-3 d-flex flex-row align-items-center gap-3">
+                    <% if (p.universidad.logo_url) { %>
+                        <img src="<%= p.universidad.logo_url %>" alt="Logo <%= p.universidad.nombre %>"
+                             style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
+                    <% } else { %>
+                        <div style="width:48px;height:48px;border-radius:50%;background:#EAEEF5;"></div>
+                    <% } %>
+                    <span class="fw-semibold"><%= p.universidad.nombre %></span>
+                </div>
+
+                <!-- Requisitos -->
+                <div class="card border-0 shadow-sm rounded-4 hover-card p-3">
+                    <p class="fw-bold text-center mb-3">Requisitos:</p>
+                    <div class="p-3 rounded-3" style="background-color: #8C9FBA1A;">
+                        <div class="row row-cols-2 g-2 small">
+                            <div class="col"><strong>NEM:</strong><br><%= p.requisitos.nem %>%</div>
+                            <div class="col"><strong>Ranking:</strong><br><%= p.requisitos.ranking %>%</div>
+                            <div class="col"><strong>Matematica M1:</strong><br><%= p.requisitos.m1 %>%</div>
+                            <div class="col"><strong>Competencia lectora:</strong><br><%= p.requisitos.lectora %>%</div>
+                            <div class="col"><strong>Historia o ciencias:</strong><br><%= p.requisitos.ciencias_historia %>%</div>
+                            <div class="col"><strong>Matematica M2:</strong><br><%= p.requisitos.m2 %>%</div>
+                            <div class="col-12"><strong>Puntaje de corte:</strong><br><%= p.requisitos.corte %> pts</div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-4 d-flex flex-column gap-2">
-                    <div class="p-2 rounded-3 text-center small" style="background-color: #8C9FBA1A;">
-                        Cantidad de ingresados anual:<br>
-                        <strong><%= p.ingresados_anual %></strong>
+
+                <!-- Descripcion + estadisticas -->
+                <div class="row g-3">
+                    <div class="col-8">
+                        <div class="card border-0 shadow-sm rounded-4 hover-card p-3 h-100">
+                            <p class="small fw-semibold mb-1">Descripción de la carrera:</p>
+                            <p class="small text-muted mb-0"><%= p.descripcion %></p>
+                        </div>
                     </div>
-                    <div class="p-2 rounded-3 text-center small" style="background-color: #8C9FBA1A;">
-                        Cantidad de egresados anual:<br>
-                        <strong><%= p.egresados_anual %></strong>
+                    <div class="col-4 d-flex flex-column gap-2">
+                        <div class="p-2 rounded-3 text-center small" style="background-color: #8C9FBA1A;">
+                            Cantidad de ingresados anual:<br>
+                            <strong><%= p.ingresados_anual %></strong>
+                        </div>
+                        <div class="p-2 rounded-3 text-center small" style="background-color: #8C9FBA1A;">
+                            Cantidad de egresados anual:<br>
+                            <strong><%= p.egresados_anual %></strong>
+                        </div>
                     </div>
                 </div>
+
             </div>
-
-        </div>
-        <% }); %>
+            <% }); %>
+            
+        <% } %>
     </div>
 
 </main>

@@ -5,7 +5,8 @@
 
 -- universidades de temuco
 
-INSERT INTO Universidad (nombre, logo_url, anos_acreditacion, sitio_web, descripcion, ciudad) VALUES
+
+INSERT INTO Universidad (nombre, logo_url, años_acreditacion, sitio_web, descripcion, ciudad) VALUES
 ('Universidad de la Frontera', 'https://ejemplo.com/logo-ufro.png', 6, 'https://www.ufro.cl', 'La Universidad de La Frontera (UFRO) es una institución pública y estatal de educación superior...', 'Temuco'),
 ('Universidad Católica de Temuco', 'https://ejemplo.com/logo-uct.png', 5, 'https://www.uct.cl', 'La Universidad Católica de Temuco es una institución de educación superior tradicional y privada...', 'Temuco'),
 ('Universidad Mayor', 'https://ejemplo.com/logo-mayor.png', 5, 'https://www.umayor.cl', 'Institución privada con sede en Temuco enfocada en la innovación académica.', 'Temuco');
@@ -33,3 +34,18 @@ INSERT INTO Requisitos_Programa (id_programa, pct_nem, pct_ranking, pct_m1, pct_
 INSERT INTO Usuario (nombres, apellidos, email, telefono, password, username, avatar_url, tipo_perfil) VALUES
 ('Diego', 'Fonseca', 'diego.fonseca@ejemplo.com', '+56912345678', 'contrasena_encriptada_123', 'Don quijote', 'https://ejemplo.com/avatar1.png', 'Estudiante'),
 ('Bayron', 'Apellido', 'bayron@ejemplo.com', '+56987654321', 'contrasena_encriptada_456', 'BayronDev', 'https://ejemplo.com/avatar2.png', 'Egresado');
+
+-- Hilo y respuesta de prueba para la vista del hilo
+INSERT INTO Hilo (titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
+('Experiencia en Ingeniería Civil en Informática', '¿Cómo ha sido su experiencia en esta carrera?', NOW(), 3, 0, 1, 1);
+
+INSERT INTO Comentario (id_hilo, id_usuario, contenido, fecha_publicacion, likes, dislikes) VALUES
+(LAST_INSERT_ID(), 2, 'Me ha gustado mucho; recomiendo participar en los proyectos y ayudantías.', NOW(), 1, 0);
+
+--  Insertar un par de Hilos de prueba para la sección de foros
+
+INSERT INTO Hilo (titulo, contenido, fecha_publicacion, likes, dislikes, id_usuario, id_programa) VALUES
+("Hilo de prueba", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla laoreet purus pulvinar malesuada tincidunt.", '2026-09-29 18:20:15', 6, 1, 2, 2),
+("Segundo hilo de prueba", "Cras bibendum lectus elit, vel ullamcorper felis condimentum ac.", '2026-10-01 09:15:20', 3, 0, 1, 1),
+("Tercer hilo de prueba", "Fusce lobortis lorem vitae sapien scelerisque, id dictum turpis eleifend. Donec tincidunt.", '2026-10-02 14:45:10', 2, 6, 2, 3);
+

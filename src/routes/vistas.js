@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../infrastructure/database/db');
 const router = express.Router();
+const db = require('../infrastructure/database/db');
 
 // MIDDLEWARE
 const { protegerRuta } = require('../middlewares/authMiddleware');

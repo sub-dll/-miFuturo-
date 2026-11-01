@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const perfilController = require('../controllers/perfilController');
+const notificacionesController = require('../controllers/notificacionesController');
 
 // ==========================================
 // Middleware propio del perfil
@@ -23,5 +24,8 @@ router.get('/perfil/general', requiereSesion, perfilController.obtenerPerfilGene
 
 // Modificar correo, teléfono, nombre de usuario o contraseña
 router.post('/perfil/actualizar', requiereSesion, perfilController.actualizarPerfil);
+
+router.get('/notificaciones', requiereSesion, notificacionesController.obtenerHistorial);
+router.post('/notificaciones/leer', requiereSesion, notificacionesController.marcarComoLeida);
 
 module.exports = router;

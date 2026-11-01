@@ -59,9 +59,11 @@
 </head>
 <body>
 
-    <div class="container-fluid p-0">
-        <div class="row g-0">
-            <%- include('../partials/navbar', { active: 'notificaciones' }) %>
+    <%- include('partials/navbar') %>
+
+    <div class="container-fluid p-0" style="height: calc(100vh - 76px);">
+        <div class="row g-0 h-100">
+            <%- include('partials/sidebar-perfil', { active: 'notificaciones' }) %>
 
             <!-- Área de Contenido Principal -->
             <div class="col-md-9 col-lg-10 p-5 content-area">
@@ -103,7 +105,7 @@
                         <input class="form-check-input fs-4" type="checkbox" role="switch" id="notifEmail" <%= user && user.notifications && user.notifications.email ? 'checked' : '' %>>
                     </div>
                 </div>
-                <%- include('../partials/footer') %>
+                <%- include('partials/footer') %>
             </div>
         </div>
     </div>

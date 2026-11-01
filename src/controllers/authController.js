@@ -64,6 +64,7 @@ const iniciarSesion = async (req, res) => {
 
         // 3. ¡CORRECCIÓN CLAVE! Guardar el objeto usuario en la sesión
         req.session.id_usuario = usuario.id_usuario;
+        req.session.userId = usuario.id_usuario;
         req.session.usuario = {
             id_usuario: usuario.id_usuario,
             nombre: usuario.nombres,

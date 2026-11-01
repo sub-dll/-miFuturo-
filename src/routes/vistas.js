@@ -1,7 +1,6 @@
 const express = require('express');
 const db = require('../infrastructure/database/db');
 const router = express.Router();
-const db = require('../infrastructure/database/db');
 
 // MIDDLEWARE
 const { protegerRuta } = require('../middlewares/authMiddleware');
@@ -144,6 +143,11 @@ router.get(['/foro/hilo/:id', '/foros/hilo/:id'], async (req, res) => {
 router.post(['/foro/hilo/:id/responder', '/foros/hilo/:id/responder'], async (req, res) => {
     const { id } = req.params;
     const contenido = typeof req.body.contenido === 'string' ? req.body.contenido.trim() : '';
+    const usuarioId = req.session && (req.session.id_usuario || req.session.userId);
+
+    if (!usuarioId) {
+        return res.redirect('/login');
+    }
 
     if (!contenido) {
         return res.status(400).send('El comentario no puede estar vacío');
@@ -151,10 +155,32 @@ router.post(['/foro/hilo/:id/responder', '/foros/hilo/:id/responder'], async (re
 
     try {
         await db.query(
-            `INSERT INTO Comentario (id_hilo, contenido, fecha_publicacion, likes, dislikes)
-             VALUES (?, ?, NOW(), 0, 0)`,
-            [id, contenido]
+            `INSERT INTO Comentario (id_hilo, id_usuario, contenido, fecha_publicacion, likes, dislikes)
+             VALUES (?, ?, ?, NOW(), 0, 0)`,
+            [id, usuarioId, contenido]
         );
+
+        const [hilos] = await db.query(
+            'SELECT id_usuario, titulo FROM Hilo WHERE id_hilo = ?',
+            [id]
+        );
+        if (hilos.length > 0 && Number(hilos[0].id_usuario) !== Number(usuarioId)) {
+            const mensaje = `Tienes una nueva respuesta en: "${hilos[0].titulo}"`;
+            const linkDestino = `/foro/hilo/${id}`;
+            const [resultado] = await db.query(
+                `INSERT INTO notificacion (id_usuario_destino, tipo_notificacion, mensaje, link_destino)
+                 VALUES (?, 'respuesta_hilo', ?, ?)`,
+                [hilos[0].id_usuario, mensaje, linkDestino]
+            );
+            const io = req.app.get('io');
+            if (io) {
+                io.to(`usuario_${hilos[0].id_usuario}`).emit('nueva_notificacion', {
+                    id: resultado.insertId,
+                    mensaje,
+                    link_destino: linkDestino
+                });
+            }
+        }
 
         res.redirect(`/foro/hilo/${encodeURIComponent(id)}`);
     } catch (error) {

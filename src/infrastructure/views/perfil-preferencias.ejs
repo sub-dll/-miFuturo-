@@ -59,9 +59,11 @@
     <!-- Contenedor para mensajes de éxito flotantes -->
     <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
 
-    <div class="container-fluid p-0 h-100">
+    <%- include('partials/navbar') %>
+
+    <div class="container-fluid p-0" style="height: calc(100vh - 76px);">
         <div class="row g-0 h-100">
-            <%- include('./partials/navbar', { active: 'preferencias' }) %>
+            <%- include('partials/sidebar-perfil', { active: 'preferencias' }) %>
 
             <!-- Área Principal utilizando utilidades de Bootstrap -->
             <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
@@ -119,7 +121,7 @@
                     </div>
 
                 </div>
-                <%- include('../partials/footer') %>
+                <%- include('partials/footer') %>
             </div>
 
         </div>

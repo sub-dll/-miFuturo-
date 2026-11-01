@@ -124,5 +124,5 @@ CREATE TABLE notificacion (
   fecha datetime DEFAULT current_timestamp(),
   PRIMARY KEY (id_notificacion),
   KEY id_usuario_destino (id_usuario_destino),
-  CONSTRAINT notificacion_ibfk_1 FOREIGN KEY (id_usuario_destino) REFERENCES usuario (id_usuario) ON DELETE CASCADE
+  CONSTRAINT notificacion_ibfk_1 FOREIGN KEY (id_usuario_destino) REFERENCES Usuario (id_usuario) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

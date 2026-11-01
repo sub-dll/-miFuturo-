@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de notificaciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    <main class="container py-5">
+        <h1 class="h3 mb-4">Historial de notificaciones</h1>
+        <div class="list-group shadow-sm">
+            <% if (notificaciones.length === 0) { %>
+                <p class="text-center py-4 mb-0">No tienes notificaciones.</p>
+            <% } else { %>
+                <% notificaciones.forEach(notificacion => { %>
+                    <a href="<%= notificacion.link_destino %>"
+                       class="list-group-item list-group-item-action <%= notificacion.leida ? '' : 'list-group-item-light fw-bold' %>"
+                       data-notificacion-id="<%= notificacion.id_notificacion %>"
+                       data-leida="<%= notificacion.leida %>">
+                        <%= notificacion.mensaje %>
+                    </a>
+                <% }) %>
+            <% } %>
+        </div>
+    </main>
+    <%- include('partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('[data-notificacion-id]').forEach(item => {
+            item.addEventListener('click', async event => {
+                if (item.dataset.leida === '1') return;
+                event.preventDefault();
+                const destino = item.getAttribute('href');
+                try {
+                    await fetch('/notificaciones/leer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id_notificacion: item.dataset.notificacionId })
+                    });
+                } finally {
+                    window.location.href = destino;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const perfilController = require('../controllers/perfilController');
+const notificacionesController = require('../controllers/notificacionesController');
 
 // ==========================================
 // Middleware propio del perfil
@@ -18,8 +19,13 @@ const requiereSesion = (req, res, next) => {
 
 // Ver el perfil con los datos reales del usuario
 router.get('/perfil', requiereSesion, perfilController.obtenerPerfil);
+// Ver la pestaña General del perfil con datos de BD
+router.get('/perfil/general', requiereSesion, perfilController.obtenerPerfilGeneral);
 
 // Modificar correo, teléfono, nombre de usuario o contraseña
 router.post('/perfil/actualizar', requiereSesion, perfilController.actualizarPerfil);
+
+router.get('/notificaciones', requiereSesion, notificacionesController.obtenerHistorial);
+router.post('/notificaciones/leer', requiereSesion, notificacionesController.marcarComoLeida);
 
 module.exports = router;

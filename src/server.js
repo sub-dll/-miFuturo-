@@ -1,39 +1,76 @@
 const express = require('express');
 const path = require('path');
+const http = require('http');
 const session = require('express-session');
+const { Server } = require('socket.io');
 const app = express();
 
-// 1. Middlewares para entender los datos de los formularios
+// 1. Middlewares para procesar datos de formularios e JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// 2. Configuración de express-session (¡DEBE ir ANTES de las rutas!)
-app.use(session({
+// 2. Configuración de express-session (DEBE ir antes de las rutas)
+const sessionParser = session({
     secret: process.env.SESSION_SECRET || 'secreto_temporal_mifuturo',
     resave: false,
-    saveUninitialized: false
-}));
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // En entorno de desarrollo (HTTP)
+        maxAge: 1000 * 60 * 60 * 24 // Duración de la sesión: 24 horas
+    }
+});
+app.use(sessionParser);
 
-// 3. Configuración de Vistas EJS y Archivos Estáticos
+// 3. Middleware Global: Expone los datos del usuario autenticado a todas las vistas EJS
+app.use((req, res, next) => {
+    res.locals.usuario = (req.session && req.session.usuario) ? req.session.usuario : null;
+    next();
+});
+const { cargarNotificaciones } = require('./middlewares/notificaciones');
+app.use(cargarNotificaciones);
+
+// 4. Configuración del Motor de Plantillas (EJS) y Archivos Estáticos
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'infrastructure/views'));
 app.use(express.static(path.join(__dirname, '../public')));
 
-// 4. Importar y Registrar Rutas
+// 5. Importar Rutas de la rama actual
 const vistasRoutes = require('./routes/vistas');
 const authRoutes = require('./routes/authRoutes');
 const comparadorRoutes = require('./routes/comparadorRoutes');
 const perfilRoutes = require('./routes/perfilRoutes'); 
+const foroRoutes = require('./routes/foroRoutes');
 
+// Registrar las rutas
 app.use('/', perfilRoutes);  
 app.use('/', vistasRoutes);
 app.use('/', authRoutes); 
+app.use('/', foroRoutes); 
 app.use('/comparador', comparadorRoutes);
 
-// 5. Base de Datos y Encendido del Servidor
+// 6. Conexión a Base de Datos y Encendido del Servidor
 require('./infrastructure/database/db.js');
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+const server = http.createServer(app);
+const io = new Server(server);
+app.set('io', io);
+
+io.engine.use(sessionParser);
+io.on('connection', socket => {
+    const usuarioId = socket.request.session &&
+        (socket.request.session.userId || socket.request.session.id_usuario);
+    if (usuarioId) {
+        socket.join(`usuario_${usuarioId}`);
+    }
+
+    socket.on('registrar_usuario', idUsuario => {
+        if (String(idUsuario) === String(usuarioId)) {
+            socket.join(`usuario_${usuarioId}`);
+        }
+    });
+});
+
+server.listen(PORT, () => {
   console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
 });

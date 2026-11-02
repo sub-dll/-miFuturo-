@@ -1,0 +1,10 @@
+<!-- sidebar-perfil.ejs -->
+<aside class="col-md-3 col-lg-2 sidebar p-4">
+    <h5 class="fw-bold text-dark mb-4">Ajustes del Perfil</h5>
+    <nav class="nav flex-column gap-2">
+        <a class="nav-link px-3 py-2 <%= typeof active !== 'undefined' && active === 'general' ? 'active' : '' %>" href="/perfil/general">General</a>
+        <a class="nav-link px-3 py-2 <%= typeof active !== 'undefined' && active === 'cuenta' ? 'active' : '' %>" href="/perfil">Cuenta</a>
+        <a class="nav-link px-3 py-2 <%= typeof active !== 'undefined' && active === 'preferencias' ? 'active' : '' %>" href="/perfil/preferencias">Preferencias</a>
+        <a class="nav-link px-3 py-2 <%= typeof active !== 'undefined' && active === 'notificaciones' ? 'active' : '' %>" href="/perfil/notificaciones">Notificaciones</a>
+    </nav>
+</aside>

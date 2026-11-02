@@ -1,8 +1,5 @@
 const express = require('express');
-const path = require('path');   // tenemos que quitar esto despues ajustandotodos los EJS que tienen las lineas res.sendFile(path.join(...)) que era para los antiguo .html yr eplzararlo en todos los archivos EJS llamando a res.render(), la librería path
 const router = express.Router();
-
-// Importa la conexión a la base de datos
 const db = require('../infrastructure/database/db');
 
 // MIDDLEWARE
@@ -10,43 +7,47 @@ const { protegerRuta } = require('../middlewares/authMiddleware');
 
 // ==========================================
 // 1. RUTAS PÚBLICAS Y DE AUTENTICACIÓN
-// (No llevan protegerRuta porque cualquiera debe poder verlas)
 // ==========================================
 router.get('/login', (req, res) => {
-  res.render('login');
+    res.render('login');
 });
 
 router.get('/registro', (req, res) => {
-  res.render('registro');
+    res.render('registro');
 });
 
 router.get('/recuperar', (req, res) => {
-  res.render('recuperar');
+    res.render('recuperar');
 });
 
-router.get('/', (req, res) => {
-  res.render('index');
+router.get('/', async (req, res) => {
+    try {
+        // Obtenemos todas las universidades ordenadas alfabéticamente
+        const [universidades] = await db.query(`SELECT id_universidad, nombre, logo_url, ciudad FROM Universidad ORDER BY nombre ASC`);
+        
+        // Extraemos un arreglo limpio sin duplicados de las ciudades disponibles
+        const ciudades = [...new Set(universidades.map(u => u.ciudad).filter(Boolean))];
+
+        res.render('index', { universidades, ciudades });
+    } catch (error) {
+        console.error('Error al cargar el home:', error);
+        res.status(500).send('Error interno al cargar la página principal');
+    }
 });
 
 router.get('/perfil-carrera', (req, res) => {
-  res.render('perfil-carrera');
+    res.render('perfil-carrera');
 });
 
 // ==========================================
-// 2. RUTAS PRIVADAS (Requieren inicio de sesión)
-// (Aquí inyectamos protegerRuta justo antes de (req, res))
+// 2. RUTAS PRIVADAS SECUNDARIAS DEL PERFIL
 // ==========================================
-
-router.get('/perfil', protegerRuta, (req, res) => {
-    res.render('vista-panel/perfil-cuenta');
-});
-
 router.get('/perfil/preferencias', protegerRuta, (req, res) => {
-    res.render('vista-panel/perfil-preferencias');
+    res.render('perfil-preferencias');
 });
 
 router.get('/perfil/notificaciones', protegerRuta, (req, res) => {
-    res.render('vista-panel/perfil-notificaciones', { user: null });
+    res.render('perfil-notificaciones', { user: null });
 });
 
 
@@ -600,4 +601,5 @@ router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
 
 });
 
+// Exportamos el enrutador
 module.exports = router;

@@ -55,10 +55,12 @@
             <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-regular fa-envelope"></i></span>
           </div>
 
-          <!-- Campo Contraseña -->
+          <!-- Campo Contraseña con botón Ver/Ocultar -->
           <div class="input-group mb-3">
-            <input type="password" name="password" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Contraseña" required>
-            <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" id="loginPasswordInput" name="password" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Contraseña" required>
+            <button type="button" onclick="toggleLoginPassword()" class="input-group-text bg-light border-0 rounded-end-3 text-muted" style="cursor: pointer;" tabindex="-1">
+              <i class="fa-regular fa-eye" id="toggleLoginPasswordIcon"></i>
+            </button>
           </div>
 
           <!-- Opciones Recordar / Olvidé contraseña -->
@@ -83,6 +85,23 @@
 
     </div>
   </div>
+
+  <script>
+    function toggleLoginPassword() {
+      const input = document.getElementById('loginPasswordInput');
+      const icon = document.getElementById('toggleLoginPasswordIcon');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+  </script>
 
 </body>
 </html>

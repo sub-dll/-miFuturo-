@@ -8,7 +8,8 @@ CREATE TABLE `Usuario` (
   `password` VARCHAR(255) NOT NULL,
   `username` VARCHAR(50) UNIQUE,
   `avatar_url` VARCHAR(255),
-  `tipo_perfil` VARCHAR(20)
+  `tipo_perfil` VARCHAR(20),
+  `biografia` VARCHAR(280)
 );
 
 CREATE TABLE `Universidad` (
@@ -111,3 +112,17 @@ CREATE TABLE `Comentario` (
   FOREIGN KEY (`id_usuario`) REFERENCES `Usuario`(`id_usuario`),
   FOREIGN KEY (`parent_comentario_id`) REFERENCES `Comentario`(`id_comentario`)
 );
+
+-- 4. tablas de nivel 4 (tablas de notificaciones y otras dependientes)
+CREATE TABLE notificacion (
+  id_notificacion int(11) NOT NULL AUTO_INCREMENT,
+  id_usuario_destino int(11) NOT NULL,
+  tipo_notificacion varchar(50) DEFAULT NULL, 
+  mensaje varchar(255) NOT NULL,
+  link_destino varchar(255) NOT NULL,
+  leida tinyint(1) DEFAULT 0,
+  fecha datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (id_notificacion),
+  KEY id_usuario_destino (id_usuario_destino),
+  CONSTRAINT notificacion_ibfk_1 FOREIGN KEY (id_usuario_destino) REFERENCES Usuario (id_usuario) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

@@ -180,7 +180,8 @@
 
                                         <div class="ms-4 mt-3">
 
-                                            <% respuesta.respuestas.forEach(subrespuesta => { %>
+                                            <% for (let j = 0; j < respuesta.respuestas.length; j++) { %>
+                                                <% const subrespuesta = respuesta.respuestas[j]; %>
 
                                                 <div class="card mb-2">
 
@@ -229,7 +230,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            <% }) %>
+                                            <% } %>
                                         </div>
                                     <% } %>
                                 </div>

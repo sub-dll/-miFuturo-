@@ -39,11 +39,13 @@ const vistasRoutes = require('./routes/vistas');
 const authRoutes = require('./routes/authRoutes');
 const comparadorRoutes = require('./routes/comparadorRoutes');
 const perfilRoutes = require('./routes/perfilRoutes'); 
+const foroRoutes = require('./routes/foroRoutes');
 
 // Registrar las rutas
 app.use('/', perfilRoutes);  
 app.use('/', vistasRoutes);
 app.use('/', authRoutes); 
+app.use('/', foroRoutes); 
 app.use('/comparador', comparadorRoutes);
 
 // 6. Conexión a Base de Datos y Encendido del Servidor

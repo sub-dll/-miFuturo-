@@ -113,70 +113,42 @@
 
                             </div>
 
-                            <form
-                                action="/foros/nuevo-hilo"
-                                method="POST"
-                            >
+                            <form action="/foro/hilo/crear" method="POST">
+                                <!-- Inputs ocultos para saber a dónde redirigir después de publicar -->
+                                <input type="hidden" name="id_universidad" value="<%= id_universidad %>">
+                                <input type="hidden" name="id_carrera" value="<%= id_carrera %>">
 
                                 <div class="modal-body">
-
+                                    
+                                    <!-- Selector de Programa -->
                                     <div class="mb-3">
-
-                                        <label for="titulo" class="form-label">
-                                            Título
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="titulo"
-                                            name="titulo"
-                                            placeholder="Escribe el título del hilo..."
-                                            required
-                                        >
-
+                                        <label for="id_programa" class="form-label fw-bold">Programa Universitario</label>
+                                        <select class="form-select" id="id_programa" name="id_programa" required>
+                                            <option value="" disabled selected>Selecciona el programa específico...</option>
+                                            <% programas.forEach(programa => { %>
+                                                <option value="<%= programa.id_programa %>">
+                                                    <%= programa.nombre_carrera %>
+                                                </option>
+                                            <% }) %>
+                                        </select>
                                     </div>
 
+                                    <div class="mb-3">
+                                        <label for="titulo" class="form-label fw-bold">Título</label>
+                                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Escribe el título del hilo..." required>
+                                    </div>
 
                                     <div class="mb-3">
-
-                                        <label for="contenido" class="form-label">
-                                            Contenido
-                                        </label>
-
-                                        <textarea
-                                            class="form-control"
-                                            id="contenido"
-                                            name="contenido"
-                                            rows="6"
-                                            placeholder="Escribe aquí tu pregunta o comentario..."
-                                            required
-                                        ></textarea>
-
+                                        <label for="contenido" class="form-label fw-bold">Contenido</label>
+                                        <textarea class="form-control" id="contenido" name="contenido" rows="6" placeholder="Escribe aquí tu pregunta o comentario..." required></textarea>
                                     </div>
 
                                 </div>
-
 
                                 <div class="modal-footer">
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-secondary"
-                                        data-bs-dismiss="modal"
-                                    >
-                                        Cancelar
-                                    </button>
-
-                                    <button
-                                        type="submit"
-                                        class="btn btn-color-base"
-                                    >
-                                        Publicar hilo
-                                    </button>
-
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-color-base">Publicar hilo</button>
                                 </div>
-
                             </form>
 
                         </div>

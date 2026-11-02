@@ -26,31 +26,73 @@
                 </div>
 
                 <!-- Lista de hilos -->
-                <div class="d-flex flex-column gap-3">
+                <div id="listaHilos" class="d-flex flex-column gap-3">
                     <% if (hilos.length > 0) { %>
                         <% hilos.forEach(hilo => { %>
-                            <a href="/foros/hilo/<%= hilo.id_hilo %>" class="card border-0 shadow-sm rounded-4 text-decoration-none text-dark hover-card p-3">
+                            <a href="/foros/hilo/<%= hilo.id_hilo %>"
+                            class="card border-0 shadow-sm rounded-4 text-decoration-none text-dark hover-card p-3">
+
                                 <div class="d-flex justify-content-between">
+                                    <!-- Información principal del hilo -->
                                     <div class="pe-3">
-                                        <h5 class="fw-bold mb-2"><%= hilo.titulo %></h5>
-                                        <p class="small text-muted mb-2 text-truncate" style="max-width: 400px;"><%= hilo.contenido %></p>
+                                        <h5 class="fw-bold mb-2">
+                                            <%= hilo.titulo %>
+                                        </h5>
+
+                                        <p class="small text-muted mb-2 text-truncate"
+                                        style="max-width: 400px;">
+                                            <%= hilo.contenido %>
+                                        </p>
+
                                         <div class="d-flex align-items-center gap-2 small text-muted">
-                                            <span>Publicado por: <strong>@<%= hilo.username %></strong></span>
+                                            <span>
+                                                Publicado por:
+                                                <strong>@<%= hilo.username %></strong>
+                                            </span>
+
                                             <span>•</span>
-                                            <span><%= new Date(hilo.fecha_publicacion).toLocaleDateString('es-CL') %></span>
+                                            <span>
+                                                <%= new Date(hilo.fecha_publicacion).toLocaleDateString('es-CL') %>
+                                            </span>
+
                                         </div>
                                     </div>
+
+                                    <!-- Estadísticas del hilo -->
                                     <div class="text-end text-muted small d-flex flex-column justify-content-center">
-                                        <span class="badge bg-light text-dark rounded-pill mb-1">👍 <%= hilo.likes || 0 %> likes</span>
-                                        <span class="badge bg-light text-dark rounded-pill">💬 <%= hilo.respuestas || 0 %> res</span>
+
+                                        <span class="badge bg-light text-dark rounded-pill mb-1">
+                                            👍 <%= hilo.likes || 0 %> likes
+                                        </span>
+
+                                        <span class="badge bg-light text-dark rounded-pill">
+                                            💬 <%= hilo.respuestas || 0 %> res
+                                        </span>
                                     </div>
                                 </div>
                             </a>
                         <% }) %>
+
                     <% } else { %>
-                        <div class="alert alert-secondary border-0 rounded-4 text-center">Sé el primero en iniciar un debate en este foro.</div>
+
+                        <div class="alert alert-secondary border-0 rounded-4 text-center">
+                            Sé el primero en iniciar un debate en este foro.
+                        </div>
                     <% } %>
                 </div>
+
+                <!-- Botón para cargar más hilos -->
+                <% if (hayMasHilos) { %>
+                    <div class="text-center mt-4" id="contenedorVerMas">
+
+                        <button
+                            type="button"
+                            class="btn btn-color-base"
+                            id="btnVerMas">
+                            Ver más
+                        </button>
+                    </div>
+                <% } %>
             </div>
 
             <!-- COLUMNA DERECHA: Presentación de la Carrera -->
@@ -76,212 +118,7 @@
                             <% }) %>
                         </select>
                     </div>
-
-                </form>
-
-                <button
-                    type="button"
-                    class="btn btn-color-base"
-                    data-bs-toggle="modal"
-                    data-bs-target="#nuevoHiloModal"
-                >
-                    + Nuevo hilo
-                </button>
-                <!-- Modal Nuevo Hilo -->
-                <div
-                    class="modal fade"
-                    id="nuevoHiloModal"
-                    tabindex="-1"
-                    aria-labelledby="nuevoHiloModalLabel"
-                    aria-hidden="true"
-                >
-                    <div class="modal-dialog modal-dialog-centered">
-
-                        <div class="modal-content">
-
-                            <div class="modal-header">
-
-                                <h5 class="modal-title" id="nuevoHiloModalLabel">
-                                    Crear nuevo hilo
-                                </h5>
-
-                                <button
-                                    type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Cerrar"
-                                ></button>
-
-                            </div>
-
-                            <form
-                                action="/foros/nuevo-hilo"
-                                method="POST"
-                            >
-
-                                <div class="modal-body">
-
-                                    <div class="mb-3">
-
-                                        <label for="titulo" class="form-label">
-                                            Título
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="titulo"
-                                            name="titulo"
-                                            placeholder="Escribe el título del hilo..."
-                                            required
-                                        >
-
-                                    </div>
-
-
-                                    <div class="mb-3">
-
-                                        <label for="contenido" class="form-label">
-                                            Contenido
-                                        </label>
-
-                                        <textarea
-                                            class="form-control"
-                                            id="contenido"
-                                            name="contenido"
-                                            rows="6"
-                                            placeholder="Escribe aquí tu pregunta o comentario..."
-                                            required
-                                        ></textarea>
-
-                                    </div>
-
-                                </div>
-
-
-                                <div class="modal-footer">
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-secondary"
-                                        data-bs-dismiss="modal"
-                                    >
-                                        Cancelar
-                                    </button>
-
-                                    <button
-                                        type="submit"
-                                        class="btn btn-color-base"
-                                    >
-                                        Publicar hilo
-                                    </button>
-
-                                </div>
-
-                            </form>
-
-                        </div>
-
-                    </div>
-                </div>
             </div>
-
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                <!-- Titulo -->
-                <h3 class="mb-0">
-                    Hilos
-                </h3>
-
-                <!-- Filtro por programa -->
-                <select
-                    class="form-select"
-                    style="width: 280px;"
-                    id="filtroPrograma"
-                    name="programa"
-                >
-                    <option value="" <%= !programaSeleccionado ? 'selected' : '' %>>
-                        Todos los programas
-                    </option>
-
-                    <% programas.forEach(programa => { %>
-
-                        <option
-                            value="<%= programa.id_programa %>"
-                            <%= String(programaSeleccionado) === String(programa.id_programa) ? 'selected' : '' %>
-                        >
-                            <%= programa.nombre_carrera %>
-                        </option>
-
-                    <% }) %>
-
-
-                </select>
-
-            </div>
-
-            <!-- Lista de hilos -->
-            <div class="list-group" id="listaHilos">
-
-                <% hilos.forEach(hilo => { %>
-
-                    <a
-                        href="/foros/hilo/<%= hilo.id_hilo %>"
-                        class="list-group-item list-group-item-action"
-                    >
-                        <div class="d-flex justify-content-between align-items-start">
-
-                            <div class="me-3">
-
-                                <h5 class="mb-1">
-                                    <%= hilo.titulo %>
-                                </h5>
-
-                                <p class="mb-1 text-muted">
-                                    <%= hilo.descripcion %>
-                                </p>
-
-                                <small class="text-muted">
-                                    Publicado por: <%= hilo.usuario %>
-                                </small>
-
-                            </div>
-
-                            <div class="text-end">
-
-                                <small class="text-muted d-block">
-                                    👍 <%= hilo.likes || 0 %> likes
-                                </small>
-
-                                <small class="text-muted d-block">
-                                    💬 <%= hilo.respuestas || 0 %> respuestas
-                                </small>
-
-                                <small class="text-muted">
-                                    <%= hilo.fecha %>
-                                </small>
-                            </div>
-                        </div>
-                    </a>
-                <% }) %>
-            </div>
-
-            <!-- Boton para cargar hilos extra -->
-            <% if (hayMasHilos) { %>
-
-                <div class="text-center mt-4" id="contenedorVerMas">
-
-                    <button
-                        type="button"
-                        class="btn btn-color-base"
-                        id="btnVerMas"
-                    >
-                        Ver más
-                    </button>
-                </div>
-            <% } %>
-
 
             <!-- Sin hilos -->
             <% if (hilos.length === 0) { %>
@@ -332,37 +169,14 @@
                 </div>
             </div>
         </div>
+        
     </main>
 
     <%- include('partials/footer') %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-    // Filtro por programa
-
-    const filtroPrograma = document.getElementById('filtroPrograma');
-
-    filtroPrograma.addEventListener('change', function () {
-
-        const parametros = new URLSearchParams(window.location.search);
-
-        if (this.value) {
-            parametros.set('programa', this.value);
-        } else {
-            parametros.delete('programa');
-        }
-
-        // Reiniciar paginación al cambiar el filtro
-        parametros.delete('offset');
-        parametros.delete('ajax');
-
-        const query = parametros.toString();
-
-        window.location.href =
-            window.location.pathname + (query ? '?' + query : '');
-
-    });
-
+    
 
     // Carga de los otros 10 hilos
     const btnVerMas = document.getElementById('btnVerMas');
@@ -409,55 +223,74 @@
                 // Agregar cada hilo a la lista
                 datos.hilos.forEach(hilo => {
 
+                    // Enlace principal de la tarjeta
                     const enlace = document.createElement('a');
-
                     enlace.href = `/foros/hilo/${encodeURIComponent(hilo.id_hilo)}`;
-                    enlace.className = 'list-group-item list-group-item-action';
+                    enlace.className =
+                        'card border-0 shadow-sm rounded-4 text-decoration-none text-dark hover-card p-3';
 
+                    // Contenedor principal
                     const contenedor = document.createElement('div');
-                    contenedor.className = 'd-flex justify-content-between align-items-start';
+                    contenedor.className = 'd-flex justify-content-between';
 
-                    // Informacion principal
+                    // Sección izquierda
                     const principal = document.createElement('div');
-                    principal.className = 'me-3';
+                    principal.className = 'pe-3';
 
+                    // Título
                     const titulo = document.createElement('h5');
-                    titulo.className = 'mb-1';
-                    titulo.textContent = hilo.titulo || '';
+                    titulo.className = 'fw-bold mb-2';
+                    titulo.textContent = hilo.titulo || 'Sin título';
 
+                    // Descripción
                     const descripcion = document.createElement('p');
-                    descripcion.className = 'mb-1 text-muted';
+                    descripcion.className = 'small text-muted mb-2 text-truncate';
+                    descripcion.style.maxWidth = '400px';
                     descripcion.textContent = hilo.descripcion || '';
 
-                    const autor = document.createElement('small');
-                    autor.className = 'text-muted';
-                    autor.textContent = `Publicado por: ${hilo.usuario || 'Usuario'}`;
+                    // Información del autor y fecha
+                    const informacion = document.createElement('div');
+                    informacion.className =
+                        'd-flex align-items-center gap-2 small text-muted';
 
-                    principal.append(titulo, descripcion, autor);
+                    const autor = document.createElement('span');
+                    const nombreUsuario = document.createElement('strong');
+                    nombreUsuario.textContent = '@' + (hilo.username || 'Usuario');
+                    autor.append('Publicado por: ', nombreUsuario);
 
-                    // Informacion extra
+                    // Separador
+                    const separador = document.createElement('span');
+                    separador.textContent = '•';
+
+                    const fecha = document.createElement('span');
+                    const fechaPublicacion = new Date(hilo.fecha_publicacion);
+                    fecha.textContent = isNaN(fechaPublicacion.getTime())
+                        ? 'Fecha no disponible'
+                        : fechaPublicacion.toLocaleDateString('es-CL');
+
+                    informacion.append(autor, separador, fecha);
+                    principal.append(titulo, descripcion, informacion);
+
+                    // Sección derecha
                     const secundaria = document.createElement('div');
-                    secundaria.className = 'text-end';
+                    secundaria.className =
+                        'text-end text-muted small d-flex flex-column justify-content-center';
 
-                    const likes = document.createElement('small');
-                    likes.className = 'text-muted d-block';
+                    // Likes
+                    const likes = document.createElement('span');
+                    likes.className = 'badge bg-light text-dark rounded-pill mb-1';
                     likes.textContent = `👍 ${hilo.likes || 0} likes`;
 
-                    const respuestas = document.createElement('small');
-                    respuestas.className = 'text-muted d-block';
-                    respuestas.textContent = `💬 ${hilo.respuestas || 0} respuestas`;
+                    // Respuestas
+                    const respuestas = document.createElement('span');
+                    respuestas.className = 'badge bg-light text-dark rounded-pill';
+                    respuestas.textContent = `💬 ${hilo.respuestas || 0} res`;
+                    secundaria.append(likes, respuestas);
 
-                    const fecha = document.createElement('small');
-                    fecha.className = 'text-muted';
-                    fecha.textContent = hilo.fecha || '';
-
-                    secundaria.append(likes, respuestas, fecha);
-
+                    // Unir los elementos
                     contenedor.append(principal, secundaria);
                     enlace.appendChild(contenedor);
-
                     listaHilos.appendChild(enlace);
-
                 });
 
                 // Si no quedan más hilos quitar el botón

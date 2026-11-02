@@ -486,6 +486,13 @@ router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
             H.id_usuario,
             H.id_programa,
 
+            -- Contar los comentarios pertenecientes a cada hilo
+            (
+                SELECT COUNT(*)
+                FROM Comentario Com
+                WHERE Com.id_hilo = H.id_hilo
+            ) AS respuestas,
+
             COALESCE(
                 NULLIF(
                     TRIM(CONCAT_WS(' ',
@@ -506,21 +513,16 @@ router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
             Uni.nombre AS nombre_universidad
 
         FROM Hilo H
-
         INNER JOIN Usuario U
             ON H.id_usuario = U.id_usuario
-
         INNER JOIN Programa_Universitario P
             ON H.id_programa = P.id_programa
-
         INNER JOIN Carrera_Base C
             ON P.id_carrera_base = C.id_carrera_base
-
         INNER JOIN Universidad Uni
             ON P.id_universidad = Uni.id_universidad
-
         WHERE P.id_universidad = ?
-          AND P.id_carrera_base = ?
+        AND P.id_carrera_base = ?
     `;
 
     const parametrosHilos = [

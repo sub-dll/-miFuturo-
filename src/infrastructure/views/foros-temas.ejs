@@ -1,265 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Hilos del foro</title>
-
-    <link 
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet"
-    >
-
-    <link
-    href="/css/global.css"
-    rel="stylesheet"
-    >
-
+    <title>Foro - <%= tituloForo %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/global.css" rel="stylesheet">
 </head>
+<body class="bg-light">
 
-<body>
-
-    <main>
-
-    <!-- 1. Inyectar Navbar -->
     <%- include('partials/navbar') %>
 
-    <main>
-        <div class="container mt-5 mb-5">
+    <main class="container py-5" style="max-width: 1100px;">
+        <a href="/foros/<%= id_universidad %>" class="btn btn-outline-secondary btn-sm rounded-pill px-3 mb-4">← Volver a las carreras</a>
 
-            <!-- Cuadro exterior -->
-            <div class="foro-fondo">
+        <div class="row g-4">
+            
+            <!-- COLUMNA IZQUIERDA: Hilos del Foro -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold mb-0">Hilos de Debate</h3>
+                    <button type="button" class="btn text-white rounded-pill px-4 shadow-sm" style="background-color: #2c3e50;" data-bs-toggle="modal" data-bs-target="#nuevoHiloModal">
+                        + Nuevo hilo
+                    </button>
+                </div>
 
-                <!-- Cuadro interior -->
-                <div class="foro-contenido">
+                <!-- Lista de hilos -->
+                <div class="d-flex flex-column gap-3">
+                    <% if (hilos.length > 0) { %>
+                        <% hilos.forEach(hilo => { %>
+                            <a href="/foros/hilo/<%= hilo.id_hilo %>" class="card border-0 shadow-sm rounded-4 text-decoration-none text-dark hover-card p-3">
+                                <div class="d-flex justify-content-between">
+                                    <div class="pe-3">
+                                        <h5 class="fw-bold mb-2"><%= hilo.titulo %></h5>
+                                        <p class="small text-muted mb-2 text-truncate" style="max-width: 400px;"><%= hilo.contenido %></p>
+                                        <div class="d-flex align-items-center gap-2 small text-muted">
+                                            <span>Publicado por: <strong>@<%= hilo.username %></strong></span>
+                                            <span>•</span>
+                                            <span><%= new Date(hilo.fecha_publicacion).toLocaleDateString('es-CL') %></span>
+                                        </div>
+                                    </div>
+                                    <div class="text-end text-muted small d-flex flex-column justify-content-center">
+                                        <span class="badge bg-light text-dark rounded-pill mb-1">👍 <%= hilo.likes || 0 %> likes</span>
+                                        <span class="badge bg-light text-dark rounded-pill">💬 <%= hilo.respuestas || 0 %> res</span>
+                                    </div>
+                                </div>
+                            </a>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="alert alert-secondary border-0 rounded-4 text-center">Sé el primero en iniciar un debate en este foro.</div>
+                    <% } %>
+                </div>
+            </div>
 
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                <div>
-                    <h1>
-                        <%= tituloForo %>
-                    </h1>
-
-                    <p class="text-muted">
-                        Hilos y preguntas de este foro
+            <!-- COLUMNA DERECHA: Presentación de la Carrera -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="background-color: #8C9FBA; color: white; top: 20px;">
+                    <h5 class="fw-bold mb-2"><%= tituloForo %></h5>
+                    <hr class="border-white opacity-50 mb-3">
+                    
+                    <h6 class="fw-bold mb-1">Identidad de la Carrera</h6>
+                    <p class="small opacity-75 text-justify">
+                        <%= programas.length > 0 ? programas[0].descripcion_general : 'Descripción no disponible.' %>
                     </p>
-                </div>
 
-                <a href="/foros" class="btn btn-outline-secondary">
-                    Volver
-                </a>
-
-            </div>
-
-
-            <!-- Buscador y botón para nuevo hilo -->
-            <div class="d-flex gap-2 mb-4">
-
-                <form action="" method="GET" class="flex-grow-1">
-
-                    <div class="input-group">
-
-                        <input
-                            type="text"
-                            name="buscar"
-                            class="form-control"
-                            placeholder="Buscar en los hilos..."
-                            value="<%= buscar || '' %>"
-                        >
-
-                        <button type="submit" class="btn btn-color-base">
-                            Buscar
-                        </button>
-
+                    <!-- Filtro por programa para el formulario oculto -->
+                    <div class="mt-4">
+                        <h6 class="fw-bold mb-2">Filtrar hilos por programa</h6>
+                        <select class="form-select form-select-sm border-0 shadow-sm" id="filtroPrograma" onchange="window.location.href='?programa='+this.value">
+                            <option value="">Todos los programas</option>
+                            <% programas.forEach(programa => { %>
+                                <option value="<%= programa.id_programa %>" <%= programaSeleccionado == programa.id_programa ? 'selected' : '' %>>
+                                    <%= programa.nombre_carrera %>
+                                </option>
+                            <% }) %>
+                        </select>
                     </div>
-
-                </form>
-
-                <button
-                    type="button"
-                    class="btn btn-color-base"
-                    data-bs-toggle="modal"
-                    data-bs-target="#nuevoHiloModal"
-                >
-                    + Nuevo hilo
-                </button>
-                <!-- Modal Nuevo Hilo -->
-                <div
-                    class="modal fade"
-                    id="nuevoHiloModal"
-                    tabindex="-1"
-                    aria-labelledby="nuevoHiloModalLabel"
-                    aria-hidden="true"
-                >
-                    <div class="modal-dialog modal-dialog-centered">
-
-                        <div class="modal-content">
-
-                            <div class="modal-header">
-
-                                <h5 class="modal-title" id="nuevoHiloModalLabel">
-                                    Crear nuevo hilo
-                                </h5>
-
-                                <button
-                                    type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Cerrar"
-                                ></button>
-
-                            </div>
-
-                            <form action="/foro/hilo/crear" method="POST">
-                                <!-- Inputs ocultos para saber a dónde redirigir después de publicar -->
-                                <input type="hidden" name="id_universidad" value="<%= id_universidad %>">
-                                <input type="hidden" name="id_carrera" value="<%= id_carrera %>">
-
-                                <div class="modal-body">
-                                    
-                                    <!-- Selector de Programa -->
-                                    <div class="mb-3">
-                                        <label for="id_programa" class="form-label fw-bold">Programa Universitario</label>
-                                        <select class="form-select" id="id_programa" name="id_programa" required>
-                                            <option value="" disabled selected>Selecciona el programa específico...</option>
-                                            <% programas.forEach(programa => { %>
-                                                <option value="<%= programa.id_programa %>">
-                                                    <%= programa.nombre_carrera %>
-                                                </option>
-                                            <% }) %>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="titulo" class="form-label fw-bold">Título</label>
-                                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Escribe el título del hilo..." required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="contenido" class="form-label fw-bold">Contenido</label>
-                                        <textarea class="form-control" id="contenido" name="contenido" rows="6" placeholder="Escribe aquí tu pregunta o comentario..." required></textarea>
-                                    </div>
-
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-color-base">Publicar hilo</button>
-                                </div>
-                            </form>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                <!-- Titulo -->
-                <h3 class="mb-0">
-                    Hilos
-                </h3>
-
-                <!-- Filtro por programa -->
-                <select
-                    class="form-select"
-                    style="width: 280px;"
-                    id="filtroPrograma"
-                    name="programa"
-                >
-                    <option value="">
-                        Todos los programas
-                    </option>
-
-                    <% programas.forEach(programa => { %>
-
-                        <option value="<%= programa.id_programa %>">
-                            <%= programa.nombre_carrera %>
-                        </option>
-
-                    <% }) %>
-
-                </select>
-
-            </div>
-
-
-            <!-- Lista de hilos -->
-            <div class="list-group">
-
-                <% hilos.forEach(hilo => { %>
-
-                    <a
-                        href="/foros/hilo/<%= hilo.id_hilo %>"
-                        class="list-group-item list-group-item-action"
-                    >
-
-                        <div class="d-flex justify-content-between align-items-start">
-
-                            <!-- Información principal -->
-                            <div class="me-3">
-
-                                <h5 class="mb-1">
-                                    <%= hilo.titulo %>
-                                </h5>
-
-                                <p class="mb-1 text-muted">
-                                    <%= hilo.descripcion %>
-                                </p>
-
-                                <small class="text-muted">
-                                    Publicado por: <%= hilo.usuario %>
-                                </small>
-
-                            </div>
-
-
-                            <!-- Información secundaria -->
-                            <div class="text-end">
-
-                                <!-- Likes -->
-                                <small class="text-muted d-block">
-                                    👍 <%= hilo.likes || 0 %> likes
-                                </small>
-
-                                <!-- Respuestas -->
-                                <small class="text-muted d-block">
-                                    💬 <%= hilo.respuestas || 0 %> respuestas
-                                </small>
-
-                                <!-- Fecha -->
-                                <small class="text-muted">
-                                    <%= hilo.fecha %>
-                                </small>
-                            </div>
-                        </div>
-                    </a>
-                <% }) %>
-            </div>
-
-
-            <!-- Sin hilos -->
-            <% if (hilos.length === 0) { %>
-
-                <div class="alert alert-warning mt-3">
-                    No hay hilos disponibles en este foro.
-                </div>
-            <% } %>
                 </div>
             </div>
         </div>
 
-
+        <!-- MODAL NUEVO HILO (Mantenemos tu lógica intacta) -->
+        <div class="modal fade" id="nuevoHiloModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold">Crear nuevo hilo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <form action="/foro/hilo/crear" method="POST">
+                        <input type="hidden" name="id_universidad" value="<%= id_universidad %>">
+                        <input type="hidden" name="id_carrera" value="<%= id_carrera %>">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small text-muted">Programa Universitario</label>
+                                <select class="form-select shadow-sm" name="id_programa" required>
+                                    <option value="" disabled selected>Selecciona el programa específico...</option>
+                                    <% programas.forEach(programa => { %>
+                                        <option value="<%= programa.id_programa %>"><%= programa.nombre_carrera %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small text-muted">Título</label>
+                                <input type="text" class="form-control shadow-sm" name="titulo" placeholder="Ej: ¿Qué tal es la malla académica?" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small text-muted">Contenido</label>
+                                <textarea class="form-control shadow-sm" name="contenido" rows="5" placeholder="Escribe aquí tu pregunta o comentario..." required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn text-white rounded-pill px-4 shadow-sm" style="background-color: #8C9FBA;">Publicar hilo</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Inyectar Footer -->
     <%- include('partials/footer') %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

@@ -54,10 +54,7 @@ router.get('/perfil/notificaciones', protegerRuta, (req, res) => {
 //  VISTAS DE LOS FOROS
 // ==========================================
 
-
-// ==========================================
-// Ruta principal de foros /foros (busca foros-principal.ejs)
-// =========================================
+// Ruta principal de foros /foros
 
 router.get('/foros', async (req, res) => {
 
@@ -111,7 +108,7 @@ router.get('/foros', async (req, res) => {
             );
 
 
-            // Top 3 carreras según empleabilidad
+            // Top carreras según empleabilidad, limite de 3
             const [populares] = await db.query(`
                 SELECT
                     cb.nombre_carrera,
@@ -227,17 +224,21 @@ router.get("/foros/:id_universidad", async (req, res) => {
     }
 });
 
-// Foros de una carrera específica + programa especifico dentro de una universidad
+// Foros de una carrera específica + programa específico
 
 router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
 
     const { id_universidad, id_carrera } = req.params;
-    const { programa } = req.query;
+    const { programa, ajax } = req.query;
 
-    //
-    // 1. Obtener los programas de esta carrera
-    //
+    // Determina de que hilo comenzar
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
 
+    const limite = 10;
+
+    const offset = (page - 1) * limite;
+
+    // Obtener los programas de la carrera
     const sqlProgramas = `
         SELECT
             P.id_programa,
@@ -250,41 +251,49 @@ router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
         ORDER BY C.nombre_carrera ASC
     `;
 
-    //
-    // 2. Obtener los hilos
-    //
-
+    // Obtener hilos
     let sqlHilos = `
         SELECT
             H.id_hilo,
             H.titulo,
-            H.contenido,
+            H.contenido AS descripcion,
             H.fecha_publicacion,
+            DATE_FORMAT(H.fecha_publicacion, '%d/%m/%Y %H:%i') AS fecha,
             H.likes,
             H.dislikes,
             H.id_usuario,
             H.id_programa,
 
-            U.username,
-            U.nombres,
-            U.apellidos,
-            U.avatar_url,
+            COALESCE(
+                NULLIF(
+                    TRIM(CONCAT_WS(' ',
+                        NULLIF(U.nombres, ''),
+                        NULLIF(U.apellidos, '')
+                    )),
+                    ''
+                ),
+                NULLIF(U.username, ''),
+                'Usuario'
+            ) AS usuario,
 
+            U.username,
+            U.avatar_url,
             P.id_universidad,
             P.id_carrera_base,
-
             C.nombre_carrera,
-
             Uni.nombre AS nombre_universidad
 
         FROM Hilo H
 
         INNER JOIN Usuario U
             ON H.id_usuario = U.id_usuario
+
         INNER JOIN Programa_Universitario P
             ON H.id_programa = P.id_programa
+
         INNER JOIN Carrera_Base C
             ON P.id_carrera_base = C.id_carrera_base
+
         INNER JOIN Universidad Uni
             ON P.id_universidad = Uni.id_universidad
 
@@ -297,13 +306,8 @@ router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
         id_carrera
     ];
 
-
-    // 
-    // 3. Aplicar filtro por programa
-    // 
-
+    // Filtro por programa
     if (programa) {
-
         sqlHilos += `
             AND H.id_programa = ?
         `;
@@ -312,50 +316,60 @@ router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
     }
 
     sqlHilos += `
-        ORDER BY H.fecha_publicacion DESC
+        ORDER BY H.fecha_publicacion DESC, H.id_hilo DESC
+        LIMIT 11 OFFSET ?
     `;
+
+    parametrosHilos.push(offset);
 
     try {
 
         // Obtener programas
         const [programas] = await db.query(
             sqlProgramas,
-            [
-                id_universidad,
-                id_carrera
-            ]
+            [id_universidad, id_carrera]
         );
 
-
         // Obtener hilos
-        const [hilos] = await db.query(
+        const [resultados] = await db.query(
             sqlHilos,
             parametrosHilos
         );
 
-        // Obtener título de la carrera
+        // Comprobar si existen más hilos y solo mostrar 10
+        const hayMasHilos = resultados.length > 10;
+        const hilos = resultados.slice(0, 10);
 
+        // Si la peticion viene del fetch() responder JSON
+        if (ajax === '1') {
+            return res.json({
+                hilos,
+                hayMasHilos
+            });
+        }
+
+        // Obtener titulo de la carrera
         let tituloForo = "";
 
         if (programas.length > 0) {
             tituloForo = programas[0].nombre_carrera;
         }
 
-        // 
-        // Enviar todo a foros-temas.ejs
-        // 
-
+        // Renderiza vista
         res.render("foros-temas", {
 
-            hilos: hilos,
-            programas: programas,
-            tituloForo: tituloForo,
-            id_universidad: id_universidad,
-            id_carrera: id_carrera,
-            programaSeleccionado: programa || "",
-            buscar: ""
-        });
+            hilos,
+            programas,
+            tituloForo,
 
+            id_universidad,
+            id_carrera,
+
+            programaSeleccionado: programa || "",
+            buscar: "",
+
+            hayMasHilos
+        });
 
     } catch (error) {
 
@@ -371,14 +385,6 @@ router.get("/foros/:id_universidad/:id_carrera", async (req, res) => {
 
 });
 
-
-router.get("/foros/temas", (req, res) => {
-    res.render("foros-temas", {
-        tituloForo: "Ingeniería Civil Informática",
-        hilos: [],
-        buscar: ""
-    });
-});
 
 router.get("/foros/hilo", (req, res) => {
     res.render("foros-hilo", {

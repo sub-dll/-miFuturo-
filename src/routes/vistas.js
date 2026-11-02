@@ -56,57 +56,107 @@ router.get('/perfil/notificaciones', protegerRuta, (req, res) => {
 // ==========================================
 
 // Ruta principal de foros /foros
-
 router.get('/foros', async (req, res) => {
 
     try {
         const universidadesPorPagina = 10;
 
-        // Obtener la pagina solicitada desde la URL
+        // Pagina solicitada
         const paginaSolicitada = Number.parseInt(req.query.pagina, 10);
 
-        // Evitar valores invalidos o negativos
         const paginaInicial = (
             Number.isInteger(paginaSolicitada) && paginaSolicitada > 0
         ) ? paginaSolicitada : 1;
 
+        // Nombre de universidad
+        const nombreBusqueda = typeof req.query.nombre === 'string'
+            ? req.query.nombre.trim()
+            : '';
 
-        // Contar universidades //
+        // Ciudad
+        const ciudadSeleccionada = typeof req.query.ciudad === 'string'
+            ? req.query.ciudad.trim()
+            : '';
+
+        // Carrera
+        const carreraSolicitada = Number.parseInt(req.query.carrera, 10);
+        const carreraSeleccionada = (
+            Number.isInteger(carreraSolicitada) &&
+            carreraSolicitada > 0
+        ) ? carreraSolicitada : null;
+
+
+        const condiciones = [];
+        const parametrosFiltros = [];
+
+        // Filtrar por nombre de universidad
+        if (nombreBusqueda) {
+            condiciones.push('u.nombre LIKE ?');
+            parametrosFiltros.push(`%${nombreBusqueda}%`);
+        }
+
+        // Filtrar por ciudad
+        if (ciudadSeleccionada) {
+            condiciones.push('u.ciudad = ?');
+            parametrosFiltros.push(ciudadSeleccionada);
+        }
+
+        // Filtrar por carrera
+        if (carreraSeleccionada) {
+            condiciones.push(`
+                EXISTS (
+                    SELECT 1
+                    FROM Programa_Universitario pu
+                    WHERE pu.id_universidad = u.id_universidad
+                      AND pu.id_carrera_base = ?
+                )
+            `);
+            parametrosFiltros.push(carreraSeleccionada);
+        }
+
+        // Unir las condiciones utilizando AND
+        const condicionFiltros = condiciones.length > 0
+            ? `WHERE ${condiciones.join(' AND ')}`
+            : '';
+
+        // Resultado universidades filtradas
         const [resultadoTotal] = await db.query(`
             SELECT COUNT(*) AS total
-            FROM Universidad
-        `);
+            FROM Universidad u
+            ${condicionFiltros}
+        `, parametrosFiltros);
 
         const totalUniversidades = resultadoTotal[0].total;
 
-        // Calcular el total de páginas
+        // Calcula paginacion
         const totalPaginas = Math.ceil(
             totalUniversidades / universidadesPorPagina
         );
 
-        // Evitar solicitar una pagina superior a la existente
         const paginaActual = Math.min(
             paginaInicial,
             Math.max(totalPaginas, 1)
         );
 
-        // Calcular desde que registro comenzar
         const offset = (paginaActual - 1) * universidadesPorPagina;
 
-
-        // Obtener universidades en la pagina actual
         const [universidades] = await db.query(`
             SELECT
-                id_universidad,
-                nombre,
-                logo_url,
-                ciudad
-            FROM Universidad
-            ORDER BY nombre ASC
+                u.id_universidad,
+                u.nombre,
+                u.logo_url,
+                u.ciudad
+            FROM Universidad u
+            ${condicionFiltros}
+            ORDER BY u.nombre ASC
             LIMIT ? OFFSET ?
-        `, [universidadesPorPagina, offset]);
+        `, [
+            ...parametrosFiltros,
+            universidadesPorPagina,
+            offset
+        ]);
 
-        //Obtener las carreras disponibles
+        // Carreras disponibles
         const [carreras] = await db.query(`
             SELECT DISTINCT
                 cb.id_carrera_base,
@@ -117,15 +167,14 @@ router.get('/foros', async (req, res) => {
             ORDER BY cb.nombre_carrera ASC
         `);
 
-        const carreraSolicitada = Number.parseInt(req.query.carrera, 10);
-
-        const carreraSeleccionada = (
-            Number.isInteger(carreraSolicitada) &&
-            carreraSolicitada > 0
-        ) ? carreraSolicitada : null;
-
-
-        // Informacion adicional
+        // Ciudades disponibles 
+        const [ciudades] = await db.query(`
+            SELECT DISTINCT ciudad
+            FROM Universidad
+            WHERE ciudad IS NOT NULL
+              AND TRIM(ciudad) <> ''
+            ORDER BY ciudad ASC
+        `);
 
         for (const universidad of universidades) {
 
@@ -135,10 +184,9 @@ router.get('/foros', async (req, res) => {
                 FROM Programa_Universitario
                 WHERE id_universidad = ?
             `, [universidad.id_universidad]);
-
             universidad.cantidadCarreras = cantidad[0].cantidadCarreras;
 
-            // Carreras que ofrece esta universidad
+            // IDs de carreras que ofrece
             const [carrerasUniversidad] = await db.query(`
                 SELECT id_carrera_base
                 FROM Programa_Universitario
@@ -148,6 +196,7 @@ router.get('/foros', async (req, res) => {
             universidad.carrerasIds = carrerasUniversidad.map(
                 carrera => carrera.id_carrera_base
             );
+
 
             // Top 3 carreras según empleabilidad
             const [populares] = await db.query(`
@@ -161,28 +210,33 @@ router.get('/foros', async (req, res) => {
                 ORDER BY pu.empleabilidad_pct DESC
                 LIMIT 3
             `, [universidad.id_universidad]);
-
             universidad.carrerasPopulares = populares;
         }
-
 
         res.render('foros-principal', {
             universidades,
             carreras,
+            ciudades: ciudades.map(c => c.ciudad),
+
             paginaActual,
             totalPaginas,
+
+            nombreBusqueda,
+            ciudadSeleccionada,
             carreraSeleccionada
         });
 
-
     } catch (error) {
+
         console.error('Error al cargar los foros:', error);
 
         res.status(500).send('Error al cargar los foros');
     }
+
 });
 
-//
+
+
 // Foro de una universidad
 
 router.get("/foros/:id_universidad", async (req, res) => {

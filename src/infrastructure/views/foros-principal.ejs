@@ -35,48 +35,89 @@
                     <div class="foro-titulo">
                         <h1 class="mb-0">Foros</h1>
                     </div>
-
-                    <!-- Filtro por carrera -->
+                                        
+                    <!-- Filtros de universidades -->
                     <div class="foro-filtro">
 
-                        <form action="/foros" method="GET">
+                        <form action="/foros" method="GET" class="row g-3 align-items-end">
 
-                            <label for="filtroCarrera" class="form-label mb-1">
-                                Filtrar por carrera
-                            </label>
+                            <!-- Nombre de universidad -->
+                            <div class="col-md-4">
+                                <label for="filtroNombre" class="form-label">
+                                    Buscar universidad
+                                </label>
 
-                            <select
-                                id="filtroCarrera"
-                                name="carrera"
-                                class="form-select"
-                                onchange="this.form.submit()"
-                            >
-                                <option value="">
-                                    Todas las carreras
-                                </option>
+                                <input
+                                    type="text"
+                                    id="filtroNombre"
+                                    name="nombre"
+                                    class="form-control"
+                                    placeholder="Nombre de universidad..."
+                                    value="<%= nombreBusqueda || '' %>"
+                                >
+                            </div>
 
+                            <!-- Ciudad -->
+                            <div class="col-md-3">
+                                <label for="filtroCiudad" class="form-label">
+                                    Ciudad
+                                </label>
 
-                                <% carreras.forEach(carrera => { %>
+                                <select
+                                    id="filtroCiudad"
+                                    name="ciudad"
+                                    class="form-select"
+                                >
+                                    <option value="">Todas las ciudades</option>
 
-                                    <option
-                                        value="<%= carrera.id_carrera_base %>"
-                                        <%= Number(carreraSeleccionada) === Number(carrera.id_carrera_base) ? 'selected' : '' %>
-                                    >
-                                        <%= carrera.nombre_carrera %>
-                                    </option>
+                                    <% ciudades.forEach(ciudad => { %>
+                                        <option
+                                            value="<%= ciudad %>"
+                                            <%= ciudadSeleccionada === ciudad ? 'selected' : '' %>
+                                        >
+                                            <%= ciudad %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
 
-                                <% }) %>
-                            </select>
+                            <!-- Carrera -->
+                            <div class="col-md-3">
+                                <label for="filtroCarrera" class="form-label">
+                                    Carrera
+                                </label>
+
+                                <select
+                                    id="filtroCarrera"
+                                    name="carrera"
+                                    class="form-select"
+                                >
+                                    <option value="">Todas las carreras</option>
+
+                                    <% carreras.forEach(carrera => { %>
+                                        <option
+                                            value="<%= carrera.id_carrera_base %>"
+                                            <%= Number(carreraSeleccionada) === Number(carrera.id_carrera_base) ? 'selected' : '' %>
+                                        >
+                                            <%= carrera.nombre_carrera %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+
+                            <!-- Acciones -->
+                            <div class="col-md-2 d-flex gap-2">
+                                <button type="submit" class="btn btn-color-base">
+                                    Buscar
+                                </button>
+
+                                <a href="/foros" class="btn btn-outline-secondary">
+                                    Limpiar
+                                </a>
+                            </div>
                         </form>
                     </div>
-
                 </div>
-
-
-                <p class="text-muted mt-4 mb-4">
-                    Selecciona una universidad para buscar sus carreras y acceder a sus foros.
-                </p>
-
 
                 <!-- Lista de universidades -->
                 <div class="universidades-lista">
@@ -204,7 +245,9 @@
 
                                 <a
                                     class="page-link"
-                                    href="/foros?pagina=<%= paginaActual - 1 %>&carrera=<%= carreraSeleccionada || '' %>"
+                                    href="/foros?pagina=<%= paginaActual + 1 %>&carrera=<%= carreraSeleccionada || '' 
+                                    %>&nombre=<%= encodeURIComponent(nombreBusqueda || '') 
+                                    %>&ciudad=<%= encodeURIComponent(ciudadSeleccionada || '') %>"
                                 >
                                     Anterior
                                 </a>

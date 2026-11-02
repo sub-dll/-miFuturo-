@@ -90,20 +90,20 @@ const _maxBar = Math.max(..._carrera.matriculas_vs_titulados.flatMap(d => [d.mat
                     <span><span style="display:inline-block;width:10px;height:10px;background:#8C9FBA;margin-right:4px;"></span>Titulados</span>
                 </div>
 
-                <div class="d-flex align-items-end justify-content-between rounded-3 p-3 mb-3"
-                     style="background-color: #8C9FBA1A; height: 160px;">
-                    <% _carrera.matriculas_vs_titulados.forEach(function (d) { %>
+                <% _carrera.matriculas_vs_titulados.forEach(function (d) { 
+                        const hMat = Math.round((d.matriculados / _maxBar) * 100);
+                        const hTit = Math.round((d.titulados / _maxBar) * 100);
+                        const styleMat = `width:10px;background:#dfe6ee;border-radius:2px 2px 0 0;height:${hMat}%;`;
+                        const styleTit = `width:10px;background:#8C9FBA;border-radius:2px 2px 0 0;height:${hTit}%;`;
+                    %>
                         <div class="d-flex flex-column align-items-center justify-content-end h-100">
                             <div class="d-flex align-items-end gap-1" style="height: 100%;">
-                                <div style="width:10px;background:#dfe6ee;border-radius:2px 2px 0 0;
-                                     height: <%= Math.round((d.matriculados / _maxBar) * 100) %>%;"></div>
-                                <div style="width:10px;background:#8C9FBA;border-radius:2px 2px 0 0;
-                                     height: <%= Math.round((d.titulados / _maxBar) * 100) %>%;"></div>
+                                <div <%- `style="${styleMat}"` %>></div>
+                                <div <%- `style="${styleTit}"` %>></div>
                             </div>
                             <span class="small mt-1"><%= d.anio %></span>
                         </div>
                     <% }); %>
-                </div>
 
                 <p class="small fw-semibold mb-1">Empleabilidad:</p>
                 <p class="small text-muted mb-3"><%= _carrera.empleabilidad_texto %></p>

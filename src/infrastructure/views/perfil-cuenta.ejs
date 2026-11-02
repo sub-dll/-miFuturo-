@@ -80,9 +80,15 @@
         <% } %>
     </div>
 
-    <div class="container-fluid p-0 h-100">
+    <!-- 1. NAVBAR ARRIBA DE TODO Y FUERA DEL ROW -->
+    <%- include('partials/navbar') %>
+
+    <!-- 2. CONTENEDOR CON ALTURA CALCULADA -->
+    <div class="container-fluid p-0" style="height: calc(100vh - 76px);">
         <div class="row g-0 h-100">
-            <%- include('../partials/navbar', { active: 'cuenta' }) %>
+            
+            <!-- 3. MENÚ LATERAL -->
+            <%- include('partials/sidebar-perfil', { active: 'cuenta' }) %>
 
             <!-- Área Principal con scroll -->
             <div class="col-md-9 col-lg-10 p-5 overflow-y-auto h-100 content-area">
@@ -147,13 +153,13 @@
                     </div>
 
                 </div>
-                <%- include('../partials/footer') %>
+                <%- include('partials/footer') %>
             </div>
 
         </div>
     </div>
 
-    <!-- Modal de Bootstrap: ahora es un formulario real que hace POST al backend -->
+    <!-- Modal de Bootstrap -->
     <div class="modal fade" id="modalModificar" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <form class="modal-content text-dark" id="formModificar" method="POST" action="/perfil/actualizar" style="font-family: 'Port Lligat Slab', serif;">
@@ -176,7 +182,7 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS (necesario para el modal y las alertas) -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const modalModificar = new bootstrap.Modal(document.getElementById('modalModificar'));
@@ -196,7 +202,6 @@
             modalModificar.show();
         }
 
-        // Las alertas de éxito se cierran solas después de 4 segundos
         document.querySelectorAll('.auto-cerrar').forEach((alertaEl) => {
             setTimeout(() => bootstrap.Alert.getOrCreateInstance(alertaEl).close(), 4000);
         });

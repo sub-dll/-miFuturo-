@@ -140,7 +140,12 @@
 
             <div class="ms-4">
 
-                <% respuestas.forEach(respuesta => { %>
+                <% if (respuestas.length === 0) { %>
+                    <p class="text-muted">Aún no hay respuestas. ¡Sé el primero en responder!</p>
+                <% } %>
+
+                <% for (let i = 0; i < respuestas.length; i++) { %>
+                    <% const respuesta = respuestas[i]; %>
 
                     <!-- Respuesta -->
                     <div class="card mb-3">
@@ -257,7 +262,7 @@
                             </div>
                         </div>
                     </div>
-                <% }) %>
+                <% } %>
             </div>
 
 

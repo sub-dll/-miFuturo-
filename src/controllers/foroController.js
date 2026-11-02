@@ -34,7 +34,13 @@ const renderForoUniversidad = async (req, res) => {
     const buscar = (req.query.buscar || "").trim();
 
     try {
-        const [universidades] = await db.query(`SELECT id_universidad, nombre, logo_url, ciudad FROM Universidad WHERE id_universidad = ?`, [id_universidad]);
+        // AQUI TRAEMOS LA DESCRIPCIÓN, ACREDITACIÓN Y SITIO WEB
+        const [universidades] = await db.query(
+            `SELECT id_universidad, nombre, logo_url, ciudad, descripcion, años_acreditacion, sitio_web 
+             FROM Universidad WHERE id_universidad = ?`, 
+            [id_universidad]
+        );
+        
         if (universidades.length === 0) return res.status(404).send("Universidad no encontrada");
 
         let sqlCarreras = `SELECT DISTINCT C.id_carrera_base, C.nombre_carrera, C.descripcion_general FROM Programa_Universitario P INNER JOIN Carrera_Base C ON P.id_carrera_base = C.id_carrera_base WHERE P.id_universidad = ?`;
@@ -55,7 +61,15 @@ const renderForoTemas = async (req, res) => {
     const { programa } = req.query;
 
     try {
-        const [programas] = await db.query(`SELECT P.id_programa, C.nombre_carrera FROM Programa_Universitario P INNER JOIN Carrera_Base C ON P.id_carrera_base = C.id_carrera_base WHERE P.id_universidad = ? AND P.id_carrera_base = ? ORDER BY C.nombre_carrera ASC`, [id_universidad, id_carrera]);
+        // AQUÍ TRAEMOS LA DESCRIPCIÓN GENERAL DE LA CARRERA
+        const [programas] = await db.query(
+            `SELECT P.id_programa, C.nombre_carrera, C.descripcion_general 
+             FROM Programa_Universitario P 
+             INNER JOIN Carrera_Base C ON P.id_carrera_base = C.id_carrera_base 
+             WHERE P.id_universidad = ? AND P.id_carrera_base = ? 
+             ORDER BY C.nombre_carrera ASC`, 
+            [id_universidad, id_carrera]
+        );
         
         let sqlHilos = `
             SELECT H.id_hilo, H.titulo, H.contenido, H.fecha_publicacion, H.likes, H.dislikes, H.id_usuario, H.id_programa, U.username, U.nombres, U.apellidos, U.avatar_url, P.id_universidad, P.id_carrera_base, C.nombre_carrera, Uni.nombre AS nombre_universidad
@@ -104,7 +118,7 @@ const responderHilo = async (req, res) => {
 
     try {
         await db.query(`INSERT INTO Comentario (id_hilo, id_usuario, contenido, fecha_publicacion, likes, dislikes) VALUES (?, ?, ?, NOW(), 0, 0)`, [id, usuarioId, contenido]);
-        // ... (Lógica de notificaciones de socket.io de tus compañeros) ...
+        
         const [hilos] = await db.query('SELECT id_usuario, titulo FROM Hilo WHERE id_hilo = ?', [id]);
         if (hilos.length > 0 && Number(hilos[0].id_usuario) !== Number(usuarioId)) {
             const mensaje = `Tienes una nueva respuesta en: "${hilos[0].titulo}"`;
@@ -122,8 +136,6 @@ const responderHilo = async (req, res) => {
 
 const crearHilo = async (req, res) => {
     const { titulo, contenido, id_programa, id_universidad, id_carrera } = req.body;
-    
-    // Obtenemos el ID del usuario de la sesión activa
     const usuarioId = req.session && (req.session.userId || req.session.id_usuario);
 
     if (!usuarioId) {
@@ -140,12 +152,7 @@ const crearHilo = async (req, res) => {
              VALUES (?, ?, ?, ?, NOW(), 0, 0)`,
             [titulo.trim(), contenido.trim(), usuarioId, id_programa]
         );
-        
-        console.log(`✅ Nuevo hilo creado por el usuario ${usuarioId} en el programa ${id_programa}`);
-        
-        // Redirigimos de vuelta a la lista de temas de esa carrera
         res.redirect(`/foros/${id_universidad}/${id_carrera}`);
-
     } catch (error) {
         console.error('❌ Error al crear el hilo:', error.message);
         res.status(500).send('Error interno del servidor al crear el hilo');

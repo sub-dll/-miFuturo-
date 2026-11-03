@@ -9,19 +9,17 @@
 
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
->
+    rel="stylesheet">
 <link
     href="/css/global.css"
-    rel="stylesheet"
->
+    rel="stylesheet">
 
 
 </head>
 
 <body>
 
-    <!-- 1. Inyectar Navbar -->
+    <!-- Inyectar Navbar -->
     <%- include('partials/navbar') %>
     
     <main>
@@ -33,50 +31,100 @@
                 <!-- Encabezado -->
                 <div class="foro-encabezado">
 
-                    <!-- Cuadro del título -->
+                    <!-- Titulo -->
                     <div class="foro-titulo">
                         <h1 class="mb-0">Foros</h1>
                     </div>
-
-                    <!-- Filtro por carrera -->
+                                        
+                    <!-- Filtros de universidades -->
                     <div class="foro-filtro">
 
-                        <label for="filtroCarrera" class="form-label mb-1">
-                            Filtrar por carrera
-                        </label>
+                        <form action="/foros" method="GET" class="row g-3 align-items-end">
 
-                        <select
-                            id="filtroCarrera"
-                            class="form-select"
-                        >
-                            <option value="todas">
-                                Todas las carreras
-                            </option>
+                            <!-- Nombre de universidad -->
+                            <div class="col-md-4">
+                                <label for="filtroNombre" class="form-label">
+                                    Buscar universidad
+                                </label>
 
-                            <% carreras.forEach(carrera => { %>
+                                <input
+                                    type="text"
+                                    id="filtroNombre"
+                                    name="nombre"
+                                    class="form-control"
+                                    placeholder="Nombre de universidad..."
+                                    value="<%= nombreBusqueda || '' %>"
+                                >
+                            </div>
 
-                                <option value="<%= carrera.id_carrera_base %>">
-                                    <%= carrera.nombre_carrera %>
-                                </option>
+                            <!-- Ciudad -->
+                            <div class="col-md-3">
+                                <label for="filtroCiudad" class="form-label">
+                                    Ciudad
+                                </label>
 
-                            <% }) %>
+                                <select
+                                    id="filtroCiudad"
+                                    name="ciudad"
+                                    class="form-select"
+                                >
+                                    <option value="">Todas las ciudades</option>
 
-                        </select>
+                                    <% ciudades.forEach(ciudad => { %>
+                                        <option
+                                            value="<%= ciudad %>"
+                                            <%= ciudadSeleccionada === ciudad ? 'selected' : '' %>
+                                        >
+                                            <%= ciudad %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
 
+                            <!-- Carrera -->
+                            <div class="col-md-3">
+                                <label for="filtroCarrera" class="form-label">
+                                    Carrera
+                                </label>
+
+                                <select
+                                    id="filtroCarrera"
+                                    name="carrera"
+                                    class="form-select"
+                                >
+                                    <option value="">Todas las carreras</option>
+
+                                    <% carreras.forEach(carrera => { %>
+                                        <option
+                                            value="<%= carrera.id_carrera_base %>"
+                                            <%= Number(carreraSeleccionada) === Number(carrera.id_carrera_base) ? 'selected' : '' %>
+                                        >
+                                            <%= carrera.nombre_carrera %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+
+                            <!-- Acciones -->
+                            <div class="col-md-2 d-flex gap-2">
+                                <button type="submit" class="btn btn-color-base">
+                                    Buscar
+                                </button>
+
+                                <a href="/foros" class="btn btn-outline-secondary">
+                                    Limpiar
+                                </a>
+                            </div>
+                        </form>
                     </div>
-
                 </div>
-
-
-                <p class="text-muted mt-4 mb-4">
-                    Selecciona una universidad para buscar sus carreras y acceder a sus foros.
-                </p>
-
 
                 <!-- Lista de universidades -->
                 <div class="universidades-lista">
 
-                    <% universidades.forEach(universidad => { %>
+                    <% if (universidades.length > 0) { %>
+
+                        <% universidades.forEach(universidad => { %>
 
                         <!-- Etiqueta de universidad -->
                         <div
@@ -122,7 +170,7 @@
                             </div>
 
 
-                            <!-- Información -->
+                            <!-- Info -->
                             <div class="universidad-info">
 
                                 <div>
@@ -161,8 +209,6 @@
 
                             </div>
 
-
-                            <!-- Botón -->
                             <div class="universidad-boton">
 
                                 <a
@@ -171,59 +217,68 @@
                                 >
                                     Ver carreras
                                 </a>
-
                             </div>
+                        </div>
+                        <% }) %>
 
+                    <% } else { %>
+
+                        <div class="text-center py-5">
+                            <h5>No se encontraron universidades</h5>
+
+                            <p class="text-muted mb-0">
+                                No hay universidades que ofrezcan la carrera seleccionada.
+                            </p>
                         </div>
 
-                    <% }) %>
-
+                    <% } %>
                 </div>
 
-            </div>
+                <!-- Paginación -->
+                <% if (totalPaginas > 1) { %>
 
+                    <nav class="mt-4" aria-label="Paginación de universidades">
+                        <ul class="pagination justify-content-center mb-0">
+
+                            <!-- Anterior -->
+                            <li class="page-item <%= paginaActual <= 1 ? 'disabled' : '' %>">
+
+                                <a
+                                    class="page-link"
+                                    href="/foros?pagina=<%= paginaActual + 1 %>&carrera=<%= carreraSeleccionada || '' 
+                                    %>&nombre=<%= encodeURIComponent(nombreBusqueda || '') 
+                                    %>&ciudad=<%= encodeURIComponent(ciudadSeleccionada || '') %>"
+                                >
+                                    Anterior
+                                </a>
+                            </li>
+
+                            <!-- Página actual -->
+                            <li class="page-item disabled">
+
+                                <span class="page-link">
+                                    Página <%= paginaActual %> de <%= totalPaginas %>
+                                </span>
+                            </li>
+
+                            <!-- Siguiente -->
+                            <li class="page-item <%= paginaActual >= totalPaginas ? 'disabled' : '' %>">
+                                <a
+                                    class="page-link"
+                                    href="/foros?pagina=<%= paginaActual + 1 %>&carrera=<%= carreraSeleccionada || '' %>"
+                                >
+                                    Siguiente
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                <% } %>
+            </div>
         </div>
     </main>
 
     <!-- Inyectar Footer -->
     <%- include('partials/footer') %>
-
-    <script>
-        const filtroCarrera = document.getElementById('filtroCarrera');
-        const universidades = document.querySelectorAll('.universidad-item');
-
-        filtroCarrera.addEventListener('change', function () {
-
-            const carreraSeleccionada = this.value;
-
-            universidades.forEach(universidad => {
-
-                const carreras = universidad.dataset.carreras
-                    .split(',')
-                    .filter(carrera => carrera !== '');
-
-                if (carreraSeleccionada === 'todas') {
-
-                    universidad.style.display = 'flex';
-
-                    return;
-                }
-
-                if (carreras.includes(carreraSeleccionada)) {
-
-                    universidad.style.display = 'flex';
-
-                } else {
-
-                    universidad.style.display = 'none';
-
-                }
-
-            });
-
-        });
-
-    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

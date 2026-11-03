@@ -1,17 +1,18 @@
 const db = require('../infrastructure/database/db');
 const bcrypt = require('bcryptjs');
 
-// Columnas alineadas con el esquema actual de MySQL
-const COLUMNAS_PERFIL = 'id_usuario, nombres, apellidos, email, telefono, username, avatar_url, tipo_perfil';
+// Columnas que se envían a la vista
+const COLUMNAS_PERFIL = 'id_usuario, nombres, apellidos, email, telefono, username, avatar_url, tipo_perfil, biografia';
 
-// Campos editables sin biografia
-const CAMPOS_EDITABLES = ['email', 'telefono', 'username', 'password'];
+// Campos que el formulario del perfil puede modificar
+const CAMPOS_EDITABLES = ['email', 'telefono', 'username', 'password', 'biografia'];
 
 const NOMBRES_CAMPOS = {
     email: 'correo electrónico',
     telefono: 'número de teléfono',
     username: 'nombre de usuario',
-    password: 'contraseña'
+    password: 'contraseña',
+    biografia: 'biografía'
 };
 
 // ==========================================
@@ -66,6 +67,11 @@ const validarCampo = (campo, valor) => {
         case 'password':
             if (valor.length < 8) {
                 return 'La contraseña debe tener al menos 8 caracteres.';
+            }
+            break;
+        case 'biografia':
+            if (valor.length > 280) {
+                return 'La biografía no puede exceder los 280 caracteres.';
             }
             break;
     }

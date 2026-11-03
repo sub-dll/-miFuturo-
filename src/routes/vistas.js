@@ -9,7 +9,7 @@ const { protegerRuta } = require('../middlewares/authMiddleware');
 // 1. RUTAS PÚBLICAS Y DE AUTENTICACIÓN
 // ==========================================
 router.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login', { mensaje: req.query.mensaje || null });
 });
 
 router.get('/registro', (req, res) => {

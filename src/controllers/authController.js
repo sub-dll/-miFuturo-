@@ -1,5 +1,6 @@
 const db = require('../infrastructure/database/db');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const registrarUsuario = async (req, res) => {
     try {
@@ -98,4 +99,117 @@ const cerrarSesion = (req, res) => {
     });
 };
 
-module.exports = { registrarUsuario, iniciarSesion, cerrarSesion };
+const solicitarRecuperacion = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const [usuarios] = await db.query(
+            'SELECT id_usuario FROM Usuario WHERE email = ?',
+            [email]
+        );
+
+        if (usuarios.length > 0) {
+            const token = crypto.randomBytes(32).toString('hex');
+            const expireDate = new Date(Date.now() + 60 * 60 * 1000);
+
+            await db.query(
+                'UPDATE Usuario SET reset_token = ?, reset_expires = ? WHERE id_usuario = ?',
+                [token, expireDate, usuarios[0].id_usuario]
+            );
+
+            const resetLink = `${req.protocol}://${req.get('host')}/restablecer?token=${token}`;
+            console.log('\n=============================================');
+            console.log('SIMULACION DE CORREO DE RECUPERACION');
+            console.log(`Para: ${email}`);
+            console.log(`Enlace de recuperacion: ${resetLink}`);
+            console.log('=============================================\n');
+        }
+
+        res.render('recuperar', {
+            mensaje: 'Si el correo existe, se enviaran las instrucciones de recuperacion.'
+        });
+    } catch (error) {
+        console.error('❌ Error al solicitar recuperación:', error.message);
+        res.status(500).render('recuperar', {
+            error: 'No fue posible procesar la solicitud. Intenta nuevamente.'
+        });
+    }
+};
+
+const mostrarRestablecimiento = async (req, res) => {
+    const { token } = req.query;
+
+    if (!token) {
+        return res.redirect('/login');
+    }
+
+    try {
+        const [usuarios] = await db.query(
+            'SELECT id_usuario FROM Usuario WHERE reset_token = ? AND reset_expires > NOW()',
+            [token]
+        );
+
+        if (usuarios.length === 0) {
+            return res.render('restablecer', {
+                token: null,
+                error: 'El enlace es invalido o ha expirado. Solicita uno nuevo.'
+            });
+        }
+
+        res.render('restablecer', { token, error: null });
+    } catch (error) {
+        console.error('❌ Error al validar el token de recuperación:', error.message);
+        res.status(500).render('restablecer', {
+            token: null,
+            error: 'No fue posible validar el enlace. Intenta nuevamente.'
+        });
+    }
+};
+
+const restablecerPassword = async (req, res) => {
+    const { token, nuevaPassword, confirmarPassword } = req.body;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&.]{8,}$/;
+
+    try {
+        const [usuarios] = await db.query(
+            'SELECT id_usuario FROM Usuario WHERE reset_token = ? AND reset_expires > NOW()',
+            [token]
+        );
+
+        if (usuarios.length === 0) {
+            return res.render('restablecer', {
+                token: null,
+                error: 'El enlace ha expirado. Solicita uno nuevo.'
+            });
+        }
+
+        if (!passwordRegex.test(nuevaPassword || '') || nuevaPassword !== confirmarPassword) {
+            return res.render('restablecer', {
+                token,
+                error: 'Las contrasenas deben coincidir y tener al menos 8 caracteres, una letra y un numero.'
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(nuevaPassword, 10);
+        await db.query(
+            'UPDATE Usuario SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id_usuario = ?',
+            [hashedPassword, usuarios[0].id_usuario]
+        );
+
+        res.redirect('/login?mensaje=Clave actualizada correctamente');
+    } catch (error) {
+        console.error('❌ Error al restablecer contraseña:', error.message);
+        res.status(500).render('restablecer', {
+            token: null,
+            error: 'No fue posible actualizar la contraseña.'
+        });
+    }
+};
+
+module.exports = {
+    registrarUsuario,
+    iniciarSesion,
+    cerrarSesion,
+    solicitarRecuperacion,
+    mostrarRestablecimiento,
+    restablecerPassword
+};

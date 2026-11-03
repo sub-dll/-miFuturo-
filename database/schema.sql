@@ -9,7 +9,9 @@ CREATE TABLE `Usuario` (
   `username` VARCHAR(50) UNIQUE,
   `avatar_url` VARCHAR(255),
   `tipo_perfil` VARCHAR(20),
-  `biografia` VARCHAR(280)
+  `biografia` VARCHAR(280),
+  `reset_token` VARCHAR(64) UNIQUE,
+  `reset_expires` DATETIME
 );
 
 CREATE TABLE `Universidad` (

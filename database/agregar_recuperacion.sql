@@ -1,0 +1,3 @@
+ALTER TABLE Usuario
+  ADD COLUMN reset_token VARCHAR(64) NULL UNIQUE,
+  ADD COLUMN reset_expires DATETIME NULL;

@@ -18,7 +18,7 @@ const NOMBRES_CAMPOS = {
 // ==========================================
 // Helper: obtiene el ID de la sesión activa
 // ==========================================
-const obtenerIdSesion = (req) => req.session.userId || req.session.id_usuario;
+const obtenerIdSesion = (req) => req.session?.userId || req.session?.id_usuario;
 
 // ==========================================
 // Helper: SELECT del usuario por ID
@@ -177,4 +177,36 @@ const obtenerPerfilGeneral = async (req, res) => {
     }
 };
 
-module.exports = { obtenerPerfil, actualizarPerfil, obtenerPerfilGeneral };
+// ==========================================
+// POST /perfil/preferencias/idioma
+// ==========================================
+const actualizarIdioma = async (req, res) => {
+    const idUsuario = obtenerIdSesion(req);
+
+    if (!idUsuario) {
+        return res.status(401).json({ ok: false, error: 'Usuario no autenticado' });
+    }
+
+    const { idioma } = req.body;
+
+    if (!idioma) {
+        return res.status(400).json({ ok: false, error: 'El idioma es obligatorio' });
+    }
+
+    try {
+        await db.query(
+            `INSERT INTO configuracion (id_usuario, idioma)
+             VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE idioma = VALUES(idioma)`,
+            [idUsuario, idioma]
+        );
+
+        console.log(`✅ Idioma actualizado a '${idioma}' para el usuario ${idUsuario}`);
+        return res.json({ ok: true, mensaje: 'Idioma actualizado correctamente', idioma });
+    } catch (error) {
+        console.error('❌ Error al actualizar el idioma:', error.message);
+        return res.status(500).json({ ok: false, error: 'Error al actualizar el idioma en la base de datos' });
+    }
+};
+
+module.exports = { obtenerPerfil, actualizarPerfil, obtenerPerfilGeneral, actualizarIdioma };

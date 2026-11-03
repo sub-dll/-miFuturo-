@@ -89,7 +89,7 @@
                     <p class="fs-6 text-light opacity-75 mb-4">Elige cómo quieres ver [miFuturo] y establece sus preferencias</p>
 
                     <!-- Formulario de preferencias -->
-                    <form action="/perfil/preferencias/actualizar" method="POST">
+                    <form id="form-preferencias">
                         
                         <h5 class="fw-bold fs-6 mt-4 text-white">Apariencia</h5>
                         <hr class="border-white border-opacity-50 my-3">
@@ -133,7 +133,7 @@
                                 <small class="text-light opacity-75">Elige el idioma en el que quieres usar la plataforma</small>
                             </div>
                             <div class="col-md-4 text-md-end mt-2 mt-md-0">
-                                <select name="idioma" class="btn btn-outline-light btn-sm d-inline-block w-auto text-start">
+                                <select id="select-idioma" name="idioma" class="btn btn-outline-light btn-sm d-inline-block w-auto text-start">
                                     <option value="es" <%= typeof configuracion !== 'undefined' && configuracion && configuracion.idioma === 'es' ? 'selected' : '' %>>Español</option>
                                     <option value="en" <%= typeof configuracion !== 'undefined' && configuracion && configuracion.idioma === 'en' ? 'selected' : '' %>>English</option>
                                 </select>
@@ -157,6 +157,68 @@
         document.querySelectorAll('.auto-cerrar').forEach((alertaEl) => {
             setTimeout(() => bootstrap.Alert.getOrCreateInstance(alertaEl).close(), 4000);
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const formPreferencias = document.getElementById('form-preferencias');
+            const selectIdioma = document.getElementById('select-idioma');
+
+            // Función para enviar la petición a la base de datos
+            async function guardarIdioma(idioma) {
+                try {
+                    const response = await fetch('/perfil/preferencias/idioma', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ idioma })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.ok) {
+                        console.log('✅ Idioma guardado correctamente:', data.idioma);
+                        mostrarAlertaExito('Idioma guardado correctamente');
+                    } else {
+                        console.error('❌ Error al guardar idioma:', data.error);
+                    }
+                } catch (error) {
+                    console.error('❌ Error de red al intentar guardar el idioma:', error);
+                }
+            }
+
+            // 1. Intercepta el evento de submit al pulsar "Guardar Cambios"
+            if (formPreferencias) {
+                formPreferencias.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (selectIdioma) {
+                        guardarIdioma(selectIdioma.value);
+                    }
+                });
+            }
+
+            // 2. Guarda automáticamente al cambiar la opción del selector
+            if (selectIdioma) {
+                selectIdioma.addEventListener('change', (e) => {
+                    guardarIdioma(e.target.value);
+                });
+            }
+        });
+
+        function mostrarAlertaExito(mensaje) {
+            const container = document.getElementById('alert-container');
+            if (!container) return;
+
+            const alertHtml = `
+                <div class="alert alert-success alert-dismissible fade show shadow auto-cerrar" role="alert">
+                    <strong>¡Éxito!</strong> ${mensaje}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', alertHtml);
+
+            const nuevaAlerta = container.lastElementChild;
+            setTimeout(() => bootstrap.Alert.getOrCreateInstance(nuevaAlerta).close(), 4000);
+        }
     </script>
 </body>
 </html>

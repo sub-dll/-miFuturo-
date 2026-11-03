@@ -175,6 +175,16 @@
     box-shadow: 0 0 0 0.2rem rgba(140, 159, 186, 0.25);
 }
 
+.btn-outline-color-base {
+    color: #8C9FBA;
+    border-color: #8C9FBA;
+}
+
+.btn-outline-color-base:hover {
+    background-color: #8C9FBA;
+    border-color: #8C9FBA;
+    color: white;
+}
 
 /*
 /* Adaptación para pantallas pequeñas */

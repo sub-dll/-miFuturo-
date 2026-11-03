@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const http = require('http');
@@ -39,12 +40,14 @@ const vistasRoutes = require('./routes/vistas');
 const authRoutes = require('./routes/authRoutes');
 const comparadorRoutes = require('./routes/comparadorRoutes');
 const perfilRoutes = require('./routes/perfilRoutes'); 
+const configuracionRoutes = require('./routes/configuracionroutes');
 const foroRoutes = require('./routes/foroRoutes');
 
 // Registrar las rutas
 app.use('/', perfilRoutes);  
 app.use('/', vistasRoutes);
 app.use('/', authRoutes); 
+app.use('/configuracion', configuracionRoutes);
 app.use('/', foroRoutes); 
 app.use('/comparador', comparadorRoutes);
 

@@ -9,8 +9,9 @@ const obtenerHistorial = async (req, res) => {
     }
 
     try {
+        // Se cambia 'notificacion' por 'Notificacion'
         const [notificaciones] = await db.query(
-            `SELECT * FROM notificacion
+            `SELECT * FROM Notificacion
              WHERE id_usuario_destino = ?
              ORDER BY fecha DESC`,
             [usuarioId]
@@ -34,8 +35,9 @@ const marcarComoLeida = async (req, res) => {
     }
 
     try {
+        // Se cambia 'notificacion' por 'Notificacion'
         await db.query(
-            `UPDATE notificacion SET leida = 1
+            `UPDATE Notificacion SET leida = 1
              WHERE id_notificacion = ? AND id_usuario_destino = ?`,
             [idNotificacion, usuarioId]
         );

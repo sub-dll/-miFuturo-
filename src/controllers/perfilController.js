@@ -17,9 +17,8 @@ const NOMBRES_CAMPOS = {
 
 // ==========================================
 // Helper: obtiene el ID de la sesión activa
-// (el login actual guarda id_usuario; el middleware usa userId)
 // ==========================================
-const obtenerIdSesion = (req) => req.session.userId || req.session.id_usuario;
+const obtenerIdSesion = (req) => req.session?.userId || req.session?.id_usuario;
 
 // ==========================================
 // Helper: SELECT del usuario por ID
@@ -33,15 +32,14 @@ const buscarUsuarioPorId = async (idUsuario) => {
 };
 
 // ==========================================
-// Helper: renderiza la vista del perfil con los datos del usuario
+// Helper: renderiza la vista del perfil
 // ==========================================
 const renderPerfil = (res, usuario, { error = null, exito = null, status = 200 } = {}) => {
     return res.status(status).render('perfil-cuenta', { usuario, error, exito });
 };
 
 // ==========================================
-// Validaciones del backend (no confiar en el navegador)
-// Devuelve un mensaje de error o null si el valor es válido
+// Validaciones del backend
 // ==========================================
 const validarCampo = (campo, valor) => {
     if (!CAMPOS_EDITABLES.includes(campo)) {
@@ -81,14 +79,13 @@ const validarCampo = (campo, valor) => {
 };
 
 // ==========================================
-// GET /perfil  →  SELECT del usuario de la sesión y render de la vista
+// GET /perfil
 // ==========================================
 const obtenerPerfil = async (req, res) => {
     try {
         const usuario = await buscarUsuarioPorId(obtenerIdSesion(req));
 
         if (!usuario) {
-            // La sesión apunta a un usuario que ya no existe
             return req.session.destroy(() => res.redirect('/login'));
         }
 
@@ -104,8 +101,7 @@ const obtenerPerfil = async (req, res) => {
 };
 
 // ==========================================
-// POST /perfil/actualizar  →  validación + UPDATE de un campo
-// Body esperado: { campo: 'email' | 'telefono' | 'username' | 'password', valor: '...' }
+// POST /perfil/actualizar
 // ==========================================
 const actualizarPerfil = async (req, res) => {
     const idUsuario = obtenerIdSesion(req);
@@ -121,13 +117,13 @@ const actualizarPerfil = async (req, res) => {
         if (campo !== 'password') valor = valor.trim();
         if (campo === 'email') valor = valor.toLowerCase();
 
-        // 1. Validaciones de formato
+        // 1. Validaciones
         const errorValidacion = validarCampo(campo, valor);
         if (errorValidacion) {
             return renderPerfil(res, usuario, { error: errorValidacion, status: 400 });
         }
 
-        // 2. Antes del UPDATE: verificar que el correo / username no pertenezca a OTRA persona
+        // 2. Comprobar duplicados en email o username
         if (campo === 'email' || campo === 'username') {
             const [duplicados] = await db.query(
                 `SELECT id_usuario FROM Usuario WHERE ${campo} = ? AND id_usuario <> ?`,
@@ -141,22 +137,19 @@ const actualizarPerfil = async (req, res) => {
             }
         }
 
-        // 3. La contraseña se guarda siempre encriptada
+        // 3. Encriptar contraseña
         if (campo === 'password') {
             valor = await bcrypt.hash(valor, 10);
         }
 
-        // 4. UPDATE (el nombre de columna viene de la lista blanca CAMPOS_EDITABLES)
+        // 4. Actualizar en BD
         await db.query(`UPDATE Usuario SET ${campo} = ? WHERE id_usuario = ?`, [valor, idUsuario]);
 
         console.log(`✅ Usuario ${idUsuario} actualizó su ${campo}`);
 
-       // Patrón PRG: redirige a la pestaña correspondiente
-        const rutaDestino = campo === 'biografia' ? '/perfil/general' : '/perfil';
-        return res.redirect(`${rutaDestino}?ok=${campo}`);
+        return res.redirect(`/perfil?ok=${campo}`);
 
     } catch (error) {
-        // Red de seguridad: UNIQUE de MySQL por si dos peticiones llegan al mismo tiempo
         if (error.code === 'ER_DUP_ENTRY') {
             const usuario = await buscarUsuarioPorId(idUsuario).catch(() => null);
             if (usuario) {
@@ -177,12 +170,43 @@ const obtenerPerfilGeneral = async (req, res) => {
         if (!usuario) {
             return req.session.destroy(() => res.redirect('/login'));
         }
-        const exito = req.query.ok === 'biografia' ? 'Se ha guardado tu biografía correctamente.' : null;
-        return res.render('perfil-general', { usuario, exito, error: null });
+        return res.render('perfil-general', { usuario, exito: null, error: null });
     } catch (error) {
         console.error('❌ Error al cargar perfil general:', error.message);
         return res.status(500).send('Error interno');
     }
 };
 
-module.exports = { obtenerPerfil, actualizarPerfil, obtenerPerfilGeneral };
+// ==========================================
+// POST /perfil/preferencias/idioma
+// ==========================================
+const actualizarIdioma = async (req, res) => {
+    const idUsuario = obtenerIdSesion(req);
+
+    if (!idUsuario) {
+        return res.status(401).json({ ok: false, error: 'Usuario no autenticado' });
+    }
+
+    const { idioma } = req.body;
+
+    if (!idioma) {
+        return res.status(400).json({ ok: false, error: 'El idioma es obligatorio' });
+    }
+
+    try {
+        await db.query(
+            `INSERT INTO configuracion (id_usuario, idioma)
+             VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE idioma = VALUES(idioma)`,
+            [idUsuario, idioma]
+        );
+
+        console.log(`✅ Idioma actualizado a '${idioma}' para el usuario ${idUsuario}`);
+        return res.json({ ok: true, mensaje: 'Idioma actualizado correctamente', idioma });
+    } catch (error) {
+        console.error('❌ Error al actualizar el idioma:', error.message);
+        return res.status(500).json({ ok: false, error: 'Error al actualizar el idioma en la base de datos' });
+    }
+};
+
+module.exports = { obtenerPerfil, actualizarPerfil, obtenerPerfilGeneral, actualizarIdioma };

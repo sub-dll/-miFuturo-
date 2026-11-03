@@ -1,10 +1,15 @@
-<!-- sidebar-perfil.ejs -->
-<aside class="col-md-3 col-lg-2 sidebar p-4">
-    <h5 class="fw-bold text-dark mb-4">Ajustes del Perfil</h5>
-    <nav class="nav flex-column gap-2">
-        <a class="nav-link px-3 py-2 <%= typeof active !== 'undefined' && active === 'general' ? 'active' : '' %>" href="/perfil/general">General</a>
-        <a class="nav-link px-3 py-2 <%= typeof active !== 'undefined' && active === 'cuenta' ? 'active' : '' %>" href="/perfil">Cuenta</a>
-        <a class="nav-link px-3 py-2 <%= typeof active !== 'undefined' && active === 'preferencias' ? 'active' : '' %>" href="/perfil/preferencias">Preferencias</a>
-        <a class="nav-link px-3 py-2 <%= typeof active !== 'undefined' && active === 'notificaciones' ? 'active' : '' %>" href="/perfil/notificaciones">Notificaciones</a>
-    </nav>
+<!-- sidebar-perfil.ejs (Adaptado para Ventana Modal) -->
+<aside class="col-md-3 col-lg-3 sidebar p-4 text-white border-end border-white border-opacity-10" style="background-color: rgba(15, 23, 42, 0.4);">
+    <h5 class="fw-bold text-white mb-4 fs-6 opacity-75">Ajustes del Perfil</h5>
+    <div class="nav flex-column nav-pills gap-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <button class="nav-link text-white text-start active px-3 py-2 rounded" id="v-pills-general-tab" data-bs-toggle="pill" data-bs-target="#tab-general" type="button" role="tab" aria-controls="tab-general" aria-selected="true">
+            General
+        </button>
+        <button class="nav-link text-white text-start px-3 py-2 rounded" id="v-pills-cuenta-tab" data-bs-toggle="pill" data-bs-target="#tab-cuenta" type="button" role="tab" aria-controls="tab-cuenta" aria-selected="false">
+            Cuenta
+        </button>
+        <button class="nav-link text-white text-start px-3 py-2 rounded" id="v-pills-preferencias-tab" data-bs-toggle="pill" data-bs-target="#tab-preferencias" type="button" role="tab" aria-controls="tab-preferencias" aria-selected="false">
+            Preferencias
+        </button>
+    </div>
 </aside>

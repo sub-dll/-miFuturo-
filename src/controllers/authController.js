@@ -41,7 +41,7 @@ const registrarUsuario = async (req, res) => {
 };
 
 // ==========================================
-// INICIAR SESIÓN (CORREGIDO Y COMPLETADO)
+// INICIAR SESIÓN (CORREGIDO PARA PANEL ADMIN Y ESTADOS)
 // ==========================================
 const iniciarSesion = async (req, res) => {
     try {
@@ -56,27 +56,46 @@ const iniciarSesion = async (req, res) => {
 
         const usuario = usuarios[0];
 
-        // 2. Comparar la contraseña ingresada con la encriptada
+        // 2. MIF-104: Validar estado de la cuenta ANTES de comparar contraseñas
+        if (usuario.estado === 'inhabilitado') {
+            return res.status(403).send('Tu cuenta ha sido inhabilitada por un administrador.');
+        }
+
+        // 3. Comparar la contraseña ingresada con la encriptada
         const contrasenaValida = await bcrypt.compare(password, usuario.password);
         
         if (!contrasenaValida) {
             return res.status(401).send('Correo o contraseña incorrectos.');
         }
 
-        // 3. ¡CORRECCIÓN CLAVE! Guardar el objeto usuario en la sesión
+        // 4. Guardar el objeto usuario en la sesión INCLUYENDO TIPO DE PERFIL Y ESTADO
         req.session.id_usuario = usuario.id_usuario;
         req.session.userId = usuario.id_usuario;
-        req.session.usuario = {
+        req.session.user = {
             id_usuario: usuario.id_usuario,
             nombre: usuario.nombres,
             email: usuario.email,
-            telefono: usuario.telefono
+            telefono: usuario.telefono,
+            tipo_perfil: usuario.tipo_perfil, 
+            estado: usuario.estado
         };
         
-        console.log(`✅ Sesión iniciada para: ${usuario.nombres} (${usuario.email})`);
+        console.log(`✅ Sesión iniciada para: ${usuario.nombres} (${usuario.email}) - Rol: ${usuario.tipo_perfil}`);
 
-        // 4. Redirigir a la página principal o a los foros
-        res.redirect('/foros'); 
+        // 5. FORZAR el guardado asíncrono de la sesión antes de redirigir
+        req.session.save((err) => {
+            if (err) {
+                console.error("Error al guardar la sesión:", err);
+                return res.status(500).send('Error interno del servidor al guardar sesión');
+            }
+            
+            // Redirigir de forma segura según el rol
+            if (usuario.tipo_perfil === 'admin') {
+                res.redirect('/admin');
+            } else {
+                res.redirect('/foros'); 
+            }
+        });
 
     } catch (error) {
         console.error('❌ Error en el inicio de sesión:', error.message);

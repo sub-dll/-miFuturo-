@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - miFuturo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/global.css">
+</head>
+
+<body class="bg-light d-flex flex-column min-vh-100">
+
+    <%- include('partials/navbar') %>
+
+        <main class="container flex-grow-1 py-5" style="max-width: 1200px;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold text-dark">⚙️ Panel de Control Administrador</h2>
+                <span class="badge bg-danger px-3 py-2 rounded-pill shadow-sm">Modo Admin Activo</span>
+            </div>
+
+            <!-- Sistema de Pestañas (Tabs) -->
+            <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold text-dark" id="miembros-tab" data-bs-toggle="tab"
+                        data-bs-target="#miembros" type="button" role="tab" aria-selected="true">
+                        👥 Gestión de Miembros
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold text-dark" id="academica-tab" data-bs-toggle="tab"
+                        data-bs-target="#academica" type="button" role="tab" aria-selected="false">
+                        🏛️ Gestión Académica
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Contenido de las Pestañas -->
+            <div class="tab-content bg-white p-4 rounded-bottom-4 rounded-end-4 shadow-sm border border-top-0"
+                id="adminTabsContent">
+
+                <!-- PESTAÑA 1: GESTIÓN DE MIEMBROS -->
+                <div class="tab-pane fade show active" id="miembros" role="tabpanel" tabindex="0">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Usuarios Registrados</h5>
+                        <input type="text" id="buscarUsuario" class="form-control form-control-sm w-25"
+                            placeholder="Buscar usuario...">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuario</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% usuarios.forEach(u=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= u.id_usuario %>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                <%= u.username || 'Sin usuario' %>
+                                            </strong> <br>
+                                            <small class="text-muted">
+                                                <%= u.nombres || '' %>
+                                                    <%= u.apellidos || '' %>
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <%= u.email %>
+                                        </td>
+
+                                        <td>
+                                            <% const rolSeguro=u.tipo_perfil || 'usuario' ; %>
+                                                <span
+                                                    class="badge <%= rolSeguro === 'admin' ? 'bg-danger' : (rolSeguro === 'mentor' ? 'bg-primary' : 'bg-secondary') %>">
+                                                    <%= rolSeguro.toUpperCase() %>
+                                                </span>
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge <%= u.estado === 'activo' ? 'bg-success' : 'bg-warning text-dark' %>">
+                                                <%= (u.estado || 'activo' ).toUpperCase() %>
+                                            </span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <!-- Selector rápido de roles -->
+                                            <select
+                                                class="form-select form-select-sm d-inline-block w-auto me-1 select-rol"
+                                                data-id="<%= u.id_usuario %>">
+                                                <option value="usuario" <%=rolSeguro==='usuario' ? 'selected' : '' %>
+                                                    >Usuario</option>
+                                                <option value="mentor" <%=rolSeguro==='mentor' ? 'selected' : '' %>
+                                                    >Mentor</option>
+                                                <option value="admin" <%=rolSeguro==='admin' ? 'selected' : '' %>>Admin
+                                                </option>
+                                            </select>
+
+                                            <!-- Botón Inhabilitar/Activar -->
+                                            <button
+                                                class="btn btn-sm btn-estado <%= u.estado === 'activo' ? 'btn-outline-warning' : 'btn-outline-success' %>"
+                                                data-id="<%= u.id_usuario %>"
+                                                data-estado="<%= u.estado === 'activo' ? 'inhabilitado' : 'activo' %>"
+                                                title="<%= u.estado === 'activo' ? 'Inhabilitar' : 'Activar' %>">
+                                                <%= u.estado==='activo' ? '⏸️' : '▶️' %>
+                                            </button>
+
+                                            <!-- Botón Eliminar -->
+                                            <button class="btn btn-sm btn-outline-danger btn-eliminar"
+                                                data-id="<%= u.id_usuario %>" title="Eliminar Permanente">🗑️</button>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PESTAÑA 2: GESTIÓN ACADÉMICA -->
+                <div class="tab-pane fade" id="academica" role="tabpanel" tabindex="0">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Universidades del Sistema</h5>
+                        <button class="btn btn-sm text-white" style="background-color: #8C9FBA;" data-bs-toggle="modal"
+                            data-bs-target="#modalAñadirUniversidad">
+                            + Añadir Universidad
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Ciudad</th>
+                                    <th>Acreditación</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% universidades.forEach(uni=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= uni.id_universidad %>
+                                        </td>
+                                        <td class="fw-bold">
+                                            <%= uni.nombre %>
+                                        </td>
+                                        <td>
+                                            <%= uni.ciudad %>
+                                        </td>
+                                        <td>
+                                            <%= uni.años_acreditacion %> Años
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-primary btn-editar-uni"
+                                                data-id="<%= uni.id_universidad %>"
+                                                data-nombre="<%= uni.nombre %>"
+                                                data-acreditacion="<%= uni.años_acreditacion %>"
+                                                data-ciudad="<%= uni.ciudad %>"
+                                                data-logo="<%= uni.logo_url || '' %>"
+                                                data-web="<%= uni.sitio_web || '' %>"
+                                                data-desc="<%= uni.descripcion || '' %>"
+                                                data-bs-toggle="modal" data-bs-target="#modalEditarUniversidad">
+                                                Editar
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger btn-eliminar-uni" data-id="<%= uni.id_universidad %>">
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        
+        <!-- MODAL: Añadir Nueva Universidad (MIF-98) -->
+        <div class="modal fade" id="modalAñadirUniversidad" tabindex="-1" aria-labelledby="modalAñadirUniversidadLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 border-0 shadow">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h1 class="modal-title fs-5 fw-bold" id="modalAñadirUniversidadLabel">🏛️ Añadir Universidad
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/admin/universidad/crear" method="POST">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Nombre de la Institución</label>
+                                <input type="text" name="nombre" class="form-control" required
+                                    placeholder="Ej. Universidad de Concepción">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold small">Años de Acreditación</label>
+                                    <input type="number" name="años_acreditacion" class="form-control" min="0" max="7"
+                                        required placeholder="Ej. 7">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold small">Ciudad</label>
+                                    <input type="text" name="ciudad" class="form-control" required
+                                        placeholder="Ej. Concepción">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Enlace del Logo (URL)</label>
+                                <input type="url" name="logo_url" class="form-control"
+                                    placeholder="https://ejemplo.com/logo.png">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Sitio Web Oficial</label>
+                                <input type="url" name="sitio_web" class="form-control"
+                                    placeholder="https://www.udec.cl">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Descripción Breve</label>
+                                <textarea name="descripcion" class="form-control" rows="3"
+                                    placeholder="Breve reseña de la universidad..."></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-0">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn text-white px-4" style="background-color: #8C9FBA;">Guardar
+                                Registro</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: Editar Universidad (MIF-98) -->
+        <div class="modal fade" id="modalEditarUniversidad" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 border-0 shadow">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h1 class="modal-title fs-5 fw-bold">✏️ Editar Universidad</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/admin/universidad/editar" method="POST">
+                        <div class="modal-body">
+                            <!-- Input oculto para enviar el ID -->
+                            <input type="hidden" name="id_universidad" id="edit_id_universidad">
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Nombre de la Institución</label>
+                                <input type="text" name="nombre" id="edit_nombre" class="form-control" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold small">Años de Acreditación</label>
+                                    <input type="number" name="años_acreditacion" id="edit_acreditacion" class="form-control" min="0" max="7" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold small">Ciudad</label>
+                                    <input type="text" name="ciudad" id="edit_ciudad" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Enlace del Logo (URL)</label>
+                                <input type="url" name="logo_url" id="edit_logo" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Sitio Web Oficial</label>
+                                <input type="url" name="sitio_web" id="edit_web" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Descripción Breve</label>
+                                <textarea name="descripcion" id="edit_desc" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-0">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn text-white px-4" style="background-color: #8C9FBA;">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <%- include('partials/footer') %>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+            <!-- Scripts de Interactividad del Panel -->
+            <script>
+                // Cambiar Rol
+                document.querySelectorAll('.select-rol').forEach(select => {
+                    select.addEventListener('change', async (e) => {
+                        const id_usuario = e.target.getAttribute('data-id');
+                        const nuevo_rol = e.target.value;
+
+                        if (!confirm(`¿Seguro que deseas cambiar el rol a ${nuevo_rol.toUpperCase()}?`)) {
+                            window.location.reload(); // Revertir select si cancela
+                            return;
+                        }
+
+                        try {
+                            const res = await fetch('/admin/usuario/rol', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ id_usuario, nuevo_rol })
+                            });
+                            const data = await res.json();
+                            if (data.success) { location.reload(); } else { alert(data.message); window.location.reload(); }
+                        } catch (err) {
+                            alert("Error de conexión");
+                        }
+                    });
+                });
+
+                // Cambiar Estado (Inhabilitar / Activar)
+                document.querySelectorAll('.btn-estado').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const id_usuario = e.currentTarget.getAttribute('data-id');
+                        const nuevo_estado = e.currentTarget.getAttribute('data-estado');
+
+                        if (confirm(`¿Deseas ${nuevo_estado === 'inhabilitado' ? 'INHABILITAR' : 'ACTIVAR'} este usuario?`)) {
+                            try {
+                                const res = await fetch('/admin/usuario/estado', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ id_usuario, nuevo_estado })
+                                });
+                                const data = await res.json();
+                                if (data.success) { location.reload(); } else { alert(data.message); }
+                            } catch (err) {
+                                alert("Error de conexión");
+                            }
+                        }
+                    });
+                });
+
+                // Eliminar Usuario
+                document.querySelectorAll('.btn-eliminar').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const id_usuario = e.currentTarget.getAttribute('data-id');
+
+                        if (confirm('🚨 ADVERTENCIA: Esta acción eliminará al usuario y todo su historial de foros de forma irreversible. ¿Deseas continuar?')) {
+                            try {
+                                const res = await fetch('/admin/usuario/eliminar', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ id_usuario })
+                                });
+                                const data = await res.json();
+                                if (data.success) { location.reload(); } else { alert(data.message); }
+                            } catch (err) {
+                                alert("Error de conexión");
+                            }
+                        }
+                    });
+                });
+
+                // Autocompletar Modal de Edición de Universidad
+                document.querySelectorAll('.btn-editar-uni').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const t = e.currentTarget;
+                        document.getElementById('edit_id_universidad').value = t.getAttribute('data-id');
+                        document.getElementById('edit_nombre').value = t.getAttribute('data-nombre');
+                        document.getElementById('edit_acreditacion').value = t.getAttribute('data-acreditacion');
+                        document.getElementById('edit_ciudad').value = t.getAttribute('data-ciudad');
+                        document.getElementById('edit_logo').value = t.getAttribute('data-logo');
+                        document.getElementById('edit_web').value = t.getAttribute('data-web');
+                        document.getElementById('edit_desc').value = t.getAttribute('data-desc');
+                    });
+                });
+
+                // Eliminar Universidad
+                document.querySelectorAll('.btn-eliminar-uni').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const id_universidad = e.currentTarget.getAttribute('data-id');
+                        
+                        if (confirm('🚨 ADVERTENCIA: Esta acción eliminará la universidad y todos los programas/carreras asociados a ella de forma irreversible. ¿Deseas continuar?')) {
+                            try {
+                                const res = await fetch('/admin/universidad/eliminar', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ id_universidad })
+                                });
+                                const data = await res.json();
+                                if (data.success) { location.reload(); } else { alert(data.message); }
+                            } catch (err) {
+                                alert("Error de conexión");
+                            }
+                        }
+                    });
+                });
+            </script>
+</body>
+
+</html>

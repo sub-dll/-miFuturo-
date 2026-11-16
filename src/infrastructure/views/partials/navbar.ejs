@@ -88,13 +88,19 @@
                     </li>
                 </ul>
             </div>
-
+        
         <% } else { %>
             <!-- === SI NO HAY SESIÓN: Muestra Botones de Ingreso === -->
             <a href="/registro" class="btn text-white btn-sm px-3" style="background-color: #8C9FBA; border: none; font-weight: 500;">Registro</a>
             <a href="/login" class="btn btn-outline-dark btn-sm px-3" style="font-weight: 500;">Login</a>
         <% } %>
         
+        <!-- Condición para mostrar el botón de Administrador solo si el usuario autenticado es admin -->
+        <% if (typeof user !== 'undefined' && user && user.tipo_perfil === 'admin') { %>
+            <li class="nav-item">
+                <a class="nav-link fw-bold text-danger" href="/admin">⚙️ Panel Admin</a>
+            </li>
+        <% } %>
     </div>
   </div>
 </nav>

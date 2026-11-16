@@ -4,39 +4,33 @@ const crypto = require('crypto');
 
 const registrarUsuario = async (req, res) => {
     try {
-        // 1. Recibir los datos exactos del formulario
         const { nombres, email, telefono, password } = req.body;
 
-        // 1.5 Validación de seguridad de la contraseña (Mínimo 8 caracteres, 1 letra y 1 número)
+        // MIF-108: Validación de seguridad
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&.]{8,}$/;
         if (!password || !passwordRegex.test(password)) {
-            return res.status(400).send('La contraseña debe tener al menos 8 caracteres, e incluir como mínimo una letra y un número.');
+            return res.status(400).json({ success: false, message: 'La contraseña debe tener al menos 8 caracteres, e incluir como mínimo una letra y un número.' });
         }
 
-        // 2. Verificar si el email ya existe en la base de datos
         const [usuariosExistentes] = await db.query('SELECT * FROM Usuario WHERE email = ?', [email]);
         if (usuariosExistentes.length > 0) {
-            return res.status(400).send('El correo electrónico ya está registrado.');
+            return res.status(400).json({ success: false, message: 'El correo electrónico ya está registrado.' });
         }
 
-        // 3. Encriptar la contraseña (hash)
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // 4. Guardar en tu tabla Usuario
-        const [resultado] = await db.query(
+        await db.query(
             'INSERT INTO Usuario (nombres, email, telefono, password) VALUES (?, ?, ?, ?)',
             [nombres, email, telefono, hashedPassword]
         );
 
-        console.log('✅ Nuevo usuario registrado con ID:', resultado.insertId);
-
-        // 5. Redirigir a la vista de login tras el éxito
-        res.redirect('/login');
+        // Respuesta exitosa JSON
+        res.json({ success: true, redirect: '/login?mensaje=Cuenta creada exitosamente. Ahora puedes iniciar sesión.' });
 
     } catch (error) {
         console.error('❌ Error en el registro:', error.message);
-        res.status(500).send('Error interno del servidor al registrar');
+        res.status(500).json({ success: false, message: 'Error interno del servidor al registrar' });
     }
 };
 
@@ -47,11 +41,10 @@ const iniciarSesion = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // 1. Buscar si el usuario existe en la base de datos
         const [usuarios] = await db.query('SELECT * FROM Usuario WHERE email = ?', [email]);
         
         if (usuarios.length === 0) {
-            return res.status(401).send('Correo o contraseña incorrectos.');
+            return res.status(401).json({ success: false, message: 'Correo o contraseña incorrectos.' });
         }
 
         const usuario = usuarios[0];
@@ -60,7 +53,7 @@ const iniciarSesion = async (req, res) => {
         const contrasenaValida = await bcrypt.compare(password, usuario.password);
         
         if (!contrasenaValida) {
-            return res.status(401).send('Correo o contraseña incorrectos.');
+            return res.status(401).json({ success: false, message: 'Correo o contraseña incorrectos.' });
         }
 
         // 3. ¡CORRECCIÓN CLAVE! Guardar el objeto usuario en la sesión
@@ -79,8 +72,7 @@ const iniciarSesion = async (req, res) => {
         res.redirect('/foros'); 
 
     } catch (error) {
-        console.error('❌ Error en el inicio de sesión:', error.message);
-        res.status(500).send('Error interno del servidor al iniciar sesión');
+        res.status(500).json({ success: false, message: 'Error interno del servidor al iniciar sesión' });
     }
 };
 

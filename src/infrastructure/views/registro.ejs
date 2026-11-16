@@ -10,6 +10,9 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
+  <!-- SweetAlert2 (Para Pop-ups) -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <style>
     .bg-custom-blue { 
       background-color: #b8c8d9; 
@@ -47,8 +50,9 @@
         <h1 class="h3 fw-semibold text-dark mb-1">Crear Cuenta</h1>
         <p class="text-muted small mb-4">Regístrate para comenzar a usar miFuturo</p>
 
-        <form action="/registro" method="POST">
-        <!-- Campo Nombre Completo -->
+        <!-- Formulario interceptado por JS -->
+        <form id="registroForm" action="/registro" method="POST">
+          <!-- Campo Nombre Completo -->
           <div class="input-group mb-3">
             <input type="text" name="nombres" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Nombre completo" required>
             <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-regular fa-user"></i></span>
@@ -91,8 +95,7 @@
             </label>
           </div>
 
-            <!-- Botón de Envío -->
-           
+          <!-- Botón de Envío -->
           <button type="submit" class="btn btn-custom-blue btn-lg w-100 rounded-3 fs-6 fw-medium d-flex align-items-center justify-content-center gap-2">
             Siguiente <i class="fa-solid fa-chevron-right small"></i>
           </button>
@@ -107,6 +110,7 @@
   </div>
 
   <script>
+    // Mostrar/Ocultar contraseña
     const passwordInput = document.getElementById('passwordInput');
     const togglePasswordBtn = document.getElementById('togglePasswordBtn');
     const togglePasswordIcon = document.getElementById('togglePasswordIcon');
@@ -114,10 +118,46 @@
     togglePasswordBtn.addEventListener('click', function () {
       const isPassword = passwordInput.getAttribute('type') === 'password';
       passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-      
-      // Alternar el ícono entre ojo abierto y ojo tachado
       togglePasswordIcon.classList.toggle('fa-eye');
       togglePasswordIcon.classList.toggle('fa-eye-slash');
+    });
+
+    // Interceptar el envío del formulario con Fetch y SweetAlert2
+    document.getElementById('registroForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); // Evitar la recarga de página
+      
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch('/registro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+
+        if (result.success) {
+          // Si el registro es correcto, redirigimos al login
+          window.location.href = result.redirect;
+        } else {
+          // Si hay error (correo existente, contraseña débil), mostrar modal
+          Swal.fire({
+            icon: 'error',
+            title: 'No se pudo crear la cuenta',
+            text: result.message,
+            confirmButtonColor: '#8ba3c1'
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de Servidor',
+          text: 'Hubo un problema de red. Intenta nuevamente.',
+          confirmButtonColor: '#8ba3c1'
+        });
+      }
     });
   </script>
   

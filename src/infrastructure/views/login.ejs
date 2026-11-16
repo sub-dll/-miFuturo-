@@ -5,61 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesión - miFuturo</title>
   
-  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
-  <!-- Estilos Personalizados de la Marca -->
+  <!-- SweetAlert2 (Para Pop-ups) -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <style>
-    .bg-custom-blue { 
-      background-color: #b8c8d9; 
-    }
-
-    .btn-custom-blue { 
-      background-color: #8ba3c1; 
-      color: #ffffff; 
-    }
-
-    .btn-custom-blue:hover { 
-      background-color: #7a92af; 
-      color: #ffffff; 
-    }
-
-    .link-custom {
-      color: #6a88ab;
-    }
-
-    .link-custom:hover {
-      text-decoration: underline;
-    }
+    .bg-custom-blue { background-color: #b8c8d9; }
+    .btn-custom-blue { background-color: #8ba3c1; color: #ffffff; }
+    .btn-custom-blue:hover { background-color: #7a92af; color: #ffffff; }
+    .link-custom { color: #6a88ab; }
+    .link-custom:hover { text-decoration: underline; }
   </style>
 </head>
 <body class="bg-white min-vh-100 d-flex align-items-center justify-content-center p-3">
 
-  <!-- Marco Exterior -->
   <div class="w-100 vh-100 d-flex align-items-center justify-content-center p-2 p-md-4">
-    
-    <!-- Contenedor Azul-Grisáceo Principal -->
     <div class="bg-custom-blue w-100 h-100 rounded-5 d-flex align-items-center justify-content-center p-3">
       
-      <!-- Tarjeta Blanca Central -->
       <div class="card border-0 shadow-sm p-4 p-md-5 rounded-4 text-center" style="max-width: 450px; width: 100%;">
         <h1 class="h3 fw-semibold text-dark mb-1">¡Bienvenido de nuevo!</h1>
         <p class="text-muted small mb-4">Inicia sesión para acceder a tu cuenta</p>
 
+        <!-- Mensaje de éxito al ser redirigido desde el registro -->
         <% if (typeof mensaje !== 'undefined' && mensaje) { %>
           <div class="alert alert-success small" role="alert"><%= mensaje %></div>
         <% } %>
 
-        <form action="/login" method="POST">
-          <!-- Campo Email -->
+        <!-- Agregamos ID al form para controlarlo con JS -->
+        <form id="loginForm" action="/login" method="POST">
           <div class="input-group mb-3">
             <input type="email" name="email" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Ingresa tu correo electrónico" required>
             <span class="input-group-text bg-light border-0 rounded-end-3 text-muted"><i class="fa-regular fa-envelope"></i></span>
           </div>
 
-          <!-- Campo Contraseña con botón Ver/Ocultar -->
           <div class="input-group mb-3">
             <input type="password" id="loginPasswordInput" name="password" class="form-control form-control-lg bg-light border-0 rounded-start-3 fs-6" placeholder="Contraseña" required>
             <button type="button" onclick="toggleLoginPassword()" class="input-group-text bg-light border-0 rounded-end-3 text-muted" style="cursor: pointer;" tabindex="-1">
@@ -67,7 +47,6 @@
             </button>
           </div>
 
-          <!-- Opciones Recordar / Olvidé contraseña -->
           <div class="d-flex justify-content-between align-items-center small mb-4">
             <div class="form-check m-0">
               <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
@@ -76,7 +55,6 @@
             <a href="/recuperar" class="text-decoration-none small link-custom">¿Olvidaste tu contraseña?</a>
           </div>
 
-          <!-- Botón Iniciar Sesión -->
           <button type="submit" class="btn btn-custom-blue btn-lg w-100 rounded-3 fs-6 fw-medium d-flex align-items-center justify-content-center gap-2">
             Siguiente <i class="fa-solid fa-chevron-right small"></i>
           </button>
@@ -86,15 +64,14 @@
           ¿Eres nuevo aquí? <a href="/registro" class="text-decoration-none fw-medium link-custom">Regístrate ahora</a>
         </div>
       </div>
-
     </div>
   </div>
 
   <script>
+    // Mostrar/Ocultar contraseña
     function toggleLoginPassword() {
       const input = document.getElementById('loginPasswordInput');
       const icon = document.getElementById('toggleLoginPasswordIcon');
-      
       if (input.type === 'password') {
         input.type = 'text';
         icon.classList.remove('fa-eye');
@@ -105,7 +82,44 @@
         icon.classList.add('fa-eye');
       }
     }
-  </script>
 
+    // Interceptar el envío del formulario con Fetch y SweetAlert2
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); // Evitar la recarga de página
+      
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+
+        if (result.success) {
+          // Si el login es correcto, el backend devuelve la ruta en 'redirect'
+          window.location.href = result.redirect;
+        } else {
+          // Si hay error (mala contraseña, cuenta inhabilitada), mostrar modal
+          Swal.fire({
+            icon: 'error',
+            title: 'No se pudo iniciar sesión',
+            text: result.message,
+            confirmButtonColor: '#8ba3c1'
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de Servidor',
+          text: 'Hubo un problema de red. Intenta nuevamente.',
+          confirmButtonColor: '#8ba3c1'
+        });
+      }
+    });
+  </script>
 </body>
 </html>

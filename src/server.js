@@ -10,7 +10,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// 2. Configuración de express-session (DEBE ir antes de las rutas)
+// 2. Configuración de express-session (DEBE ir antes de TODAS las rutas)
 const sessionParser = session({
     secret: process.env.SESSION_SECRET || 'secreto_temporal_mifuturo',
     resave: false,
@@ -24,7 +24,9 @@ app.use(sessionParser);
 
 // 3. Middleware Global: Expone los datos del usuario autenticado a todas las vistas EJS
 app.use((req, res, next) => {
-    res.locals.usuario = (req.session && req.session.usuario) ? req.session.usuario : null;
+    // Compatibilidad para leer tanto "user" como "usuario" según cómo se guarde en la sesión
+    res.locals.usuario = req.session ? (req.session.user || req.session.usuario) : null;
+    res.locals.user = res.locals.usuario; // Alias por si alguna vista usa 'user'
     next();
 });
 const { cargarNotificaciones } = require('./middlewares/notificaciones');
@@ -43,7 +45,8 @@ const perfilRoutes = require('./routes/perfilRoutes');
 const configuracionRoutes = require('./routes/configuracionroutes');
 const foroRoutes = require('./routes/foroRoutes');
 
-// Registrar las rutas
+// Registrar las rutas (AHORA SÍ, EL ADMIN VA DESPUÉS DE LA SESIÓN)
+app.use('/admin', require('./routes/admin')); 
 app.use('/', perfilRoutes);  
 app.use('/', vistasRoutes);
 app.use('/', authRoutes); 

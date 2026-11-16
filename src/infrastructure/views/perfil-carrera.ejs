@@ -1,4 +1,4 @@
-<% const _maxBar = Math.max(...programa.matriculas_vs_titulados.flatMap(d => [d.matriculados, d.titulados])); %>
+<% const _maxBar = Math.max(...programa.matriculas_vs_titulados.flatMap(d => [d.matriculados || 0, d.titulados || 0]), 1); %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -73,46 +73,64 @@
             </div>
         </div>
 
-        <!-- Columna derecha: grafico + empleabilidad + sueldos -->
+       <!-- Columna derecha: grafico + empleabilidad + sueldos -->
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm rounded-4 hover-card p-4 h-100">
-                <p class="small fw-bold mb-3">Matriculados vs. Titulados por año</p>
-                <div class="d-flex align-items-center gap-3 small mb-4">
-                    <span><span style="display:inline-block;width:10px;height:10px;background:#dfe6ee;margin-right:4px;"></span>Matriculados</span>
-                    <span><span style="display:inline-block;width:10px;height:10px;background:#8C9FBA;margin-right:4px;"></span>Titulados</span>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <p class="small fw-bold mb-0">Matriculados vs. Titulados por año</p>
+                    <span class="badge bg-light text-muted border" style="font-size: 0.7rem;">Fuente: SIES / mifuturo.cl (2026)</span>
                 </div>
 
-                <!-- Gráfico de Barras -->
-                <!-- Gráfico de Barras -->
-                <div class="d-flex justify-content-between align-items-end mb-4" style="height: 120px;">
-                    <% programa.matriculas_vs_titulados.forEach(function (d) { 
-                        const hMat = Math.round((d.matriculados / _maxBar) * 100);
-                        const hTit = Math.round((d.titulados / _maxBar) * 100);
-                        
-                        /* Armamos el string del estilo aquí arriba para que VS Code no llore */
-                        const styleMat = `width:12px;background:#dfe6ee;border-radius:2px 2px 0 0;height:${hMat}%;`;
-                        const styleTit = `width:12px;background:#8C9FBA;border-radius:2px 2px 0 0;height:${hTit}%;`;
-                    %>
-                        <div class="d-flex flex-column align-items-center justify-content-end h-100 w-100">
-                            <div class="d-flex align-items-end justify-content-center gap-1 w-100" style="height: 100%;">
-                                <!-- Y lo inyectamos limpiamente -->
-                                <div <%- `style="${styleMat}"` %>></div>
-                                <div <%- `style="${styleTit}"` %>></div>
+                <% if (programa.ingresados_anual && programa.egresados_anual) { %>
+                    <div class="d-flex align-items-center gap-3 small mb-4">
+                        <span><span style="display:inline-block;width:10px;height:10px;background:#dfe6ee;margin-right:4px;"></span>Matriculados</span>
+                        <span><span style="display:inline-block;width:10px;height:10px;background:#8C9FBA;margin-right:4px;"></span>Titulados</span>
+                    </div>
+
+                    <!-- Gráfico de Barras -->
+                    <div class="d-flex justify-content-between align-items-end mb-4" style="height: 120px;">
+                        <% programa.matriculas_vs_titulados.forEach(function (d) { 
+                            const hMat = Math.round((d.matriculados / _maxBar) * 100);
+                            const hTit = Math.round((d.titulados / _maxBar) * 100);
+                            
+                            const styleMat = `width:12px;background:#dfe6ee;border-radius:2px 2px 0 0;height:${hMat}%;`;
+                            const styleTit = `width:12px;background:#8C9FBA;border-radius:2px 2px 0 0;height:${hTit}%;`;
+                        %>
+                            <div class="d-flex flex-column align-items-center justify-content-end h-100 w-100">
+                                <div class="d-flex align-items-end justify-content-center gap-1 w-100" style="height: 100%;">
+                                    <div <%- `style="${styleMat}"` %>></div>
+                                    <div <%- `style="${styleTit}"` %>></div>
+                                </div>
+                                <span class="small mt-2 text-muted" style="font-size: 0.75rem;"><%= d.anio %></span>
                             </div>
-                            <span class="small mt-2 text-muted" style="font-size: 0.75rem;"><%= d.anio %></span>
-                        </div>
-                    <% }); %>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <div class="alert alert-light border text-muted small text-center my-4">
+                        No hay registros históricos de matrícula y titulación disponibles para este programa.
+                    </div>
+                <% } %>
 
                 <hr class="opacity-25 my-3">
 
                 <p class="small fw-bold mb-1">Empleabilidad:</p>
-                <p class="small text-muted mb-3">El <strong><%= programa.empleabilidad_pct || '--' %>%</strong> de los egresados se encuentra trabajando al primer año tras titularse (fuente: mifuturo.cl).</p>
+                <% if (programa.empleabilidad_pct) { %>
+                    <p class="small text-muted mb-3">
+                        El <strong><%= programa.empleabilidad_pct %>%</strong> de los egresados se encuentra trabajando al primer año tras titularse (fuente: mifuturo.cl, 2026).
+                    </p>
+                <% } else { %>
+                    <p class="small text-muted mb-3">Información de empleabilidad no disponible (fuente: mifuturo.cl, 2026).</p>
+                <% } %>
 
                 <p class="small fw-bold mb-1">Ingresos promedio:</p>
-                <p class="small text-muted mb-0">
-                    $<%= programa.sueldo_promedio_1er_ano ? programa.sueldo_promedio_1er_ano.toLocaleString('es-CL') : '--' %> al primer año y
-                    $<%= programa.sueldo_promedio_2do_ano ? programa.sueldo_promedio_2do_ano.toLocaleString('es-CL') : '--' %> al segundo año de titulación.
-                </p>
+                <% if (programa.sueldo_promedio_1er_ano || programa.sueldo_promedio_2do_ano) { %>
+                    <p class="small text-muted mb-0">
+                        $<%= programa.sueldo_promedio_1er_ano ? programa.sueldo_promedio_1er_ano.toLocaleString('es-CL') : '--' %> al primer año y
+                        $<%= programa.sueldo_promedio_2do_ano ? programa.sueldo_promedio_2do_ano.toLocaleString('es-CL') : '--' %> al segundo año de titulación (fuente: mifuturo.cl, 2026).
+                    </p>
+                <% } else { %>
+                    <p class="small text-muted mb-0">Información salarial no disponible para este programa.</p>
+                <% } %>
             </div>
         </div>
     </div>
